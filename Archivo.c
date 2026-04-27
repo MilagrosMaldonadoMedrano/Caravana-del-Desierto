@@ -1,5 +1,4 @@
-#include"Archivo.h"
-
+#include "Archivo.h"
 
 int abrirArchivo(FILE** arch,const char* nomArch,const char* modoApertura)
 {
@@ -36,15 +35,21 @@ void configuracionPorDefecto(FILE** arch,const char* nomArch)
 //consultarle al profe si e sposible que el txt tenga las lineas modificadas
 //elemplo: que la primer linea sea "vidas_inicio: 3" y no "cantidad_posiciones: 25"
 
-void cargarConfiguracion(const char* nomArch,tConfiguracion* config)
+int cargarConfiguracion(const char* nomArch,tConfiguracion* config)
 {
     FILE* arch;
     if(ERROR_ARCH==abrirArchivo(&arch,nomArch,"rt"))
     {
+        perror("Error:");
+        printf("\nSe cargaran configuraciones por defecto\n");
         configuracionPorDefecto(&arch,nomArch);
     }
 
-    abrirArchivo(&arch,nomArch,"rt");
+    if (ERROR_ARCH==abrirArchivo(&arch,nomArch,"rt"))
+    {
+        perror("Error:");
+        return ERROR_ARCH;
+    }
 
     char linea[255];
 
@@ -70,4 +75,22 @@ void cargarConfiguracion(const char* nomArch,tConfiguracion* config)
     sscanf(linea,"%*[^:]: %d",&config->maxTormentas);
 
     fclose(arch);
+
+    if (validarConfiguracion(config)!=TODO_OK)
+        return ERROR_CONFIG;
+
+    return TODO_OK;
+}
+
+//función que verifica que la configuración sea válida
+int validarConfiguracion(const tConfiguracion* config)
+{
+    ///validaciones del archivo de configuraciones
+    if (config->cantPosiciones < (config->maxBandidos + config->maxOasis + config->maxPremios+\
+                                  config->maxTormentas + config->maxVidasExtra))
+        return ERROR_CONFIG;
+
+    ///otras validaciones podrian ser como: que no sean todo maxBandidos menos 1 o 2 casillas
+
+    return TODO_OK;
 }

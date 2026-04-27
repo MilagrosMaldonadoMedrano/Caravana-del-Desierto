@@ -1,6 +1,7 @@
 #ifndef COLA_H_INCLUDED
 #define COLA_H_INCLUDED
-#include <stddef.h>
+
+#include "main.h"
 
 #define TODO_OK 1
 #define COLA_LLENA 2

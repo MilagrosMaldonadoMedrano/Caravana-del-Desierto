@@ -39,6 +39,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Cola.h" />
+		<Unit filename="Herramientas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Herramientas.h" />
 		<Unit filename="Juego.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -46,6 +50,7 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="main.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
