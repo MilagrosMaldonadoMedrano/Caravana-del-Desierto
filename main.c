@@ -7,10 +7,12 @@ int main()
 {
     tConfiguracion config;
     tCola tablero;
+    tCola historial; // registro de movimientos
 
     srand(time(NULL));
 
     crearCola(&tablero);
+    crearCola(&historial);
 
     if (cargarConfiguracion(NOM_ARCH_CONFIG,&config)!=TODO_OK)
     {
@@ -29,6 +31,17 @@ int main()
     ///para ver si funciona
     printf("Cantidad de pos: %d\n",config.cantPosiciones);
     printf("Maximo de tormentas: %d\n",config.maxTormentas);
+
+    /// Test del registro de movimientos
+    registrarMovimiento(&historial, FORWARD, 5);
+    registrarMovimiento(&historial, FORWARD, 2);
+    registrarMovimiento(&historial, BACKWARD, 3);
+    registrarMovimiento(&historial, FORWARD, 1);
+    guardarMostrarHistorial(&historial, NOM_ARCH_MOVIMIENTOS);
+
+    /// Test del dado
+    for (int i = 0; i < 5; i++)
+        printf("\nTirada de dado: %u", tirarDado());
 
     vaciarCola(&tablero);
 

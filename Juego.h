@@ -33,6 +33,9 @@
 
 #define CANT_COMPONENTES 6
 
+/// Nombre del archivo donde se guarda el historial
+#define NOM_ARCH_MOVIMIENTOS "movimientos.txt"
+
 ///macros de dirección para la estructura tMovimientos
 #define FORWARD 'F'
 #define BACKWARD 'B'
@@ -72,5 +75,13 @@ typedef struct
 }tMovimiento;
 
 int crearTablero(const char* nomArch,tCola* tablero,tConfiguracion* config);
+
+/// Funciones de registro de movimientos
+void registrarMovimiento(tCola* historial, char direccion, unsigned cantMovim);
+void mostrarHistorial(tCola* historial);
+int guardarMostrarHistorial(tCola* historial, const char* nomArch);
+
+/// Dado
+int tirarDado(void);
 
 #endif // JUEGO_H_INCLUDED
