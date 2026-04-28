@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-#define DIEZ 10 //para evitar el uso de magic numbers
+#define DIVISOR_DECIMAL 10 //para evitar el uso de magic numbers
 
 int cantDigitosUnsigned(unsigned num);
 

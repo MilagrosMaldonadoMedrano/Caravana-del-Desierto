@@ -1,30 +1,31 @@
 # depslib dependency file v1.0
-1777061389 source:f:\ingeniería\algoritmos\caravana_del_desierto\main.c
-	<stdio.h>
-	<stdlib.h>
+1777399607 source:f:\ingeniería\algoritmos\caravana_del_desierto\main.c
+	"main.h"
 	"Cola.h"
 	"Archivo.h"
 	"Juego.h"
 
-1777056815 source:f:\ingeniería\algoritmos\caravana_del_desierto\cola.c
+1777396954 source:f:\ingeniería\algoritmos\caravana_del_desierto\cola.c
 	"Cola.h"
-	<stdlib.h>
-	<string.h>
 
-1777056815 f:\ingeniería\algoritmos\caravana_del_desierto\cola.h
-	<stddef.h>
+1777396954 f:\ingeniería\algoritmos\caravana_del_desierto\cola.h
+	"main.h"
 
-1777061983 f:\ingeniería\algoritmos\caravana_del_desierto\archivo.h
-	<stdio.h>
+1777396954 f:\ingeniería\algoritmos\caravana_del_desierto\archivo.h
+	"main.h"
 	"Juego.h"
+	"Cola.h"
 
-1777062031 source:f:\ingeniería\algoritmos\caravana_del_desierto\archivo.c
+1777398881 source:f:\ingeniería\algoritmos\caravana_del_desierto\archivo.c
 	"Archivo.h"
 
-1777061389 source:f:\ingeniería\algoritmos\caravana_del_desierto\juego.c
+1777399607 source:f:\ingeniería\algoritmos\caravana_del_desierto\juego.c
 	"Juego.h"
+	"Archivo.h"
 
-1777058770 f:\ingeniería\algoritmos\caravana_del_desierto\juego.h
+1777397490 f:\ingeniería\algoritmos\caravana_del_desierto\juego.h
+	"main.h"
+	"Cola.h"
 
 1777237294 source:c:\users\mirag\desktop\caravana-del-desierto\cola.c
 	"Cola.h"
@@ -110,4 +111,18 @@
 1777328545 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\juego.c
 	"Juego.h"
 	"Archivo.h"
+
+1777396954 f:\ingeniería\algoritmos\caravana_del_desierto\main.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stddef.h>
+	"Herramientas.h"
+
+1777397388 f:\ingeniería\algoritmos\caravana_del_desierto\herramientas.h
+	"main.h"
+
+1777397388 source:f:\ingeniería\algoritmos\caravana_del_desierto\herramientas.c
+	"Herramientas.h"
 

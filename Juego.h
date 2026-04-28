@@ -80,6 +80,7 @@ int crearTablero(const char* nomArch,tCola* tablero,tConfiguracion* config);
 void registrarMovimiento(tCola* historial, char direccion, unsigned cantMovim);
 void mostrarHistorial(tCola* historial);
 int guardarMostrarHistorial(tCola* historial, const char* nomArch);
+void dibujarTablero(tCola* tablero, int cantPosiciones, int columnas);
 
 /// Dado
 int tirarDado(void);

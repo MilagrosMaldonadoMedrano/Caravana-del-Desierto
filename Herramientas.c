@@ -6,7 +6,7 @@ int cantDigitosUnsigned(unsigned num)
 
     do
     {
-        num /= DIEZ;
+        num /= DIVISOR_DECIMAL;
         cantDigitos++;
     } while (num > 0);
     return cantDigitos;

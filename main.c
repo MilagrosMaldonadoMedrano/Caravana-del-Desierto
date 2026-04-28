@@ -28,22 +28,25 @@ int main()
         return ERROR_CONFIG;
     }
 
+
     ///para ver si funciona
     printf("Cantidad de pos: %d\n",config.cantPosiciones);
     printf("Maximo de tormentas: %d\n",config.maxTormentas);
 
     /// Test del registro de movimientos
-    registrarMovimiento(&historial, FORWARD, 5);
-    registrarMovimiento(&historial, FORWARD, 2);
-    registrarMovimiento(&historial, BACKWARD, 3);
-    registrarMovimiento(&historial, FORWARD, 1);
+    registrarMovimiento(&historial, FORWARD, tirarDado());
+    registrarMovimiento(&historial, FORWARD,tirarDado());
+    registrarMovimiento(&historial, BACKWARD, tirarDado());
+    registrarMovimiento(&historial, FORWARD, tirarDado());
     guardarMostrarHistorial(&historial, NOM_ARCH_MOVIMIENTOS);
 
     /// Test del dado
     for (int i = 0; i < 5; i++)
-        printf("\nTirada de dado: %u", tirarDado());
+        printf("\nTirada de dado: %u\n", tirarDado());
 
+    dibujarTablero(&tablero,config.cantPosiciones,5);//debemos definir un criterio para las columnas
     vaciarCola(&tablero);
+    vaciarCola(&historial);
 
     return 0;
 }
