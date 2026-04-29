@@ -368,20 +368,10 @@ int guardarMostrarHistorial(tCola* historial, const char* nomArch)
 {
     FILE* arch;
     tMovimiento mov;
-    tCola copiaTemporal;
     int nroTurno = 1;
-
-    crearCola(&copiaTemporal);
-
-    while (!colaVacia(historial))
-    {
-        sacarDeCola(historial, &mov, sizeof(mov));
-        ponerEnCola(&copiaTemporal, &mov, sizeof(mov));
-    }
 
     if (abrirArchivo(&arch, nomArch, "wt") != TODO_OK)
     {
-        vaciarCola(&copiaTemporal);
         perror("Error al guardar historial");
         return ERROR_ARCH;
     }
@@ -389,21 +379,19 @@ int guardarMostrarHistorial(tCola* historial, const char* nomArch)
     printf("\n===== REGISTRO DE MOVIMIENTOS =====\n");
     fprintf(arch, "===== REGISTRO DE MOVIMIENTOS =====\n");
 
-    if (colaVacia(&copiaTemporal))
+    if (colaVacia(historial))
     {
         printf("No se realizaron movimientos.\n");
         fprintf(arch, "No se realizaron movimientos.\n");
     }
     else
     {
-        do
-        {
-            sacarDeCola(&copiaTemporal, &mov, sizeof(mov));
+        do {
+            sacarDeCola(historial, &mov, sizeof(mov));
             printf("Turno %2d: %c%u\n", nroTurno, mov.direccion, mov.cantMovim);
             fprintf(arch, "Turno %2d: %c%u\n", nroTurno, mov.direccion, mov.cantMovim);
             nroTurno++;
-        }
-        while (!colaVacia(&copiaTemporal));
+        } while (!colaVacia(historial));
     }
 
     printf("===================================\n");

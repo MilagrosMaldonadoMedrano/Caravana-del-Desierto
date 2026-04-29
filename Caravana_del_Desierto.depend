@@ -86,10 +86,10 @@
 	<stddef.h>
 	"Herramientas.h"
 
-1777324238 c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\herramientas.h
+1777492942 c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\herramientas.h
 	"main.h"
 
-1777328545 c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\juego.h
+1777492942 c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\juego.h
 	"main.h"
 	"Cola.h"
 
@@ -99,10 +99,10 @@
 1777324238 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\cola.c
 	"Cola.h"
 
-1777324238 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\herramientas.c
+1777492942 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\herramientas.c
 	"Herramientas.h"
 
-1777328657 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\main.c
+1777492942 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\main.c
 	"main.h"
 	"Cola.h"
 	"Archivo.h"
