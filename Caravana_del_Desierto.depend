@@ -102,13 +102,15 @@
 1777492942 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\herramientas.c
 	"Herramientas.h"
 
-1777492942 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\main.c
+1778967736 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\main.c
 	"main.h"
 	"Cola.h"
 	"Archivo.h"
 	"Juego.h"
+	"Menu.h"
+	"Turno.h"
 
-1777328545 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\juego.c
+1777493042 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\juego.c
 	"Juego.h"
 	"Archivo.h"
 
@@ -125,4 +127,17 @@
 
 1777397388 source:f:\ingeniería\algoritmos\caravana_del_desierto\herramientas.c
 	"Herramientas.h"
+
+1778968687 c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\menu.h
+	"main.h"
+	"Juego.h"
+	"Archivo.h"
+
+1778967617 c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\turno.h
+	"main.h"
+	"Juego.h"
+	"Cola.h"
+
+1778968422 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\menu.c
+	"Menu.h"
 
