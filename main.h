@@ -7,5 +7,6 @@
 #include <time.h>
 #include <stddef.h>
 #include "Herramientas.h"
+#include "Lista.h"
 
 #endif // MAIN_H_INCLUDED

@@ -4,6 +4,7 @@
 #include "main.h"
 #include "Cola.h"
 
+
 #define NOM_ARCH_CONFIG "config.txt"
 #define NOM_ARCH_TABLERO "caravana.txt"
 
@@ -52,11 +53,24 @@ typedef struct
     unsigned maxTormentas;
 }tConfiguracion;
 
-/// estructura para cada casilla del tablero
+
 typedef struct
 {
-    char caractElem;
+    char tipo;
+} tElemento;
+
+typedef struct
+{
+    tLista elementos;
+    unsigned posicion;
 }tCasilla;
+
+
+/// estructura para cada casilla del tablero
+/*typedef struct
+{
+    char caractElem;
+}tCasilla;*/
 
 /// estructura para la partida
 typedef struct
@@ -74,13 +88,31 @@ typedef struct
     char direccion;
 }tMovimiento;
 
-int crearTablero(const char* nomArch,tCola* tablero,tConfiguracion* config);
+int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config);
 
 /// Funciones de registro de movimientos
 void registrarMovimiento(tCola* historial, char direccion, unsigned cantMovim);
 void mostrarHistorial(tCola* historial);
 int guardarMostrarHistorial(tCola* historial, const char* nomArch);
-void dibujarTablero(tCola* tablero, int cantPosiciones, int columnas);
+
+void dibujarTablero(tLista* tablero,int cantPosiciones,int columnas);
+
+
+int crearCasilla(tCasilla* casilla);
+
+int agregarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem);
+
+int compararPosicion(const void* a,const void* b);
+
+int guardarTableroArchivo(tLista* tablero, FILE* pf,tConfiguracion* config,int cantDigitos);
+
+
+void accionEscribirArchivo(const void* elem, const void* pf);
+
+void accionImprimirConsola(const void* elem, const void* extra);
+
+void vaciarTablero(tLista* tablero);
+
 
 /// Dado
 int tirarDado(void);

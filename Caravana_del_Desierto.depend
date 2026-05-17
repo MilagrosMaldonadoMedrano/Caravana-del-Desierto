@@ -141,3 +141,69 @@
 1778968422 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\menu.c
 	"Menu.h"
 
+1779025488 source:c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\archivo.c
+	"Archivo.h"
+
+1779025488 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\archivo.h
+	"main.h"
+	"Juego.h"
+	"Cola.h"
+
+1779029553 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\main.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stddef.h>
+	"Herramientas.h"
+	"Lista.h"
+
+1779025488 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\herramientas.h
+	"main.h"
+
+1779052182 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\juego.h
+	"main.h"
+	"Cola.h"
+
+1779025488 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\cola.h
+	"main.h"
+
+1779025488 source:c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\cola.c
+	"Cola.h"
+
+1779025488 source:c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\herramientas.c
+	"Herramientas.h"
+
+1779052584 source:c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\juego.c
+	"Juego.h"
+	"Archivo.h"
+
+1779052247 source:c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\main.c
+	"main.h"
+	"Cola.h"
+	"Archivo.h"
+	"Juego.h"
+	"Menu.h"
+	"Turno.h"
+
+1779025488 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\menu.h
+	"main.h"
+	"Juego.h"
+	"Archivo.h"
+
+1779025488 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\turno.h
+	"main.h"
+	"Juego.h"
+	"Cola.h"
+
+1779029553 source:c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\menu.c
+	"Menu.h"
+
+1779048567 source:c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\lista.c
+	"Lista.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+
+1779048607 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\lista.h
+

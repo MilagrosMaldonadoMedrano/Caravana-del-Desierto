@@ -3,328 +3,253 @@
 
 //esta función crea el archivo del tablero en base a la configuración, un tablero jugable
 //llama a otra función que valida si la configuración, para poder crear el tablero
-/*int crearTablero(const char* nomArch,tCola* tablero,tConfiguracion* config)
+
+
+
+
+int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
 {
     FILE* pf;
-    unsigned tableroValido = 0, elemValido, aleatorio, cantPosiVacias;
-    int cantDigitosCasillas = cantDigitosUnsigned(config->cantPosiciones);
-    //char codAsciiComponentes[] = {ASCII_BANDIDO,ASCII_PREMIO,ASCII_VIDA_EXTRA,
-    //                                ASCII_OASIS,ASCII_TORMENTA,ASCII_POS_VACIA};
-    //esto es para reemplazar el switch que hace lo mismo para cada componentes. A MEJORAR LUEGO
-    tConfiguracion configTemp;
-    tCasilla elem;
 
-    do
-    {
-        configTemp = *config;
-        elem.caractElem = ASCII_INICIO;
-        if (ponerEnCola(tablero,&elem,sizeof(elem))!=TODO_OK)
-            return ERROR_SIN_MEM;
-
-        configTemp.cantPosiciones--; //ignora la casilla del inicio
-        configTemp.cantPosiciones--; //ignora la casiila del final
-
-        cantPosiVacias = configTemp.cantPosiciones - (configTemp.maxBandidos + configTemp.maxOasis+\
-                                                    configTemp.maxPremios + configTemp.maxTormentas+\
-                                                    configTemp.maxVidasExtra);
-
-        while (configTemp.cantPosiciones)
-        {
-            elemValido = 0;
-            do
-            {
-                aleatorio = rand()%(int)(CANT_COMPONENTES*AUMENTO_PROB_POS_VACIA);
-                //printf("Nro Aleatorio: %d\n", aleatorio);
-                switch(aleatorio)
-                {
-                    case BANDIDO: if (configTemp.maxBandidos)
-                            {
-                                configTemp.maxBandidos--;
-                                elem.caractElem = ASCII_BANDIDO;
-                                elemValido = 1;
-                            }
-                    break;
-                    case PREMIO: if (configTemp.maxPremios)
-                            {
-                                configTemp.maxPremios--;
-                                elem.caractElem = ASCII_PREMIO;
-                                elemValido = 1;
-                            }
-                    break;
-                    case VIDA_EXTRA: if (configTemp.maxVidasExtra)
-                            {
-                                configTemp.maxVidasExtra--;
-                                elem.caractElem = ASCII_VIDA_EXTRA;
-                                elemValido = 1;
-                            }
-                    break;
-                    case OASIS: if (configTemp.maxOasis)
-                            {
-                                configTemp.maxOasis--;
-                                elem.caractElem = ASCII_OASIS;
-                                elemValido = 1;
-                            }
-                    break;
-                    case TORMENTA: if (configTemp.maxTormentas)
-                            {
-                                configTemp.maxTormentas--;
-                                elem.caractElem = ASCII_TORMENTA;
-                                elemValido = 1;
-                            }
-                    break;
-                    default: if (cantPosiVacias)
-                            {
-                                cantPosiVacias--;
-                                elem.caractElem = ASCII_POS_VACIA;
-                                elemValido = 1;
-                            }
-
-                }
-            } while (!elemValido);
-
-            if (ponerEnCola(tablero, &elem, sizeof(elem))!=TODO_OK)
-            {
-                vaciarCola(tablero);
-                return ERROR_SIN_MEM;
-            }
-            configTemp.cantPosiciones--;
-        }
-
-        elem.caractElem = ASCII_SALIDA;
-        if (ponerEnCola(tablero, &elem, sizeof(elem))!=TODO_OK)
-        {
-            vaciarCola(tablero);
-            return ERROR_SIN_MEM;
-        }
-
-    /// validaciones del tablero
-
-
-
-    if (tableroValido) /// poner !
-        vaciarCola(tablero);
-
-    } while (tableroValido); /// poner !
-
-    /// cargar la cola en el archivo
-    if (abrirArchivo(&pf,nomArch,"wt")!=TODO_OK)
-    {
-        vaciarCola(tablero);
+    if(TODO_OK!=abrirArchivo(&pf,NOM_ARCH_TABLERO,"wt"))
         return ERROR_ARCH;
-    }
 
-    sacarDeCola(tablero,&elem,sizeof(elem));
-    ponerEnCola(tablero,&elem,sizeof(elem));
-    sacarDeCola(tablero,&elem,sizeof(elem));
-    fprintf(pf,"%0*d: [I J]\n",cantDigitosCasillas,configTemp.cantPosiciones+1);
-    configTemp.cantPosiciones++;
-    while(elem.caractElem != ASCII_SALIDA)
-    {
-        fprintf(pf,"%0*d: %c\n",cantDigitosCasillas,configTemp.cantPosiciones+1,elem.caractElem);
-        configTemp.cantPosiciones++;
-        ponerEnCola(tablero,&elem,sizeof(elem));
-        sacarDeCola(tablero,&elem,sizeof(elem));
-    }
-    ponerEnCola(tablero,&elem,sizeof(elem));
-    fprintf(pf,"%0*d: %c\n",cantDigitosCasillas,config->cantPosiciones,elem.caractElem);
 
-    fclose(pf);
-
-    return TODO_OK;
-}*/
-int crearTablero(const char* nomArch,tCola* tablero,tConfiguracion* config)
-{
-    FILE* pf;
-    unsigned tableroValido = 0;
-    unsigned elemValido; //controla que casilla sea valida
-    unsigned aleatorio;  //nro aleatorio que decide que poner en la casilla
-    unsigned cantPosiVacias; //cantidad de casillas vacias
     int cantDigitosCasillas = cantDigitosUnsigned(config->cantPosiciones);
-    //char codAsciiComponentes[] = {ASCII_BANDIDO,ASCII_PREMIO,ASCII_VIDA_EXTRA,
-    //                                ASCII_OASIS,ASCII_TORMENTA,ASCII_POS_VACIA};
-    //esto es para reemplazar el switch que hace lo mismo para cada componentes. A MEJORAR LUEGO
-    tConfiguracion configTemp;
+
+
+    ///creo todas las listas de las casillas
+
     tCasilla casilla;
+    tElemento elem;
 
-    do
+    for(int i=0;i<config->cantPosiciones;i++)
     {
-        configTemp = *config;
-        casilla.caractElem = ASCII_INICIO;
-        if (ponerEnCola(tablero,&casilla,sizeof(tCasilla))!=TODO_OK)
-            return ERROR_SIN_MEM;
+        crearCasilla(&casilla);
+        casilla.posicion=i+1;
 
-        configTemp.cantPosiciones--; //ignora la casilla del inicio
-        configTemp.cantPosiciones--; //ignora la casiila del final
 
-        cantPosiVacias = configTemp.cantPosiciones - (configTemp.maxBandidos + configTemp.maxOasis+\
-                                                     configTemp.maxPremios + configTemp.maxTormentas+\
-                                                     configTemp.maxVidasExtra);
-
-        while (configTemp.cantPosiciones) //mientras que hayan casillas vacias
+        if(listaInsertarAlFinal(tablero,&casilla,sizeof(tCasilla))!=TODO_OK)
         {
-            elemValido = 0;
-            do
-            {
-                aleatorio = rand()%(int)(CANT_COMPONENTES*AUMENTO_PROB_POS_VACIA);
-                //printf("Nro Aleatorio: %d\n", aleatorio);
-                switch(aleatorio)
-                {
-                case BANDIDO:
-                    if (configTemp.maxBandidos)
-                    {
-                        configTemp.maxBandidos--;
-                        casilla.caractElem = ASCII_BANDIDO;
-                        elemValido = 1;
-                    }
-                    break;
-                case PREMIO:
-                    if (configTemp.maxPremios)
-                    {
-                        configTemp.maxPremios--;
-                        casilla.caractElem = ASCII_PREMIO;
-                        elemValido = 1;
-                    }
-                    break;
-                case VIDA_EXTRA:
-                    if (configTemp.maxVidasExtra)
-                    {
-                        configTemp.maxVidasExtra--;
-                        casilla.caractElem = ASCII_VIDA_EXTRA;
-                        elemValido = 1;
-                    }
-                    break;
-                case OASIS:
-                    if (configTemp.maxOasis)
-                    {
-                        configTemp.maxOasis--;
-                        casilla.caractElem = ASCII_OASIS;
-                        elemValido = 1;
-                    }
-                    break;
-                case TORMENTA:
-                    if (configTemp.maxTormentas)
-                    {
-                        configTemp.maxTormentas--;
-                        casilla.caractElem = ASCII_TORMENTA;
-                        elemValido = 1;
-                    }
-                    break;
-                default:
-                    if (cantPosiVacias)
-                    {
-                        cantPosiVacias--;
-                        casilla.caractElem = ASCII_POS_VACIA;
-                        elemValido = 1;
-                    }
-
-                }
-            }
-            while (!elemValido); //no se si es lo mas eficiente pero es un buen comienzo
-
-            if (ponerEnCola(tablero, &casilla, sizeof(tCasilla))!=TODO_OK)
-            {
-                vaciarCola(tablero);
-                return ERROR_SIN_MEM;
-            }
-            configTemp.cantPosiciones--;
+            vaciarLista(tablero);
+            return  ERROR_MEM;
         }
-
-        casilla.caractElem = ASCII_SALIDA;
-        if (ponerEnCola(tablero, &casilla, sizeof(tCasilla))!=TODO_OK)
-        {
-            vaciarCola(tablero);
-            return ERROR_SIN_MEM;
-        }
-
-        /// validaciones del tablero
-
-
-
-        if (tableroValido) /// poner !
-            vaciarCola(tablero);
-
     }
-    while (tableroValido);   /// poner !
 
-    /// cargar la cola en el archivo
-    if (abrirArchivo(&pf,nomArch,"wt")!=TODO_OK)
+    ///agrego el primer elemento
+
+    casilla.posicion=1;
+    elem.tipo=ASCII_INICIO;
+    agregarElementoEnCasilla(tablero,casilla,elem); ///validar si se pudo
+    elem.tipo=ASCII_JUGADOR;
+    agregarElementoEnCasilla(tablero,casilla,elem);
+
+
+
+    unsigned aleatorio;
+    ///bandidos
+    elem.tipo=ASCII_BANDIDO;
+    for(int i=0;i<config->maxBandidos;i++)
     {
-        vaciarCola(tablero);
-        return ERROR_ARCH;
+        aleatorio = rand()%(config->cantPosiciones-2)+2;
+        casilla.posicion=aleatorio;
+        agregarElementoEnCasilla(tablero,casilla,elem);
     }
 
-    //saca y vuelve a poner el primer elemento
-    sacarDeCola(tablero,&casilla,sizeof(tCasilla));
-    ponerEnCola(tablero,&casilla,sizeof(tCasilla));
-    sacarDeCola(tablero,&casilla,sizeof(tCasilla));
-    fprintf(pf,"%0*d: [I J]\n",cantDigitosCasillas,configTemp.cantPosiciones+1);
-    configTemp.cantPosiciones++;
-    while(casilla.caractElem != ASCII_SALIDA)
+    ///premios
+    elem.tipo=ASCII_PREMIO;
+    for(int i=0;i<config->maxPremios;i++)
     {
-        fprintf(pf,"%0*d: %c\n",cantDigitosCasillas,configTemp.cantPosiciones+1,casilla.caractElem);
-        configTemp.cantPosiciones++;
-        ponerEnCola(tablero,&casilla,sizeof(tCasilla));
-        sacarDeCola(tablero,&casilla,sizeof(tCasilla));
+        aleatorio=rand()%config->cantPosiciones+1;
+        casilla.posicion=aleatorio;
+        agregarElementoEnCasilla(tablero,casilla,elem);
     }
-    ponerEnCola(tablero,&casilla,sizeof(tCasilla));
-    fprintf(pf,"%0*d: %c\n",cantDigitosCasillas,config->cantPosiciones,casilla.caractElem);
+
+    ///vidas
+    elem.tipo=ASCII_VIDA_EXTRA;
+    for(int i=0;i<config->maxVidasExtra;i++)
+    {
+        aleatorio=rand()%config->cantPosiciones+1;
+        casilla.posicion=aleatorio;
+        agregarElementoEnCasilla(tablero,casilla,elem);
+    }
+
+
+    ///oasis
+    elem.tipo=ASCII_OASIS;
+    for(int i=0;i<config->maxOasis;i++)
+    {
+        aleatorio=rand()%config->cantPosiciones+1;
+        casilla.posicion=aleatorio;
+        agregarElementoEnCasilla(tablero,casilla,elem);
+    }
+
+    ///tormenta
+    elem.tipo=ASCII_TORMENTA;
+    for(int i=0;i<config->maxTormentas;i++)
+    {
+        aleatorio = rand()%(config->cantPosiciones-2)+2;
+        casilla.posicion=aleatorio;
+        agregarElementoEnCasilla(tablero,casilla,elem);
+    }
+
+    casilla.posicion=config->cantPosiciones;
+    elem.tipo=ASCII_SALIDA;
+    agregarElementoEnCasilla(tablero,casilla,elem);
+
+
+
+
+
+    guardarTableroArchivo(tablero,pf,config,cantDigitosCasillas);
+
 
     fclose(pf);
 
     return TODO_OK;
 }
 
-
-
-void dibujarTablero(tCola* tablero, int cantPosiciones, int columnas)
+int guardarTableroArchivo(tLista* tablero, FILE* pf, tConfiguracion* config, int cantDigitos)
 {
-    tCasilla casilla;
+    tCasilla* casilla;
+    tCasilla casillaPos;
+
+    for(int i = 0; i < config->cantPosiciones; i++)
+    {
+        casillaPos.posicion = i + 1;
+        casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
+
+        fprintf(pf, "%0*u: [", cantDigitos, casilla->posicion);
+
+        if(listaVacia(&casilla->elementos) == LISTA_VACIA)
+        {
+            // Si no hay elementos, ponemos el punto de vacío
+            fprintf(pf, ".");
+        }
+        else
+        {
+           // Pasamos 'pf' como tercer argumento para que llegue a la acción
+           recorrerDeIzqADer(&casilla->elementos, (Accion)accionEscribirArchivo, pf);
+        }
+
+        fprintf(pf, "]\n");
+    }
+    return TODO_OK;
+}
+
+/// Accion para imprimir en consola (dibujarTablero)
+
+void accionImprimirConsola(const void* elem, const void* extra)
+{
+    tElemento* e = (tElemento*)elem;
+    printf("%c ", e->tipo);
+}
+
+/// Accion para escribir en archivo (guardarTableroArchivo)
+void accionEscribirArchivo(const void* elem, const void* pf)
+{
+    tElemento* e = (tElemento*)elem;
+    if (pf != NULL)
+    {
+        fprintf((FILE*)pf, "%c", e->tipo);
+    }
+}
+
+void dibujarTablero(tLista* tablero, int cantPosiciones, int columnas)
+{
+    tCasilla* casilla;
+    tCasilla casillaPos;
     int filas = (cantPosiciones + columnas - 1) / columnas;
 
     for(int f = 0; f < filas; f++)
     {
-        // línea superior
+
         for(int c = 0; c < columnas; c++)
-            printf("+----");
+            printf("+--------");
         printf("+\n");
 
-        //if(f%2==0)
-            for(int c = 0; c < columnas; c++)
+
+        for(int c = 0; c < columnas; c++)
+        {
+            int posLogica;
+
+
+            if (f % 2 == 0)
+                posLogica = (f * columnas) + c + 1;
+            else
+                posLogica = (f * columnas) + (columnas - 1 - c) + 1;
+
+
+            printf("| ");
+
+            if (posLogica <= cantPosiciones)
             {
-                printf("| ");
+                casillaPos.posicion = posLogica;
+                casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
 
-                if(TODO_OK==sacarDeCola(tablero,&casilla,sizeof(tCasilla)))
-                {
-                    printf("%c  ", casilla.caractElem);
-                    ponerEnCola(tablero,&casilla,sizeof(tCasilla));
-                }
-
+                if(listaVacia(&casilla->elementos) == LISTA_VACIA)
+                    printf(".      ");
                 else
-                    printf("   ");
-
+                {
+                    recorrerDeIzqADer(&casilla->elementos, (Accion)accionImprimirConsola, NULL);
+                    unsigned cant = listaCantidadElementos(&casilla->elementos);
+                    int anchoUsado = cant * 2;
+                    for(int k = anchoUsado; k < 7; k++) printf(" ");
+                }
             }
-        /*else
-            for(int c = columnas; 0 < c; c--)
-            {
-                printf("| ");
+            else
+                printf("        ");
 
-                if(TODO_OK==sacarDeCola(tablero,&casilla,sizeof(tCasilla)))
-                {
-                    printf("%c  ", casilla.caractElem);
-                    ponerEnCola(tablero,&casilla,sizeof(tCasilla));
-                }
-
-                else
-                    printf("   ");
-            }*/
-
+        }
         printf("|\n");
     }
 
     for(int c = 0; c < columnas; c++)
-        printf("+----");
+        printf("+--------");
     printf("+\n");
 }
+int agregarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem)
+{
+    tCasilla* casilla=buscarElementoLista(tablero,&casillaPos,compararPosicion); ///busco en la lista del tablero en que casilla vpy a insertar
+
+    if(listaInsertarAlFinal(&casilla->elementos,&elem,sizeof(tElemento))==TODO_OK) ///en la lista de casilla inserto
+        return TODO_OK;
+
+
+    return ERROR_MEM;  ///VACIAR EL TABLERO
+}
+
+int crearCasilla(tCasilla* casilla)
+{
+    crearLista(&casilla->elementos);
+
+    return TODO_OK;
+}
+
+int compararPosicion(const void* a,const void* b)
+{
+    tCasilla* auxA=(tCasilla*)a;
+    tCasilla* auxB=(tCasilla*)b;
+
+
+    return auxA->posicion-auxB->posicion;
+
+}
+
+void vaciarTablero(tLista* tablero)
+{
+    tCasilla casilla;
+
+    while(listaVacia(tablero) == LISTA_NO_VACIA)
+    {
+        if(listaEliminarPrimerElemento(tablero, &casilla, sizeof(tCasilla)) == TODO_OK)
+        {
+            vaciarLista(&casilla.elementos);
+        }
+    }
+}
+
+
 
 /// ---===================================---
 /// |  FUNCIONES DE REGISTRO DE MOVIMIENTO  |

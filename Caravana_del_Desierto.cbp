@@ -47,6 +47,13 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Juego.h" />
+		<Unit filename="Lista.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Lista.h" />
+		<Unit filename="Menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Menu.h" />
 		<Unit filename="Turno.c">
 			<Option compilerVar="CC" />
@@ -59,9 +66,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.h" />
-		<Unit filename="menu.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

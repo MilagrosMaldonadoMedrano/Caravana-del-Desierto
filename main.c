@@ -5,22 +5,36 @@
 #include "Menu.h"
 #include "Turno.h"
 
-int main() {
+int main()
+{
     tConfiguracion config;
     int opcion;
 
     srand(time(NULL));
 
-    if (cargarConfiguracion(NOM_ARCH_CONFIG, &config) != TODO_OK) {
+    tLista tablero;
+
+    crearLista(&tablero);
+
+
+
+
+    if (cargarConfiguracion(NOM_ARCH_CONFIG, &config) != TODO_OK)
+    {
         perror("\nError al cargar las configuraciones:");
         printf("\nFinalizando programa...\n");
         return ERROR_ARCH;
     }
 
+
+    crearTablero(NOM_ARCH_CONFIG,&tablero,&config);
+    dibujarTablero(&tablero,config.cantPosiciones,5);
+
     do {
         opcion = mostrarMenu();
 
-        switch (opcion) {
+        switch (opcion)
+        {
             case OPCION_JUGAR:
                 iniciarPartida(&config);
                 break;
@@ -36,6 +50,7 @@ int main() {
 
     } while (opcion != OPCION_SALIR);
 
+    vaciarTablero(&tablero);
     return 0;
 }
 

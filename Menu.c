@@ -36,14 +36,14 @@ void mostrarRanking() {
 // Inicializa la partida con los valores de config
 void iniciarPartida(tConfiguracion* config) {
     tPartida partida;
-    tCola tablero;
+    tLista tablero;
     tCola historial;
-    char nombre[MAX_NOMBRE];
+    char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
 
     pedirNombre(nombre);
     printf("\nBienvenido, %s!\n", nombre);
 
-    crearCola(&tablero);
+    crearLista(&tablero);
     crearCola(&historial);
 
     partida.cantPuntos = 0;
@@ -51,9 +51,10 @@ void iniciarPartida(tConfiguracion* config) {
     partida.oasis = 0;
     partida.tormenta = 0;
 
+    ///ESTA VALIDACION ME PARECE QUE ESTA DE MAS
     if (crearTablero(NOM_ARCH_TABLERO, &tablero, config) != TODO_OK) {
         printf("Error al crear el tablero. Volviendo al menu...\n");
-        vaciarCola(&tablero);
+        vaciarLista(&tablero);
         vaciarCola(&historial);
         return;
     }
@@ -68,6 +69,6 @@ void iniciarPartida(tConfiguracion* config) {
 
     guardarMostrarHistorial(&historial, NOM_ARCH_MOVIMIENTOS);
 
-    vaciarCola(&tablero);
+    vaciarLista(&tablero);
     vaciarCola(&historial);
 }
