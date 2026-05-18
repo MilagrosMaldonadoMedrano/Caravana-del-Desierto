@@ -15,6 +15,7 @@
 char pedirDireccion();
 void aplicarEfectoCasilla(char casilla, tPartida* partida);
 int verificarFinPartida(char casilla, const tPartida* partida);
-void ejecutarTurno(tPartida* partida, tCola* historial);
+void ejecutarTurno(tLista* tablero, tPartida* partida, tCola* historial);
+void ejecutarMovimientoBandido(tLista* tablero, tLista* bandidos, unsigned cantPosiciones);
 
 #endif // TURNO_H_INCLUDED

@@ -37,6 +37,7 @@ void mostrarRanking() {
 void iniciarPartida(tConfiguracion* config) {
     tPartida partida;
     tLista tablero;
+    tLista bandidos;
     tCola historial;
     char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
 
@@ -44,6 +45,7 @@ void iniciarPartida(tConfiguracion* config) {
     printf("\nBienvenido, %s!\n", nombre);
 
     crearLista(&tablero);
+    crearLista(&bandidos);
     crearCola(&historial);
 
     partida.cantPuntos = 0;
@@ -70,5 +72,6 @@ void iniciarPartida(tConfiguracion* config) {
     guardarMostrarHistorial(&historial, NOM_ARCH_MOVIMIENTOS);
 
     vaciarLista(&tablero);
+    vaciarLista(&bandidos);
     vaciarCola(&historial);
 }

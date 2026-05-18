@@ -88,6 +88,12 @@ typedef struct
     char direccion;
 }tMovimiento;
 
+/// estructura para los bandidos (guarda las posiciones)
+typedef struct
+{
+    unsigned posBandido;
+}tBandido;
+
 int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config);
 
 /// Funciones de registro de movimientos
@@ -103,6 +109,8 @@ int crearCasilla(tCasilla* casilla);
 int agregarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem);
 
 int compararPosicion(const void* a,const void* b);
+int compararElem(const void* a, const void* b);
+int compararPosYElem(const void* a, const void* b);
 
 int guardarTableroArchivo(tLista* tablero, FILE* pf,tConfiguracion* config,int cantDigitos);
 

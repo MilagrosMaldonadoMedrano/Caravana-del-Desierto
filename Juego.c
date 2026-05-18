@@ -129,7 +129,7 @@ int guardarTableroArchivo(tLista* tablero, FILE* pf, tConfiguracion* config, int
         else
         {
            // Pasamos 'pf' como tercer argumento para que llegue a la acción
-           recorrerDeIzqADer(&casilla->elementos, (Accion)accionEscribirArchivo, pf);
+           recorrerDeIzqADer(&casilla->elementos, (tAccion)accionEscribirArchivo, pf);
         }
 
         fprintf(pf, "]\n");
@@ -191,7 +191,7 @@ void dibujarTablero(tLista* tablero, int cantPosiciones, int columnas)
                     printf(".      ");
                 else
                 {
-                    recorrerDeIzqADer(&casilla->elementos, (Accion)accionImprimirConsola, NULL);
+                    recorrerDeIzqADer(&casilla->elementos, (tAccion)accionImprimirConsola, NULL);
                     unsigned cant = listaCantidadElementos(&casilla->elementos);
                     int anchoUsado = cant * 2;
                     for(int k = anchoUsado; k < 7; k++) printf(" ");
@@ -234,6 +234,28 @@ int compararPosicion(const void* a,const void* b)
 
     return auxA->posicion-auxB->posicion;
 
+}
+
+int compararElem(const void* a, const void* b)
+{
+    tCasilla* auxA = (tCasilla*)a;
+    tCasilla* auxB = (tCasilla*)b;
+
+    tElemento* elemA = (tElemento*)auxA->elementos->info;
+    tElemento* elemB = (tElemento*)auxB->elementos->info;
+
+    return elemA->tipo - elemB->tipo;
+}
+
+int compararPosYElem(const void* a, const void* b)
+{
+    tCasilla* auxA = (tCasilla*)a;
+    tCasilla* auxB = (tCasilla*)b;
+
+    tElemento* elemA = (tElemento*)auxA->elementos->info;
+    tElemento* elemB = (tElemento*)auxB->elementos->info;
+
+    return (auxA->posicion - auxB->posicion) + (elemA->tipo - elemB->tipo);
 }
 
 void vaciarTablero(tLista* tablero)

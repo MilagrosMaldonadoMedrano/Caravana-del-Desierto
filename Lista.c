@@ -128,7 +128,7 @@ int listaLlena(tLista* lista,void* elem,unsigned cantBytes)
 }
 
 
-/*int recorrerDeIzqADer(tLista* pl,Accion accion)
+/*int recorrerDeIzqADer(tLista* pl,tAccion accion)
 {
     tNodoD* actual=(*pl)->sig;//actual esta en el primero
 
@@ -151,7 +151,7 @@ int listaLlena(tLista* lista,void* elem,unsigned cantBytes)
 
 
 
-int recorrerDeIzqADer(tLista* pl, Accion accion, const void* extra)
+int recorrerDeIzqADer(tLista* pl, tAccion accion, const void* extra)
 {
     if(!*pl) return LISTA_VACIA;
 
@@ -168,7 +168,7 @@ int recorrerDeIzqADer(tLista* pl, Accion accion, const void* extra)
 }
 
 
-int recorrerDeDerAIzq(tLista* pl,Accion accion)
+int recorrerDeDerAIzq(tLista* pl,tAccion accion)
 {
     tNodoD* actual=*pl;
 
@@ -236,7 +236,7 @@ int listaInsertarAlFinal(tLista* pl, const void* dato, unsigned tamElem)
 
 
 
-int listaInsertarOrdenado(tLista* pl,const void* dato,unsigned tamElem,Cmp tCmp,Accion tAccion)
+int listaInsertarOrdenado(tLista* pl,const void* dato,unsigned tamElem,tCmp tCmp,tAccion tAccion)
 {
     tNodoD* actual;
     tNodoD* anterior;
@@ -303,8 +303,9 @@ int listaInsertarOrdenado(tLista* pl,const void* dato,unsigned tamElem,Cmp tCmp,
     return TODO_OK;
 }
 
+
 ///si la lista esta desordenada admite repetidos
-int eliminarListaDesordenadaPorClave(tLista* pl, void* dato, unsigned tamElem,Cmp cmp,Accion accion)
+int eliminarListaDesordenadaPorClave(tLista* pl, void* dato, unsigned tamElem,tCmp cmp,tAccion accion)
 {
 
     if(!*pl)
@@ -365,10 +366,49 @@ int eliminarListaDesordenadaPorClave(tLista* pl, void* dato, unsigned tamElem,Cm
     return TODO_OK;
 }
 
+int eliminarListaDesordenadaPorClaveSinDup(tLista* pl, void* dato, unsigned tamElem, tCmp cmp)
+{
+    tNodoD* actual = *pl;
+    tNodoD* auxAnt;
+    tNodoD* auxSig;
+
+    if (!actual)
+        return LISTA_VACIA;
+
+    do
+    {
+        if (cmp(dato, actual->info) == 0)
+        {
+            auxAnt = actual->ant;
+            auxSig = actual->sig;
+
+            if (auxAnt == auxSig)
+                auxAnt = NULL;
+            else
+            {
+                auxAnt->sig = auxSig;
+                auxSig->ant = auxAnt;
+            }
+
+            memcpy(dato, actual->info, minimo(tamElem, actual->tamElem));
+            free(actual->info);
+            free(actual);
+
+            *pl = auxAnt;
+
+            return ENCONTRADO;
+        }
+        else
+            actual = actual->sig;
+
+    } while (*pl && actual != *pl);
+
+    return NO_ENCONTRADO;
+}
 
 
 
-void* buscarElementoLista(tLista* pl, void* dato,Cmp cmp)
+void* buscarElementoLista(tLista* pl, void* dato,tCmp cmp)
 {
     if(!*pl)
         return NULL;
@@ -393,6 +433,49 @@ void* buscarElementoLista(tLista* pl, void* dato,Cmp cmp)
 
 }
 
+int buscarElementoEnLista(tLista* pl, void* dato, unsigned tamElem, tCmp cmp)
+{
+    tNodoD* actual = *pl;
+
+    if (!actual)
+        return LISTA_VACIA;
+
+    do
+    {
+        if (cmp(dato,actual->info) == 0)
+        {
+            memcpy(dato, actual->info, minimo(tamElem, actual->tamElem));
+            return ENCONTRADO;
+        }
+        actual = actual->sig;
+    } while (actual != *pl);
+
+    return NO_ENCONTRADO;
+}
+
+int recuperarElementoXPosLista(tLista* pl, void* dato, unsigned tamElem, unsigned posDato)
+{
+    tNodoD* actual;
+    unsigned i = 0;
+
+    if (!*pl)
+        return LISTA_VACIA;
+
+    actual = (*pl)->sig;
+
+    while (i < posDato && actual != *pl)
+    {
+        actual = actual->sig;
+        i++;
+    }
+
+    if (actual == *pl)
+        return NO_ENCONTRADO;
+
+    memcpy(dato, actual->info, minimo(tamElem,actual->tamElem));
+
+    return ENCONTRADO;
+}
 
 
 unsigned listaCantidadElementos(const tLista* pl)
@@ -449,7 +532,7 @@ int listaEliminarPrimerElemento(tLista* pl, void* dato, unsigned tamElem)
 }
 
 ///si la lista esta ordenada no admite repetidos
-int eliminarListaOrdenadaPorClave(tLista* pl, void* dato, unsigned tamElem,Cmp cmp)
+int eliminarListaOrdenadaPorClave(tLista* pl, void* dato, unsigned tamElem,tCmp cmp)
 {
     if(!*pl)
         return LISTA_VACIA;
@@ -498,7 +581,7 @@ int eliminarListaOrdenadaPorClave(tLista* pl, void* dato, unsigned tamElem,Cmp c
     return TODO_OK;
 }
 
-void ordenarLista(tLista *pl, Cmp cmp)
+void ordenarLista(tLista *pl, tCmp cmp)
 {
     if(!*pl || (*pl)->sig == *pl) ///si la lista esta vacia o hay un solo nodo salgo
         return;

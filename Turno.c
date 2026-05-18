@@ -75,7 +75,7 @@ int verificarFinPartida(char casilla, const tPartida* partida)
 }
 
 // Ejecuta un turno completo del jugador
-void ejecutarTurno(tPartida* partida, tCola* historial) {
+void ejecutarTurno(tLista* tablero, tPartida* partida, tCola* historial) {
     int dado;
     char direccion;
     char casillaActual;
@@ -106,4 +106,88 @@ void ejecutarTurno(tPartida* partida, tCola* historial) {
     printf("Vidas: %u | Puntos: %u\n", partida->cantVidas, partida->cantPuntos);
 
     aplicarEfectoCasilla(casillaActual, partida);
+
+    system("pause");
+    system("cls");
+}
+
+/// ejecuta el turno de los bandidos (lógica)
+void ejecutarMovimientoBandido(tLista* tablero, tLista* bandidos, unsigned cantPosiciones)
+{
+    //tNodoD* actual;
+    tBandido bandido;
+    tCasilla* casilla;
+    tElemento elem;
+    int dado;
+    unsigned pos = 1;
+    unsigned posBandidoAMover;
+    unsigned menorDistancia;
+    unsigned nuevaPosBandido;
+    char direccion;
+    char pri = 1;
+
+    if (!bandidos)
+        return;
+
+    crearCasilla(casilla);
+    casillaJugador->posicion = 1; // para no meterle basura, pero esto no sirve de nada
+    elem.tipo = ASCII_JUGADOR;
+    insertarAlComienzo(&casilla->elementos, &elem, sizeof(elem));
+    /// creo un tCasilla y le guardo el ASCII_JUGADOR, para recuperar la pos del jugador
+    casillaJugador = buscarElementoLista(tablero, *casilla, compararElem); /// recupera la pos del jugador
+
+    dado = tirarDado();
+
+    //actual = (*bandidos)->sig;
+
+    //while (actual != *bandidos && recuperarElementoXPosLista(bandidos, &bandido, sizeof(bandido), pos) == TODO_OK)
+    while (recuperarElementoXPosLista(bandidos, &bandido, sizeof(bandido), pos) == TODO_OK)
+    {
+        unsigned posNuevaAvanzando = (bandido.posBandido + dado) % cantPosiciones;
+        unsigned posNuevaRetrocediendo = bandido.posBandido + cantPosiciones - dado) % cantPosiciones;
+
+        unsigned distanciaAvanzando = (cantPosiciones + posNuevaAvanzando - casillaJugador->posicion) % cantPosiciones;
+        unsigned distanciaRetrocediendo = (cantPosiciones + posNuevaRetrocediendo - casillaJugador->posicion) % cantPosiciones;
+
+        if (pri || distanciaAvanzando < menorDistancia || distanciaRetrocediendo < menorDistancia)
+        {
+            if (distanciaAvanzando < distanciaRetrocediendo)
+            {
+                direccion = FORWARD;
+                menorDistancia = distanciaAvanzando;
+                nuevaPosBandido = posNuevaAvanzando;
+            }
+            else
+            {
+                direccion = BACKWARD;
+                menorDistancia = distanciaRetrocediendo;
+                nuevaPosBandido = posNuevaRetrocediendo;
+            }
+
+            posBandidoAMover = bandido.posBandido;
+            pri = 0;
+        }
+
+    }
+
+    /// falta verificar si es conveniente realizar este movimiento, u otro
+
+    elem.tipo = ASCII_BANDIDO;
+    casilla->posicion = posBandidoAMover;
+    /// remover el bandido de la casilla anterior: Hace falta un "eliminarElementoEnCasilla"
+
+    casilla->posicion = nuevaPosBandido;
+    agregarElementoEnCasilla(tablero, *casillaBandido, elem); /// añado el bandido a la casilla nueva
+
+    /// Si no captura al jugador, analizar estos casos y su orden de prioridad:
+
+    /// 1. Ocupar una casilla con beneficios para el jugador (vida extra, oasis, punto)
+    /// 2. Avanzar hacia el jugador en el caso de no quedar demasiado lejos
+    /// 3. Si hay mas de un bandido en la misma casilla, separarse
+
+    printf("\nLa IA tiro el dado: %d, y desplazo el bandido de la casilla %u", dado, posBandidoAMover); /// modificar luego
+    if (direccion == FORWARD)
+        printf(" hacia adelante\n");
+    else
+        printf(" hacia atras\n");
 }

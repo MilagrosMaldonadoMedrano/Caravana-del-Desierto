@@ -33,41 +33,43 @@
 1777236918 c:\users\mirag\desktop\caravana-del-desierto\cola.h
 	"main.h"
 
-1777260461 source:c:\users\mirag\desktop\caravana-del-desierto\juego.c
+1779076755 source:c:\users\mirag\desktop\caravana-del-desierto\juego.c
 	"Juego.h"
 	"Archivo.h"
 
-1777260426 c:\users\mirag\desktop\caravana-del-desierto\juego.h
+1779076500 c:\users\mirag\desktop\caravana-del-desierto\juego.h
 	"main.h"
 	"Cola.h"
 
-1777259540 source:c:\users\mirag\desktop\caravana-del-desierto\archivo.c
+1777260495 source:c:\users\mirag\desktop\caravana-del-desierto\archivo.c
 	"Archivo.h"
-	"Herramientas.h"
 
 1777260488 c:\users\mirag\desktop\caravana-del-desierto\archivo.h
 	"main.h"
 	"Juego.h"
 	"Cola.h"
 
-1777259723 source:c:\users\mirag\desktop\caravana-del-desierto\main.c
+1779064312 source:c:\users\mirag\desktop\caravana-del-desierto\main.c
 	"main.h"
 	"Cola.h"
 	"Archivo.h"
 	"Juego.h"
+	"Menu.h"
+	"Turno.h"
 
-1777259695 c:\users\mirag\desktop\caravana-del-desierto\main.h
+1779064312 c:\users\mirag\desktop\caravana-del-desierto\main.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
 	<stddef.h>
 	"Herramientas.h"
+	"Lista.h"
 
-1777256830 source:c:\users\mirag\desktop\caravana-del-desierto\herramientas.c
+1777433963 source:c:\users\mirag\desktop\caravana-del-desierto\herramientas.c
 	"Herramientas.h"
 
-1777259790 c:\users\mirag\desktop\caravana-del-desierto\herramientas.h
+1779073161 c:\users\mirag\desktop\caravana-del-desierto\herramientas.h
 	"main.h"
 
 1777324238 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\archivo.c
@@ -206,4 +208,25 @@
 	<stdlib.h>
 
 1779048607 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\lista.h
+
+1779078232 c:\users\mirag\desktop\caravana-del-desierto\lista.h
+
+1779076696 source:c:\users\mirag\desktop\caravana-del-desierto\lista.c
+	"Lista.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+
+1778973105 c:\users\mirag\desktop\caravana-del-desierto\menu.h
+	"main.h"
+	"Juego.h"
+	"Archivo.h"
+
+1779069734 c:\users\mirag\desktop\caravana-del-desierto\turno.h
+	"main.h"
+	"Juego.h"
+	"Cola.h"
+
+1779067796 source:c:\users\mirag\desktop\caravana-del-desierto\menu.c
+	"Menu.h"
 
