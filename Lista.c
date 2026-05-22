@@ -128,29 +128,6 @@ int listaLlena(tLista* lista,void* elem,unsigned cantBytes)
 }
 
 
-/*int recorrerDeIzqADer(tLista* pl,tAccion accion)
-{
-    tNodoD* actual=(*pl)->sig;//actual esta en el primero
-
-    if(!actual)
-        return LISTA_VACIA;
-
-
-
-
-    while(actual!=*pl) //hasta que actual no sea el ultimo
-    {
-        accion(actual->info,NULL);
-        actual= actual->sig;
-    }
-
-    accion(actual->info,NULL);
-
-    return TODO_OK;
-}*/
-
-
-
 int recorrerDeIzqADer(tLista* pl, tAccion accion, const void* extra)
 {
     if(!*pl) return LISTA_VACIA;
@@ -304,6 +281,10 @@ int listaInsertarOrdenado(tLista* pl,const void* dato,unsigned tamElem,tCmp tCmp
 }
 
 
+
+
+
+
 ///si la lista esta desordenada admite repetidos
 int eliminarListaDesordenadaPorClave(tLista* pl, void* dato, unsigned tamElem,tCmp cmp,tAccion accion)
 {
@@ -365,6 +346,10 @@ int eliminarListaDesordenadaPorClave(tLista* pl, void* dato, unsigned tamElem,tC
 
     return TODO_OK;
 }
+
+
+
+
 
 int eliminarListaDesordenadaPorClaveSinDup(tLista* pl, void* dato, unsigned tamElem, tCmp cmp)
 {

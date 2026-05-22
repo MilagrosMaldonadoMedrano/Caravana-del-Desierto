@@ -230,3 +230,71 @@
 1779067796 source:c:\users\mirag\desktop\caravana-del-desierto\menu.c
 	"Menu.h"
 
+1779398232 source:f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\archivo.c
+	"Archivo.h"
+
+1779398232 f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\archivo.h
+	"main.h"
+	"Juego.h"
+	"Cola.h"
+
+1779463491 f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\main.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stddef.h>
+	<windows.h>
+	"Herramientas.h"
+	"Lista.h"
+
+1779398232 f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\herramientas.h
+	"main.h"
+
+1779398232 f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\lista.h
+
+1779460989 f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\juego.h
+	"main.h"
+	"Cola.h"
+
+1779398232 f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\cola.h
+	"main.h"
+
+1779398232 source:f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\cola.c
+	"Cola.h"
+
+1779398232 source:f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\herramientas.c
+	"Herramientas.h"
+
+1779476564 source:f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\lista.c
+	"Lista.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+
+1779471747 source:f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\main.c
+	"main.h"
+	"Cola.h"
+	"Archivo.h"
+	"Juego.h"
+	"Menu.h"
+	"Turno.h"
+
+1779475549 f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\menu.h
+	"main.h"
+	"Juego.h"
+	"Archivo.h"
+	"Turno.h"
+
+1779414646 f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\turno.h
+	"main.h"
+	"Juego.h"
+	"Cola.h"
+
+1779476924 source:f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\menu.c
+	"Menu.h"
+
+1779477199 source:f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\juego.c
+	"Juego.h"
+	"Archivo.h"
+

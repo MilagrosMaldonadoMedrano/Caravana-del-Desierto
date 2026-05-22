@@ -10,8 +10,6 @@
 
 #define ERROR_SIN_MEM -3
 
-#define AUMENTO_PROB_POS_VACIA 1.5
-
 
 #define ASCII_JUGADOR   'J'
 #define ASCII_INICIO    'I'
@@ -61,16 +59,24 @@ typedef struct
 
 typedef struct
 {
+    int cantInicio;
+    int cantJugador;
+    int cantBandido;
+    int cantPremio;
+    int cantVida;
+    int cantOasis;
+    int cantTormenta;
+    int cantSalida;
+} tContadorElementos;
+
+/// estructura para cada casilla del tablero
+typedef struct
+{
     tLista elementos;
     unsigned posicion;
 }tCasilla;
 
 
-/// estructura para cada casilla del tablero
-/*typedef struct
-{
-    char caractElem;
-}tCasilla;*/
 
 /// estructura para la partida
 typedef struct
@@ -79,6 +85,7 @@ typedef struct
     unsigned cantVidas;
     char oasis;
     char tormenta;
+    unsigned posJugador;
 }tPartida;
 
 /// estructura para encolar los movimientos
@@ -94,35 +101,37 @@ typedef struct
     unsigned posBandido;
 }tBandido;
 
+
+///CREACION DEL TABLERO
 int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config);
+int crearCasilla(tCasilla* casilla);
+int guardarTableroArchivo(tLista* tablero, FILE* pf,tConfiguracion* config,int cantDigitos);
+
+
 
 /// Funciones de registro de movimientos
 void registrarMovimiento(tCola* historial, char direccion, unsigned cantMovim);
 void mostrarHistorial(tCola* historial);
 int guardarMostrarHistorial(tCola* historial, const char* nomArch);
 
-void dibujarTablero(tLista* tablero,int cantPosiciones,int columnas);
 
 
-int crearCasilla(tCasilla* casilla);
-
+///FUNCIONES DE USO COMUN
 int agregarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem);
-
-int compararPosicion(const void* a,const void* b);
-int compararElem(const void* a, const void* b);
-int compararPosYElem(const void* a, const void* b);
-
-int guardarTableroArchivo(tLista* tablero, FILE* pf,tConfiguracion* config,int cantDigitos);
-
-
-void accionEscribirArchivo(const void* elem, const void* pf);
-
-void accionImprimirConsola(const void* elem, const void* extra);
-
+void dibujarTablero(tLista* tablero,int cantPosiciones,int columnas);
 void vaciarTablero(tLista* tablero);
-
-
-/// Dado
+int insertarElementoSeguro(tLista* tablero,tCasilla casilla,tElemento elem,FILE* pf);
+int eliminarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem);
 int tirarDado(void);
+
+
+
+///FUNCIONES AUXILIARES DE CMP Y ACCION
+int compararPosicion(const void* a,const void* b);
+int compararElementos(const void* a, const void* b);
+void accionEscribirArchivo(const void* elem, const void* pf);
+void accionImprimirConsola(const void* elem, const void* extra);
+void accionContarElementos(const void* elem, const void* extra);
+
 
 #endif // JUEGO_H_INCLUDED

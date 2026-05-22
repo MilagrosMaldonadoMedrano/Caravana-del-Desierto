@@ -1,23 +1,5 @@
 #include "Turno.h"
 
-// Muestra el menu de direccion y devuelve FORWARD o BACKWARD
-char pedirDireccion() {
-    int opcion;
-
-    do {
-        printf("\n  %d. Avanzar\n", OPCION_AVANZAR);
-        printf("  %d. Retroceder\n", OPCION_RETROCEDER);
-        printf("Opcion: ");
-        scanf(" %d", &opcion);
-
-        if (opcion != OPCION_AVANZAR && opcion != OPCION_RETROCEDER)
-            printf("Opcion invalida. Intenta nuevamente.\n");
-
-    } while (opcion != OPCION_AVANZAR && opcion != OPCION_RETROCEDER);
-
-    return (opcion == OPCION_AVANZAR) ? FORWARD : BACKWARD;
-}
-
 // Aplica el efecto de la casilla sobre la partida
 void aplicarEfectoCasilla(char casilla, tPartida* partida) {
     switch (casilla) {
@@ -191,3 +173,8 @@ void ejecutarMovimientoBandido(tLista* tablero, tLista* bandidos, unsigned cantP
     else
         printf(" hacia atras\n");
 }
+
+
+
+
+

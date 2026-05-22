@@ -1,25 +1,53 @@
 #include "Menu.h"
 
-void pedirNombre(char* nombre) {
+
+void pedirNombre(char* nombre)
+{
     printf("Ingrese su nombre: ");
+
     fgets(nombre, MAX_NOMBRE, stdin);
 
-    nombre[strcspn(nombre, "\n")] = '\0'; // saca el \n obtenido del fgets
-}
+    if(strchr(nombre, '\n'))
+        nombre[strcspn(nombre, "\n")] = '\0';
+    else
+        limpiarBuffer();
 
+}
 // Muestra el menu y devuelve la opcion elegida
-int mostrarMenu() {
+int mostrarMenu()
+{
     int opcion;
 
-    printf("\n==============================\n");
-    printf("     CARAVANA DEL DESIERTO    \n");
-    printf("==============================\n");
-    printf("  %d. Jugar nueva partida     \n", OPCION_JUGAR);
-    printf("  %d. Ver ranking             \n", OPCION_RANKING);
-    printf("  %d. Salir                   \n", OPCION_SALIR);
-    printf("==============================\n");
-    printf("Opcion: ");
-    scanf(" %d", &opcion);
+    do {
+        printf("\n==============================\n");
+        printf("     CARAVANA DEL DESIERTO    \n");
+        printf("==============================\n");
+        printf("  %d. Jugar nueva partida     \n", OPCION_JUGAR);
+        printf("  %d. Ver ranking             \n", OPCION_RANKING);
+        printf("  %d. Salir                   \n", OPCION_SALIR);
+        printf("==============================\n");
+        printf("Opcion: ");
+
+        if(scanf("%d", &opcion) != 1)
+        {
+            printf("Entrada invalida.\n");
+            limpiarBuffer();
+            opcion = -1;
+            continue;
+        }
+
+        limpiarBuffer();
+
+        if(opcion != OPCION_JUGAR &&
+           opcion != OPCION_RANKING &&
+           opcion != OPCION_SALIR)
+        {
+            printf("Opcion invalida.\n");
+        }
+
+    } while(opcion != OPCION_JUGAR &&
+            opcion != OPCION_RANKING &&
+            opcion != OPCION_SALIR);
 
     return opcion;
 }
@@ -33,45 +61,271 @@ void mostrarRanking() {
     printf("==============================\n");
 }
 
-// Inicializa la partida con los valores de config
-void iniciarPartida(tConfiguracion* config) {
+
+void iniciarPartida(tConfiguracion* config)
+{
     tPartida partida;
     tLista tablero;
-    tLista bandidos;
+    //tLista bandidos;
     tCola historial;
     char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
-
-    pedirNombre(nombre);
-    printf("\nBienvenido, %s!\n", nombre);
-
+    int estado=JUEGO_CONTINUA;
     crearLista(&tablero);
-    crearLista(&bandidos);
+    //crearLista(&bandidos);
     crearCola(&historial);
 
+    partida.posJugador=1;
     partida.cantPuntos = 0;
     partida.cantVidas = config->vidasInicio;
     partida.oasis = 0;
     partida.tormenta = 0;
 
     ///ESTA VALIDACION ME PARECE QUE ESTA DE MAS
-    if (crearTablero(NOM_ARCH_TABLERO, &tablero, config) != TODO_OK) {
+    if (crearTablero(NOM_ARCH_TABLERO, &tablero, config) != TODO_OK)
+    {
         printf("Error al crear el tablero. Volviendo al menu...\n");
         vaciarLista(&tablero);
         vaciarCola(&historial);
         return;
     }
 
-    printf("\nVidas: %u | Puntos: %u\n", partida.cantVidas, partida.cantPuntos);
+    pedirNombre(nombre);
+
+
+
+    system("cls");
+    printf("\n=========================================\n");
+    printf("  Bienvenido a la caravana, %s!\n", nombre);
+    printf("=========================================\n");
+    printf("Vidas iniciales: %u | Puntos: %u\n\n", partida.cantVidas, partida.cantPuntos);
+    system("pause");
+    system("cls");
+
 
 
     /// vvv LOGICA DEL JUEGO vvv
+    while(partida.cantVidas>0 && estado==JUEGO_CONTINUA) //agregar condicion de que slae porque gana
+    {
+        dibujarTablero(&tablero,config->cantPosiciones,5);//definir columnas!
+        estado=ejecutarTurnoJugador(&tablero,&partida,&historial,config);
+
+
+    }
+
 
     /// ^^^ LOGICA DEL JUEGO ^^^
 
 
+    if (JUGADOR_GANO==estado)
+        printf("FELICITACIONES %s! Llegaste a la salida y ganaste.\n", nombre);
+    else
+        printf("GAME OVER. Te quedaste sin vidas :(.\n");
+
     guardarMostrarHistorial(&historial, NOM_ARCH_MOVIMIENTOS);
 
-    vaciarLista(&tablero);
-    vaciarLista(&bandidos);
+
+    vaciarTablero(&tablero);
+    //vaciarLista(&bandidos);
     vaciarCola(&historial);
 }
+
+
+///Para interpretar lo que sucede cuando el jugador cae en una nueva casilla
+int manejarSituacionCasilla(tPartida* partida,tLista* tablero, tCasilla casillaPosicion)
+{
+    tCasilla* casilla=buscarElementoLista(tablero,&casillaPosicion,compararPosicion);
+    tContadorElementos cont = {0};
+    tElemento elem;
+
+
+    recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
+
+    if (cont.cantVida > 0)
+    {
+        partida->cantVidas += cont.cantVida;
+        printf("\u00A1Encontraste una vida extra! Ahora tenes %u vidas.\n", partida->cantVidas);  ///mejorar mensaje
+        elem.tipo=ASCII_VIDA_EXTRA;
+        for(int i=0;i<cont.cantVida;i++)
+            eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+    }
+
+    if (cont.cantBandido > 0 && partida->oasis == 0)
+    {
+        if(cont.cantBandido>=partida->cantVidas)
+            return JUGADOR_PERDIO;
+
+        partida->cantVidas -= cont.cantBandido; ///VALIDO SI ES NEGATIVO O CERO EN EJECUTARtURNOjuagador
+        printf("\u00A1Te han atacado %d bandidos!\n",cont.cantBandido);
+    }
+
+    if (cont.cantBandido > 0 && partida->oasis != 0 ) //se cubre por un oasis
+        printf("¡Te salvas por el oasis! Los bandidos no pueden atacarte.\n");
+
+    if(cont.cantTormenta>0 && partida->oasis == 0)
+    {
+        if(cont.cantTormenta>=partida->cantVidas)
+            return JUGADOR_PERDIO;
+        partida->cantVidas -=cont.cantTormenta;
+        printf("¡Has pasado por una tormenta, pierdes %d vidas!\n",cont.cantTormenta);
+
+
+    }
+
+    if(cont.cantTormenta>0 && partida->oasis == 1)
+        printf("¡Te salvas por el oasis! Las tormentas no pueden dañarte.\n");
+
+    if(cont.cantTormenta)
+    {
+        elem.tipo=ASCII_TORMENTA;
+        for(int i=0;i<cont.cantTormenta;i++)
+            eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+    }
+
+    if(cont.cantBandido)
+    {
+        elem.tipo=ASCII_BANDIDO;
+        for(int i=0;i<cont.cantBandido;i++)
+            eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+    }
+
+    if((cont.cantTormenta>0 || cont.cantBandido>0) && partida->oasis==1 )
+        partida->oasis=0;
+
+    if(cont.cantOasis>=1)
+    {
+        printf("¡Tenes proteccion en el proximo turno!\n");
+        partida->oasis=1;
+
+        elem.tipo=ASCII_OASIS;
+        for(int i=0;i<cont.cantOasis;i++)
+            eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+    }
+
+    if(cont.cantPremio>0)
+    {
+        partida->cantPuntos++;
+        printf("\u00A1Has encontrado un premio! Sumas 1 punto.\n");
+
+        elem.tipo=ASCII_PREMIO;
+        for(int i=0;i<cont.cantPremio;i++)
+            eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+    }
+
+
+    return JUEGO_CONTINUA;
+}
+
+
+
+int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tConfiguracion* config)
+{
+    int dado;
+    char direccion;
+    tElemento elem;
+    tCasilla casilla;
+    unsigned nuevaPos;
+
+    if (partida->tormenta)
+    {
+        printf("\nEstas atrapado en una tormenta. Perdes este turno.\n");
+        partida->tormenta = 0;
+        return JUEGO_CONTINUA;
+    }
+
+    if (partida->oasis)
+    {
+        printf("La proteccion del oasis expiro.\n");
+        partida->oasis = 0;
+    }
+
+    dado=tirarDado();
+    printf("El valor del dado es: %d\n",dado);
+    direccion=pedirDireccion();
+
+    nuevaPos=partida->posJugador;
+    if(FORWARD==direccion)
+    {
+        if(partida->posJugador+dado<=config->cantPosiciones)
+            nuevaPos+=dado;
+        else
+        {
+            unsigned exceso= (partida->posJugador+dado)-config->cantPosiciones;
+            nuevaPos=config->cantPosiciones-exceso;
+            printf("\u00A1Rebotaste en la salida! Te posicionas en la casilla %d\n",nuevaPos);
+        }
+    }
+    else  ///direccion backward
+    {
+        if((int)(partida->posJugador)-dado >= 1)
+            nuevaPos-=dado;
+        else ///TOPE INFERIOR, ENTIENDO QUE LA DIRECCION PASA A SER FORWARD
+        {
+            nuevaPos+=dado;
+            printf("No podes retroceder mas alla del inicio del tablero. Tu direccion es hacia adelante.\n");
+        }
+    }
+
+    elem.tipo=ASCII_JUGADOR;
+
+    casilla.posicion=partida->posJugador;
+    eliminarElementoEnCasilla(tablero,casilla,elem); //validar
+
+    registrarMovimiento(historial, direccion, dado);
+
+
+
+    casilla.posicion=nuevaPos;
+
+
+
+    if(manejarSituacionCasilla(partida,tablero,casilla)==JUGADOR_PERDIO)
+        return JUGADOR_PERDIO;
+
+    insertarElementoSeguro(tablero,casilla,elem,NULL);
+    partida->posJugador=casilla.posicion;
+
+    printf("Vidas: %u | Puntos: %u\n", partida->cantVidas, partida->cantPuntos);
+    system("pause");
+    limpiarBuffer();
+    system("cls");
+
+    if(partida->posJugador==config->cantPosiciones)
+        return JUGADOR_GANO;
+
+
+    return JUEGO_CONTINUA;
+}
+
+char pedirDireccion()
+{
+    int opcion;
+
+    do {
+        printf("\n  %d. Avanzar\n", OPCION_AVANZAR);
+        printf("  %d. Retroceder\n", OPCION_RETROCEDER);
+        printf("Opcion: ");
+
+        if (scanf(" %d", &opcion) != 1)
+        {
+            limpiarBuffer();
+            opcion = -1;     // fuerza reintentar
+            continue;
+        }
+
+        if (opcion != OPCION_AVANZAR && opcion != OPCION_RETROCEDER)
+            printf("Opcion invalida. Intenta nuevamente.\n");
+
+    } while (opcion != OPCION_AVANZAR && opcion != OPCION_RETROCEDER);
+
+    return (opcion == OPCION_AVANZAR) ? FORWARD : BACKWARD;
+}
+
+
+void limpiarBuffer()
+{
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+
+    ///get char lee y elimina de a un caracter del buffer hasta que no hay mas datos (EOF)
+}
+

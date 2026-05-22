@@ -4,9 +4,6 @@
 //esta función crea el archivo del tablero en base a la configuración, un tablero jugable
 //llama a otra función que valida si la configuración, para poder crear el tablero
 
-
-
-
 int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
 {
     FILE* pf;
@@ -23,6 +20,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
     tCasilla casilla;
     tElemento elem;
 
+
     for(int i=0;i<config->cantPosiciones;i++)
     {
         crearCasilla(&casilla);
@@ -32,6 +30,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
         if(listaInsertarAlFinal(tablero,&casilla,sizeof(tCasilla))!=TODO_OK)
         {
             vaciarLista(tablero);
+            fclose(pf);
             return  ERROR_MEM;
         }
     }
@@ -40,10 +39,13 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
 
     casilla.posicion=1;
     elem.tipo=ASCII_INICIO;
-    agregarElementoEnCasilla(tablero,casilla,elem); ///validar si se pudo
-    elem.tipo=ASCII_JUGADOR;
-    agregarElementoEnCasilla(tablero,casilla,elem);
+    if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+        return ERROR_MEM;
 
+
+    elem.tipo=ASCII_JUGADOR;
+    if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+        return ERROR_MEM;
 
 
     unsigned aleatorio;
@@ -53,25 +55,28 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
     {
         aleatorio = rand()%(config->cantPosiciones-2)+2;
         casilla.posicion=aleatorio;
-        agregarElementoEnCasilla(tablero,casilla,elem);
+        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+            return ERROR_MEM;
     }
 
     ///premios
     elem.tipo=ASCII_PREMIO;
     for(int i=0;i<config->maxPremios;i++)
     {
-        aleatorio=rand()%config->cantPosiciones+1;
+        aleatorio = rand()%(config->cantPosiciones-2)+2;
         casilla.posicion=aleatorio;
-        agregarElementoEnCasilla(tablero,casilla,elem);
+        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+            return ERROR_MEM;
     }
 
     ///vidas
     elem.tipo=ASCII_VIDA_EXTRA;
     for(int i=0;i<config->maxVidasExtra;i++)
     {
-        aleatorio=rand()%config->cantPosiciones+1;
+        aleatorio = rand()%(config->cantPosiciones-2)+2;
         casilla.posicion=aleatorio;
-        agregarElementoEnCasilla(tablero,casilla,elem);
+        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+            return ERROR_MEM;
     }
 
 
@@ -79,9 +84,10 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
     elem.tipo=ASCII_OASIS;
     for(int i=0;i<config->maxOasis;i++)
     {
-        aleatorio=rand()%config->cantPosiciones+1;
+        aleatorio = rand()%(config->cantPosiciones-2)+2;
         casilla.posicion=aleatorio;
-        agregarElementoEnCasilla(tablero,casilla,elem);
+        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+            return ERROR_MEM;
     }
 
     ///tormenta
@@ -90,12 +96,14 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
     {
         aleatorio = rand()%(config->cantPosiciones-2)+2;
         casilla.posicion=aleatorio;
-        agregarElementoEnCasilla(tablero,casilla,elem);
+        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+            return ERROR_MEM;
     }
 
     casilla.posicion=config->cantPosiciones;
     elem.tipo=ASCII_SALIDA;
-    agregarElementoEnCasilla(tablero,casilla,elem);
+    if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+        return ERROR_MEM;
 
 
 
@@ -105,6 +113,25 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
 
 
     fclose(pf);
+
+    return TODO_OK;
+}
+
+int crearCasilla(tCasilla* casilla)
+{
+    crearLista(&casilla->elementos);
+
+    return TODO_OK;
+}
+///pequeña funcion que valida que se pudo reservar memoria (para no repetir esto mil veces en la funcion crear tablero)
+int insertarElementoSeguro(tLista* tablero,tCasilla casilla,tElemento elem,FILE* pf)
+{
+    if(agregarElementoEnCasilla(tablero, casilla, elem) != TODO_OK)
+    {
+        vaciarTablero(tablero);
+        fclose(pf);
+        return ERROR_MEM;
+    }
 
     return TODO_OK;
 }
@@ -123,13 +150,13 @@ int guardarTableroArchivo(tLista* tablero, FILE* pf, tConfiguracion* config, int
 
         if(listaVacia(&casilla->elementos) == LISTA_VACIA)
         {
-            // Si no hay elementos, ponemos el punto de vacío
+            // Si no hay elementos, pongo el punto indicando que el casillero esta vacio
             fprintf(pf, ".");
         }
         else
         {
-           // Pasamos 'pf' como tercer argumento para que llegue a la acción
-           recorrerDeIzqADer(&casilla->elementos, (tAccion)accionEscribirArchivo, pf);
+
+           recorrerDeIzqADer(&casilla->elementos, accionEscribirArchivo, pf);
         }
 
         fprintf(pf, "]\n");
@@ -137,77 +164,8 @@ int guardarTableroArchivo(tLista* tablero, FILE* pf, tConfiguracion* config, int
     return TODO_OK;
 }
 
-/// Accion para imprimir en consola (dibujarTablero)
-
-void accionImprimirConsola(const void* elem, const void* extra)
-{
-    tElemento* e = (tElemento*)elem;
-    printf("%c ", e->tipo);
-}
-
-/// Accion para escribir en archivo (guardarTableroArchivo)
-void accionEscribirArchivo(const void* elem, const void* pf)
-{
-    tElemento* e = (tElemento*)elem;
-    if (pf != NULL)
-    {
-        fprintf((FILE*)pf, "%c", e->tipo);
-    }
-}
-
-void dibujarTablero(tLista* tablero, int cantPosiciones, int columnas)
-{
-    tCasilla* casilla;
-    tCasilla casillaPos;
-    int filas = (cantPosiciones + columnas - 1) / columnas;
-
-    for(int f = 0; f < filas; f++)
-    {
-
-        for(int c = 0; c < columnas; c++)
-            printf("+--------");
-        printf("+\n");
 
 
-        for(int c = 0; c < columnas; c++)
-        {
-            int posLogica;
-
-
-            if (f % 2 == 0)
-                posLogica = (f * columnas) + c + 1;
-            else
-                posLogica = (f * columnas) + (columnas - 1 - c) + 1;
-
-
-            printf("| ");
-
-            if (posLogica <= cantPosiciones)
-            {
-                casillaPos.posicion = posLogica;
-                casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
-
-                if(listaVacia(&casilla->elementos) == LISTA_VACIA)
-                    printf(".      ");
-                else
-                {
-                    recorrerDeIzqADer(&casilla->elementos, (tAccion)accionImprimirConsola, NULL);
-                    unsigned cant = listaCantidadElementos(&casilla->elementos);
-                    int anchoUsado = cant * 2;
-                    for(int k = anchoUsado; k < 7; k++) printf(" ");
-                }
-            }
-            else
-                printf("        ");
-
-        }
-        printf("|\n");
-    }
-
-    for(int c = 0; c < columnas; c++)
-        printf("+--------");
-    printf("+\n");
-}
 int agregarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem)
 {
     tCasilla* casilla=buscarElementoLista(tablero,&casillaPos,compararPosicion); ///busco en la lista del tablero en que casilla vpy a insertar
@@ -218,46 +176,15 @@ int agregarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem)
 
     return ERROR_MEM;  ///VACIAR EL TABLERO
 }
-
-int crearCasilla(tCasilla* casilla)
+int eliminarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem)
 {
-    crearLista(&casilla->elementos);
+    tCasilla* casilla=buscarElementoLista(tablero,&casillaPos,compararPosicion);
 
-    return TODO_OK;
+    if(eliminarListaDesordenadaPorClaveSinDup(&casilla->elementos,&elem,sizeof(tElemento),compararElementos)==TODO_OK)
+        return TODO_OK;
+
+    return NO_ENCONTRADO;
 }
-
-int compararPosicion(const void* a,const void* b)
-{
-    tCasilla* auxA=(tCasilla*)a;
-    tCasilla* auxB=(tCasilla*)b;
-
-
-    return auxA->posicion-auxB->posicion;
-
-}
-
-int compararElem(const void* a, const void* b)
-{
-    tCasilla* auxA = (tCasilla*)a;
-    tCasilla* auxB = (tCasilla*)b;
-
-    tElemento* elemA = (tElemento*)auxA->elementos->info;
-    tElemento* elemB = (tElemento*)auxB->elementos->info;
-
-    return elemA->tipo - elemB->tipo;
-}
-
-int compararPosYElem(const void* a, const void* b)
-{
-    tCasilla* auxA = (tCasilla*)a;
-    tCasilla* auxB = (tCasilla*)b;
-
-    tElemento* elemA = (tElemento*)auxA->elementos->info;
-    tElemento* elemB = (tElemento*)auxB->elementos->info;
-
-    return (auxA->posicion - auxB->posicion) + (elemA->tipo - elemB->tipo);
-}
-
 void vaciarTablero(tLista* tablero)
 {
     tCasilla casilla;
@@ -270,6 +197,181 @@ void vaciarTablero(tLista* tablero)
         }
     }
 }
+void dibujarTablero(tLista* tablero, int cantPosiciones, int columnas)
+{
+    tCasilla* casilla;
+    tCasilla casillaPos;
+    int filas = (cantPosiciones + columnas - 1) / columnas; ///(A + B - 1) / B para no tener problema con los decimales
+                                                            ///y que no me falten lugares
+
+    for(int f = 0; f < filas; f++)
+    {
+        for(int c = 0; c < columnas; c++)
+            printf("+----------------");
+        printf("+\n");
+
+        for(int c = 0; c < columnas; c++)
+        {
+
+             if (c == 0 && f % 2 != 0 && f < filas - 1)
+                printf("\u2193 ");
+            else
+                printf("| ");
+
+
+            int posLogica; ///como tiene un recorrido de "serpiente"
+
+            if (f % 2 == 0)
+                posLogica = (f * columnas) + c + 1; ///calculo desde donde inicia para imprimir
+            else
+                posLogica = (f * columnas) + (columnas - 1 - c) + 1;
+
+            //printf("| ");
+
+            if (posLogica <= cantPosiciones)
+            {
+                casillaPos.posicion = posLogica;
+                casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
+
+                if(listaVacia(&casilla->elementos) == LISTA_VACIA)
+                {
+                    printf(".              ");
+                }
+                else
+                {
+                    tContadorElementos cont = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+                    recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
+
+                    int anchoUsado = 0;
+
+                    ///valores que nunca van a tener un numero delante
+                    if (cont.cantInicio > 0)
+                        anchoUsado += printf("I ");
+                    if (cont.cantJugador > 0)
+                        anchoUsado += printf("J ");
+                    if (cont.cantSalida > 0)
+                        anchoUsado += printf("S ");
+
+                    ///en estos casos solo muestro el numero por delante cuando este es mayor a 1
+                    if (cont.cantBandido > 0)
+                        anchoUsado += (cont.cantBandido > 1) ? printf("%dB ", cont.cantBandido) : printf("B ");
+
+                    if (cont.cantTormenta > 0)
+                        anchoUsado += (cont.cantTormenta > 1) ? printf("%dT ", cont.cantTormenta) : printf("T ");
+
+                    if (cont.cantPremio > 0)
+                        anchoUsado += (cont.cantPremio > 1) ? printf("%dP ", cont.cantPremio) : printf("P ");
+
+                    if (cont.cantVida > 0)
+                        anchoUsado += (cont.cantVida > 1) ? printf("%dV ", cont.cantVida) : printf("V ");
+
+                    if (cont.cantOasis > 0)
+                        anchoUsado += (cont.cantOasis > 1) ? printf("%dO ", cont.cantOasis) : printf("O ");
+
+                    ///relleno el resto de la casilla con " "
+                    for(int k = anchoUsado; k < 15; k++)
+                        printf(" ");
+                }
+            }
+            else
+            {
+                printf("               ");
+            }
+        }
+
+
+        if (f < filas - 1)
+        {
+            if (f % 2 == 0)
+                printf("\u2193\n");
+            else
+                printf("|\n");
+        }
+        else
+            printf("|\n");
+
+    }
+
+    for(int c = 0; c < columnas; c++)
+        printf("+----------------");
+    printf("+\n");
+}
+
+
+
+
+
+
+///FUNCIONES AUXILIARES DE CMP Y ACCION
+int compararPosicion(const void* a,const void* b)
+{
+    tCasilla* auxA=(tCasilla*)a;
+    tCasilla* auxB=(tCasilla*)b;
+
+
+    return auxA->posicion-auxB->posicion;
+
+}
+
+int compararElementos(const void* a, const void* b)
+{
+    tElemento* elemA = (tElemento*)a;
+    tElemento* elemB = (tElemento*)b;
+    return elemA->tipo - elemB->tipo;
+}
+
+void accionContarElementos(const void* elem, const void* extra)
+{
+    tElemento* e = (tElemento*)elem;
+    tContadorElementos* cont = (tContadorElementos*)extra;
+
+    switch(e->tipo)
+    {
+        case ASCII_INICIO:
+            cont->cantInicio++;
+            break;
+        case ASCII_JUGADOR:
+            cont->cantJugador++;
+            break;
+        case ASCII_BANDIDO:
+            cont->cantBandido++;
+            break;
+        case ASCII_PREMIO:
+            cont->cantPremio++;
+            break;
+        case ASCII_VIDA_EXTRA:
+            cont->cantVida++;
+            break;
+        case ASCII_OASIS:
+            cont->cantOasis++;
+            break;
+        case ASCII_TORMENTA:
+             cont->cantTormenta++;
+             break;
+        case ASCII_SALIDA:
+            cont->cantSalida++;
+            break;
+    }
+
+}
+
+void accionImprimirConsola(const void* elem, const void* extra)
+{
+    tElemento* e = (tElemento*)elem;
+    printf("%c ", e->tipo);
+}
+
+void accionEscribirArchivo(const void* elem, const void* pf)
+{
+    tElemento* e = (tElemento*)elem;
+    if (pf != NULL)
+    {
+        fprintf((FILE*)pf, "%c", e->tipo);
+    }
+}
+
+
 
 
 
@@ -356,3 +458,8 @@ int tirarDado(void)
 {
     return rand() % 6 + 1;
 }
+
+
+
+
+

@@ -4,8 +4,9 @@
 #include "main.h"
 #include "Juego.h"
 #include "Archivo.h"
+#include "Turno.h"
 
-#define MAX_NOMBRE 3
+#define MAX_NOMBRE 5
 
 #define OPCION_JUGAR 1
 #define OPCION_RANKING 2
@@ -15,5 +16,10 @@ void pedirNombre(char* nombre);
 int mostrarMenu();
 void mostrarRanking();
 void iniciarPartida(tConfiguracion* config);
+
+int manejarSituacionCasilla(tPartida* partida,tLista* tablero, tCasilla casillaPosicion);
+void limpiarBuffer();
+int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tConfiguracion* config);
+char pedirDireccion() ;
 
 #endif // MENU_H_INCLUDED

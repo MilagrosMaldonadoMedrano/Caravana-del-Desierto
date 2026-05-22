@@ -3,5 +3,5 @@ vidas_inicio: 3
 maximo_bandidos: 2
 maximo_premios: 3
 maximo_vidas_extra: 4
-maximo_oasis: 4
+maximo_oasis: 8
 maximo_tormentas: 3
