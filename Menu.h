@@ -14,7 +14,7 @@
 
 void pedirNombre(char* nombre);
 int mostrarMenu();
-void mostrarRanking();
+void mostrarRanking(const char* nomArch);
 void iniciarPartida(tConfiguracion* config);
 
 int manejarSituacionCasilla(tPartida* partida,tLista* tablero,tLista* bandidos,tCasilla casillaPosicion);

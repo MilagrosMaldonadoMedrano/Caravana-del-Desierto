@@ -65,7 +65,7 @@ int actualizarJugador(const char* nomArch, tJugador* jug)
 void mostrarJugador(const void* j)
 {
     tJugador* jug = (tJugador*)j;
-    printf("ID: %d | Nombre: %s | Puntos: %u | Partidas: %u\n",
+    printf("ID: %d\t| Nombre: %s\t| Puntos: %u\t| Partidas: %u\n",
            jug->idJugador,
            jug->nombre,
            jug->totalPuntos,

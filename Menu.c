@@ -54,12 +54,26 @@ int mostrarMenu()
 }
 
 // Muestra el ranking (para mas adelante)
-void mostrarRanking() {
-    printf("\n==============================\n");
-    printf("           RANKING            \n");
-    printf("==============================\n");
-    printf("         <pendiente>          \n");
-    printf("==============================\n");
+void mostrarRanking(const char* nomArch)
+{
+    FILE* pf;
+    tJugador jug;
+
+    pf = fopen(nomArch, "rb");
+    if(!pf)
+    {
+        printf("No hay jugadores registrados.\n");
+        return;
+    }
+
+    printf("\n=====================================================\n");
+    printf("                         RANKING                      \n");
+    printf("=====================================================\n");
+    while(fread(&jug, sizeof(tJugador), 1, pf) == 1)
+        mostrarJugador(&jug);
+    printf("=====================================================\n");
+
+    fclose(pf);
 }
 
 
@@ -70,6 +84,8 @@ void iniciarPartida(tConfiguracion* config)
     tLista bandidos;
     tCola historial;
     tCasilla casilla;
+    tJugador jugador;
+
     char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
     int estado=JUEGO_CONTINUA;
     crearLista(&tablero);
@@ -92,7 +108,6 @@ void iniciarPartida(tConfiguracion* config)
     }
 
     pedirNombre(nombre);
-    tJugador jugador; //mandar al inicio de la fc
     if(buscarJugador(NOM_ARCH_JUGADORES, nombre, &jugador) == NO_ENCONTRADO)
     {
         jugador.idJugador = obtenerUltimoID(NOM_ARCH_JUGADORES) + 1;
@@ -157,6 +172,10 @@ void iniciarPartida(tConfiguracion* config)
 
     guardarMostrarHistorial(&historial, NOM_ARCH_MOVIMIENTOS);
 
+    jugador.totalPuntos += partida.cantPuntos;
+    jugador.partidasJugadas++;
+
+    actualizarJugador(NOM_ARCH_JUGADORES, &jugador);
 
     vaciarTablero(&tablero);
     vaciarLista(&bandidos);

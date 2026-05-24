@@ -36,7 +36,7 @@ int main()
                 iniciarPartida(&config);
                 break;
             case OPCION_RANKING:
-                mostrarRanking();
+                mostrarRanking(NOM_ARCH_JUGADORES);
                 break;
             case OPCION_SALIR:
                 printf("\nSaliendo...\n");
