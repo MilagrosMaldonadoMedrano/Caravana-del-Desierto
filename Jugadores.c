@@ -2,7 +2,25 @@
 
 int buscarJugador(const char* nomArch, const char* nombre, tJugador* jug)
 {
+    FILE *pf;
+    tJugador aux;
 
+    pf = fopen(nomArch, "rb");
+    if(!pf)
+        return ERROR_ARCH;
+
+    while(fread(&aux, sizeof(tJugador), 1, pf) == 1)
+    {
+        if(strcmp(aux.nombre, nombre) == 0)
+        {
+            *jug = aux;
+            fclose(pf);
+            return ENCONTRADO;
+        }
+    }
+
+    fclose(pf);
+    return NO_ENCONTRADO;
 }
 
 int altaJugador(const char* nomArch, tJugador* jug)
@@ -10,23 +28,46 @@ int altaJugador(const char* nomArch, tJugador* jug)
     FILE *pf;
 
     pf= fopen(nomArch, "ab");
-
     if(!pf)
         return ERROR_ARCH;
 
     fwrite(jug, sizeof(tJugador), 1, pf);
 
     fclose(pf);
-
-    return TODO_OK
+    return TODO_OK;
 }
 
 int actualizarJugador(const char* nomArch, tJugador* jug)
 {
+    FILE *pf;
+    tJugador aux;
 
+    pf = fopen(nomArch, "rb+");
+    if(!pf)
+        return ERROR_ARCH;
+
+    while(fread(&aux, sizeof(tJugador), 1, pf) == 1)
+    {
+        if(aux.idJugador == jug->idJugador)
+        {
+            fseek(pf, -(long)sizeof(tJugador), SEEK_CUR);
+            fwrite(jug, sizeof(tJugador),1, pf);
+            fclose(pf);
+            return TODO_OK;
+        }
+    }
+
+    fclose(pf);
+
+    return NO_ENCONTRADO;
 }
 
 void mostrarJugador(const void* j)
 {
-
+    tJugador* jug = (tJugador*)j;
+    printf("ID: %d | Nombre: %s | Puntos: %u | Partidas: %u\n",
+           jug->idJugador,
+           jug->nombre,
+           jug->totalPuntos,
+           jug->partidasJugadas);
 }

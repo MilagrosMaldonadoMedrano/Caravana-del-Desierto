@@ -6,6 +6,8 @@
 #define NOM_ARCH_JUGADORES "jugadores.dat"
 #define TODO_OK 1
 #define ERROR_ARCH 0
+#define ENCONTRADO 1
+#define NO_ENCONTRADO 0
 
 typedef struct
 {
