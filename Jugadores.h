@@ -3,7 +3,9 @@
 
 #include "main.h"
 
-#define ARCH_JUGADORES "jugadores.dat"
+#define NOM_ARCH_JUGADORES "jugadores.dat"
+#define TODO_OK 1
+#define ERROR_ARCH 0
 
 typedef struct
 {
