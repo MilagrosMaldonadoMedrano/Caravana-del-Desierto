@@ -2,6 +2,7 @@
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
+//#include"Juego.h" /// para recorrer la lista que está en la casilla (funcion: eliminarListaDesordenadaPorClaveSinDup)
 
 #define minimo(a,b)(a<b?a:b)
 
@@ -34,7 +35,7 @@ void vaciarLista(tLista* pl)
     free(eliminar);
     *pl=NULL;
 }
-/*
+
 int insertarAlFinal(tLista* pl,const void* elem,unsigned cantBytes)
 {
     tNodoD* nuevo=malloc(sizeof(tNodoD));
@@ -73,7 +74,6 @@ int insertarAlFinal(tLista* pl,const void* elem,unsigned cantBytes)
     return TODO_OK;
 
 }
-*/
 
 int insertarAlComienzo(tLista* pl,const void* elem,unsigned cantBytes)
 {
@@ -360,6 +360,10 @@ int eliminarListaDesordenadaPorClaveSinDup(tLista* pl, void* dato, unsigned tamE
     if (!actual)
         return LISTA_VACIA;
 
+/// para ver la lista dentro de la casilla
+//    recorrerDeIzqADer(pl, mostrarElementos, NULL);
+//    system("pause");
+
     do
     {
         if (cmp(dato, actual->info) == 0)
@@ -367,7 +371,7 @@ int eliminarListaDesordenadaPorClaveSinDup(tLista* pl, void* dato, unsigned tamE
             auxAnt = actual->ant;
             auxSig = actual->sig;
 
-            if (auxAnt == auxSig)
+            if (auxAnt == actual)
                 auxAnt = NULL;
             else
             {

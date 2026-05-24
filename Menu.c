@@ -1,5 +1,6 @@
+#include "Turno.h"
 #include "Menu.h"
-
+#include "Lista.h"
 
 void pedirNombre(char* nombre)
 {
@@ -66,12 +67,13 @@ void iniciarPartida(tConfiguracion* config)
 {
     tPartida partida;
     tLista tablero;
-    //tLista bandidos;
+    tLista bandidos;
     tCola historial;
+    tCasilla casilla;
     char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
     int estado=JUEGO_CONTINUA;
     crearLista(&tablero);
-    //crearLista(&bandidos);
+    crearLista(&bandidos);
     crearCola(&historial);
 
     partida.posJugador=1;
@@ -81,7 +83,7 @@ void iniciarPartida(tConfiguracion* config)
     partida.tormenta = 0;
 
     ///ESTA VALIDACION ME PARECE QUE ESTA DE MAS
-    if (crearTablero(NOM_ARCH_TABLERO, &tablero, config) != TODO_OK)
+    if (crearTablero(NOM_ARCH_TABLERO, &tablero, config, &bandidos) != TODO_OK)
     {
         printf("Error al crear el tablero. Volviendo al menu...\n");
         vaciarLista(&tablero);
@@ -104,11 +106,21 @@ void iniciarPartida(tConfiguracion* config)
 
 
     /// vvv LOGICA DEL JUEGO vvv
+
     while(partida.cantVidas>0 && estado==JUEGO_CONTINUA) //agregar condicion de que slae porque gana
     {
         dibujarTablero(&tablero,config->cantPosiciones,5);//definir columnas!
-        estado=ejecutarTurnoJugador(&tablero,&partida,&historial,config);
-
+        casilla.posicion = partida.posJugador;
+        estado = manejarSituacionCasilla(&partida,&tablero,&bandidos,casilla);
+        if (estado == JUEGO_CONTINUA)
+        {
+            estado=ejecutarTurnoJugador(&tablero,&partida,&historial,config);
+            casilla.posicion = partida.posJugador;
+            estado = manejarSituacionCasilla(&partida,&tablero,&bandidos,casilla);
+            dibujarTablero(&tablero,config->cantPosiciones,5);
+            if (estado == JUEGO_CONTINUA)
+                ejecutarMovimientoBandido(&tablero,&bandidos,partida.posJugador, config->cantPosiciones);
+        }
 
     }
 
@@ -119,43 +131,68 @@ void iniciarPartida(tConfiguracion* config)
     if (JUGADOR_GANO==estado)
         printf("FELICITACIONES %s! Llegaste a la salida y ganaste.\n", nombre);
     else
-        printf("GAME OVER. Te quedaste sin vidas :(.\n");
+        if (JUGADOR_PERDIO==estado)
+            printf("GAME OVER. Te quedaste sin vidas :(.\n");
+        else
+        {
+            fprintf(stderr, "ERROR. Algo paso...\n");
+            vaciarTablero(&tablero);
+            vaciarLista(&bandidos);
+            vaciarCola(&historial);
+        }
 
     guardarMostrarHistorial(&historial, NOM_ARCH_MOVIMIENTOS);
 
 
     vaciarTablero(&tablero);
-    //vaciarLista(&bandidos);
+    vaciarLista(&bandidos);
     vaciarCola(&historial);
 }
 
 
 ///Para interpretar lo que sucede cuando el jugador cae en una nueva casilla
-int manejarSituacionCasilla(tPartida* partida,tLista* tablero, tCasilla casillaPosicion)
+int manejarSituacionCasilla(tPartida* partida,tLista* tablero,tLista* bandidos,tCasilla casillaPosicion)
 {
     tCasilla* casilla=buscarElementoLista(tablero,&casillaPosicion,compararPosicion);
     tContadorElementos cont = {0};
     tElemento elem;
-
+    int i;
 
     recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
 
     if (cont.cantVida > 0)
     {
         partida->cantVidas += cont.cantVida;
-        printf("\u00A1Encontraste una vida extra! Ahora tenes %u vidas.\n", partida->cantVidas);  ///mejorar mensaje
+        printf("\u00A1Encontraste %d vida/s extra! Ahora tenes %u vidas.\n", cont.cantVida, partida->cantVidas);  ///mejorar mensaje
         elem.tipo=ASCII_VIDA_EXTRA;
-        for(int i=0;i<cont.cantVida;i++)
+        for(i=0;i<cont.cantVida;i++)
             eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
     }
 
     if (cont.cantBandido > 0 && partida->oasis == 0)
     {
+        printf("\u00A1Te han atacado %d bandidos!\n",cont.cantBandido);
         if(cont.cantBandido>=partida->cantVidas)
             return JUGADOR_PERDIO;
 
         partida->cantVidas -= cont.cantBandido; ///VALIDO SI ES NEGATIVO O CERO EN EJECUTARtURNOjuagador
-        printf("\u00A1Te han atacado %d bandidos!\n",cont.cantBandido);
+
+        /// eliminar el jugador de la casilla actual, y posicionarlo al inicio del tablero
+        elem.tipo=ASCII_JUGADOR;
+        eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+
+        /// posicionar al jugador al inicio del tablero
+        casillaPosicion.posicion = 1;
+        if(insertarElementoSeguro(tablero, casillaPosicion, elem, NULL) != TODO_OK)
+            return ERROR_MEM;
+
+        /// eliminar los bandidos de la casilla, y de la lista de bandidos
+        elem.tipo=ASCII_BANDIDO;
+        casillaPosicion.posicion = partida->posJugador;
+        for(i=0;i<cont.cantVida;i++)
+            eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+
+        partida->posJugador = 1;
     }
 
     if (cont.cantBandido > 0 && partida->oasis != 0 ) //se cubre por un oasis
@@ -177,14 +214,14 @@ int manejarSituacionCasilla(tPartida* partida,tLista* tablero, tCasilla casillaP
     if(cont.cantTormenta)
     {
         elem.tipo=ASCII_TORMENTA;
-        for(int i=0;i<cont.cantTormenta;i++)
+        for(i=0;i<cont.cantTormenta;i++)
             eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
     }
 
     if(cont.cantBandido)
     {
         elem.tipo=ASCII_BANDIDO;
-        for(int i=0;i<cont.cantBandido;i++)
+        for(i=0;i<cont.cantBandido;i++)
             eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
     }
 
@@ -197,7 +234,7 @@ int manejarSituacionCasilla(tPartida* partida,tLista* tablero, tCasilla casillaP
         partida->oasis=1;
 
         elem.tipo=ASCII_OASIS;
-        for(int i=0;i<cont.cantOasis;i++)
+        for(i=0;i<cont.cantOasis;i++)
             eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
     }
 
@@ -207,7 +244,7 @@ int manejarSituacionCasilla(tPartida* partida,tLista* tablero, tCasilla casillaP
         printf("\u00A1Has encontrado un premio! Sumas 1 punto.\n");
 
         elem.tipo=ASCII_PREMIO;
-        for(int i=0;i<cont.cantPremio;i++)
+        for(i=0;i<cont.cantPremio;i++)
             eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
     }
 
@@ -224,6 +261,8 @@ int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tCo
     tElemento elem;
     tCasilla casilla;
     unsigned nuevaPos;
+
+    printf("Vidas: %u | Puntos: %u\n", partida->cantVidas, partida->cantPuntos);
 
     if (partida->tormenta)
     {
@@ -268,26 +307,26 @@ int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tCo
     elem.tipo=ASCII_JUGADOR;
 
     casilla.posicion=partida->posJugador;
-    eliminarElementoEnCasilla(tablero,casilla,elem); //validar
+    if (eliminarElementoEnCasilla(tablero,casilla,elem) != TODO_OK)
+        return JUEGO_ERROR;
 
     registrarMovimiento(historial, direccion, dado);
 
 
 
     casilla.posicion=nuevaPos;
+    partida->posJugador=nuevaPos;
 
 
 
-    if(manejarSituacionCasilla(partida,tablero,casilla)==JUGADOR_PERDIO)
-        return JUGADOR_PERDIO;
+//    if(manejarSituacionCasilla(partida,tablero,casilla)==JUGADOR_PERDIO)
+//        return JUGADOR_PERDIO;
 
     insertarElementoSeguro(tablero,casilla,elem,NULL);
-    partida->posJugador=casilla.posicion;
 
-    printf("Vidas: %u | Puntos: %u\n", partida->cantVidas, partida->cantPuntos);
     system("pause");
     limpiarBuffer();
-    system("cls");
+    //system("cls");
 
     if(partida->posJugador==config->cantPosiciones)
         return JUGADOR_GANO;

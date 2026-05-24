@@ -1,24 +1,24 @@
-#include "Juego.h"
 #include "Archivo.h"
+#include "Lista.h"
 
 //esta función crea el archivo del tablero en base a la configuración, un tablero jugable
 //llama a otra función que valida si la configuración, para poder crear el tablero
 
-int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
+int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLista* bandidos)
 {
     FILE* pf;
+    tBandido bandido;
+
+    ///creo todas las listas de las casillas
+
+    tCasilla casilla;
+    tElemento elem;
 
     if(TODO_OK!=abrirArchivo(&pf,NOM_ARCH_TABLERO,"wt"))
         return ERROR_ARCH;
 
 
     int cantDigitosCasillas = cantDigitosUnsigned(config->cantPosiciones);
-
-
-    ///creo todas las listas de las casillas
-
-    tCasilla casilla;
-    tElemento elem;
 
 
     for(int i=0;i<config->cantPosiciones;i++)
@@ -57,6 +57,8 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config)
         casilla.posicion=aleatorio;
         if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
             return ERROR_MEM;
+        bandido.posBandido = casilla.posicion;
+        insertarAlFinal(bandidos, &bandido, sizeof(bandido));
     }
 
     ///premios
@@ -180,7 +182,7 @@ int eliminarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem
 {
     tCasilla* casilla=buscarElementoLista(tablero,&casillaPos,compararPosicion);
 
-    if(eliminarListaDesordenadaPorClaveSinDup(&casilla->elementos,&elem,sizeof(tElemento),compararElementos)==TODO_OK)
+    if(eliminarListaDesordenadaPorClaveSinDup(&casilla->elementos,&elem,sizeof(tElemento),compararElementos)==ENCONTRADO)
         return TODO_OK;
 
     return NO_ENCONTRADO;
@@ -319,6 +321,25 @@ int compararElementos(const void* a, const void* b)
     tElemento* elemA = (tElemento*)a;
     tElemento* elemB = (tElemento*)b;
     return elemA->tipo - elemB->tipo;
+}
+
+int compararBandidos(const void* a,const void* b)
+{
+    tBandido* bandidoA = (tBandido*)a;
+    tBandido* bandidoB = (tBandido*)b;
+    return bandidoA->posBandido - bandidoB->posBandido;
+}
+
+void mostrarElementos(const void* elem, const void* extra)
+{
+    tElemento* elemento = (tElemento*)elem;
+    printf("Elemento: %c\n", elemento->tipo);
+}
+
+void mostrarBandidos(const void* elem, const void* extra)
+{
+    tBandido* bandido = (tBandido*)elem;
+    printf("Posicion del bandido: %u\n", bandido->posBandido);
 }
 
 void accionContarElementos(const void* elem, const void* extra)

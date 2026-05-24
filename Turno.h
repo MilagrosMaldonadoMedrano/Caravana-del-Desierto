@@ -3,11 +3,12 @@
 
 #include "main.h"
 #include "Juego.h"
-#include "Cola.h"
+//#include "Cola.h"
 
 #define JUGADOR_GANO 1
 #define JUGADOR_PERDIO -1
 #define JUEGO_CONTINUA 0
+#define JUEGO_ERROR -2
 
 #define OPCION_AVANZAR 1
 #define OPCION_RETROCEDER 2
@@ -16,7 +17,7 @@
 void aplicarEfectoCasilla(char casilla, tPartida* partida);
 int verificarFinPartida(char casilla, const tPartida* partida);
 void ejecutarTurno(tLista* tablero, tPartida* partida, tCola* historial);
-void ejecutarMovimientoBandido(tLista* tablero, tLista* bandidos, unsigned cantPosiciones);
+void ejecutarMovimientoBandido(tLista* tablero, tLista* bandidos, unsigned posJugador, unsigned cantPosiciones);
 
 
 

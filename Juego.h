@@ -3,7 +3,7 @@
 
 #include "main.h"
 #include "Cola.h"
-
+#include "Lista.h"
 
 #define NOM_ARCH_CONFIG "config.txt"
 #define NOM_ARCH_TABLERO "caravana.txt"
@@ -103,7 +103,7 @@ typedef struct
 
 
 ///CREACION DEL TABLERO
-int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config);
+int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLista* bandidos);
 int crearCasilla(tCasilla* casilla);
 int guardarTableroArchivo(tLista* tablero, FILE* pf,tConfiguracion* config,int cantDigitos);
 
@@ -128,7 +128,11 @@ int tirarDado(void);
 
 ///FUNCIONES AUXILIARES DE CMP Y ACCION
 int compararPosicion(const void* a,const void* b);
-int compararElementos(const void* a, const void* b);
+int compararElementos(const void* a,const void* b);
+int compararBandidos(const void* a,const void* b);
+void mostrarElementos(const void* elem, const void* extra);
+void mostrarBandidos(const void* elem, const void* extra);
+
 void accionEscribirArchivo(const void* elem, const void* pf);
 void accionImprimirConsola(const void* elem, const void* extra);
 void accionContarElementos(const void* elem, const void* extra);

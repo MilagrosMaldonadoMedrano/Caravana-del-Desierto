@@ -8,6 +8,5 @@
 #include <stddef.h>
 #include <windows.h>
 #include "Herramientas.h"
-#include "Lista.h"
 
 #endif // MAIN_H_INCLUDED
