@@ -92,7 +92,21 @@ void iniciarPartida(tConfiguracion* config)
     }
 
     pedirNombre(nombre);
+    tJugador jugador; //mandar al inicio de la fc
+    if(buscarJugador(NOM_ARCH_JUGADORES, nombre, &jugador) == NO_ENCONTRADO)
+    {
+        jugador.idJugador = obtenerUltimoID(NOM_ARCH_JUGADORES) + 1;
 
+        strcpy(jugador.nombre, nombre);
+        jugador.totalPuntos = 0;
+        jugador.partidasJugadas = 0;
+
+        altaJugador(NOM_ARCH_JUGADORES, &jugador);
+
+        printf("El jugador '%s' se ha creado correctamente.\n", nombre);
+    }
+    else
+        printf("Jugador encontrado.\n");
 
 
     system("cls");

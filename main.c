@@ -4,6 +4,7 @@
 #include "Juego.h"
 #include "Menu.h"
 #include "Turno.h"
+#include "Jugadores.h"
 
 int main()
 {
@@ -24,6 +25,7 @@ int main()
         return ERROR_ARCH;
     }
 
+    mostrarArchivoJugadores(NOM_ARCH_JUGADORES);
 
     do {
         opcion = mostrarMenu();

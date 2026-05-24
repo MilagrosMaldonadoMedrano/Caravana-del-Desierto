@@ -71,3 +71,39 @@ void mostrarJugador(const void* j)
            jug->totalPuntos,
            jug->partidasJugadas);
 }
+
+int obtenerUltimoID(const char* nomArch)
+{
+    FILE *pf;
+    tJugador jug;
+    int ultimoID = 0;
+
+    pf = fopen(nomArch, "rb");
+    if(!pf)
+        return ERROR_ARCH;
+
+    while(fread(&jug, sizeof(tJugador), 1, pf) == 1)
+    {
+        ultimoID = jug.idJugador;
+    }
+
+    fclose(pf);
+
+    return ultimoID;
+}
+
+
+void mostrarArchivoJugadores(const char* nomArch)
+{
+    FILE *pf;
+    tJugador jug;
+
+    pf = fopen(nomArch, "rb");
+    if(!pf)
+        printf("No se puedo abrir el archvo: '%s\n'", nomArch);
+
+    while(fread(&jug, sizeof(tJugador), 1, pf) == 1)
+        mostrarJugador(&jug);
+
+    fclose(pf);
+}

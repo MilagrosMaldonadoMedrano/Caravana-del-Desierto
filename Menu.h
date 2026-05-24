@@ -4,6 +4,7 @@
 #include "main.h"
 #include "Archivo.h"
 #include "Juego.h"
+#include "Jugadores.h"
 
 #define MAX_NOMBRE 5
 
