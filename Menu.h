@@ -5,6 +5,7 @@
 #include "Archivo.h"
 #include "Juego.h"
 #include "Jugadores.h"
+#include "Partidas.h"
 
 #define MAX_NOMBRE 5
 

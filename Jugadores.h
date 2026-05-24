@@ -5,8 +5,10 @@
 #include "Archivo.h"
 #include "Lista.h"
 #include "Menu.h"
+#include "Partidas.h"
 
 #define MAX_NOMBRE 5
+#define MAX_JUGADORES 100
 
 #define NOM_ARCH_JUGADORES "jugadores.dat"
 
@@ -16,14 +18,18 @@ typedef struct
     char nombre[MAX_NOMBRE];
     unsigned totalPuntos;
     unsigned partidasJugadas;
-} tJugador;
+}tJugador;
 
+int obtenerUltimoID(const char* nomArch);
+void mostrarArchivoJugadores(const char* nomArch);
 int buscarJugador(const char* nomArch, const char* nombre, tJugador* jug);
 int altaJugador(const char* nomArch, tJugador* jug);
 int actualizarJugador(const char* nomArch, tJugador* jug);
 void mostrarJugador(const void* j);
-int obtenerUltimoID(const char* nomArch);
 
-void mostrarArchivoJugadores(const char* nomArch);
+int cargarJugadores(const char* nomArch, tJugador* vec);
+void ordenarJugadores(tJugador* vec, int cantJugadores);
+int compararJugadores(const void* j1, const void* j2);
+void mostrarVectorJugadores(tJugador* vec, int cantJugadores);
 
 #endif // JUGADORES_H_INCLUDED

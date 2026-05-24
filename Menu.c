@@ -56,24 +56,22 @@ int mostrarMenu()
 // Muestra el ranking (para mas adelante)
 void mostrarRanking(const char* nomArch)
 {
-    FILE* pf;
-    tJugador jug;
+    tJugador vec[MAX_JUGADORES];
+    int cantJugadores;
 
-    pf = fopen(nomArch, "rb");
-    if(!pf)
+    cantJugadores = cargarJugadores(nomArch, vec);
+    if(cantJugadores == 0)
     {
         printf("No hay jugadores registrados.\n");
         return;
     }
-
+    ordenarJugadores(vec, cantJugadores);
     printf("\n=====================================================\n");
     printf("                         RANKING                      \n");
     printf("=====================================================\n");
-    while(fread(&jug, sizeof(tJugador), 1, pf) == 1)
-        mostrarJugador(&jug);
+    mostrarVectorJugadores(vec, cantJugadores);
     printf("=====================================================\n");
 
-    fclose(pf);
 }
 
 
@@ -85,6 +83,7 @@ void iniciarPartida(tConfiguracion* config)
     tCola historial;
     tCasilla casilla;
     tJugador jugador;
+    tRegistroPartida reg;
 
     char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
     int estado=JUEGO_CONTINUA;
@@ -94,6 +93,7 @@ void iniciarPartida(tConfiguracion* config)
 
     partida.posJugador=1;
     partida.cantPuntos = 0;
+    partida.movimientos = 0;
     partida.cantVidas = config->vidasInicio;
     partida.oasis = 0;
     partida.tormenta = 0;
@@ -171,6 +171,13 @@ void iniciarPartida(tConfiguracion* config)
         }
 
     guardarMostrarHistorial(&historial, NOM_ARCH_MOVIMIENTOS);
+
+    reg.idPartida = obtenerUltimoIdPartida(NOM_ARCH_PARTIDAS) + 1;
+    reg.idJugador = jugador.idJugador;
+    reg.puntos = partida.cantPuntos;
+    reg.movimientos = partida.movimientos;
+    reg.gano = (estado == JUGADOR_GANO);
+    altaPartida(NOM_ARCH_PARTIDAS, &reg);
 
     jugador.totalPuntos += partida.cantPuntos;
     jugador.partidasJugadas++;
@@ -349,6 +356,7 @@ int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tCo
 
     casilla.posicion=nuevaPos;
     partida->posJugador=nuevaPos;
+    partida->movimientos++;
 
 
 

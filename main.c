@@ -25,7 +25,9 @@ int main()
         return ERROR_ARCH;
     }
 
+    /*//fc para verificar los archivos:
     mostrarArchivoJugadores(NOM_ARCH_JUGADORES);
+    mostrarArchivoPartidas(NOM_ARCH_PARTIDAS);*/
 
     do {
         opcion = mostrarMenu();

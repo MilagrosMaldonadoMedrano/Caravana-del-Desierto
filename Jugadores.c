@@ -92,7 +92,23 @@ int obtenerUltimoID(const char* nomArch)
     return ultimoID;
 }
 
+int compararJugadores(const void* j1, const void* j2)
+{
+    tJugador* jugador1 = (tJugador*)j1;
+    tJugador* jugador2 = (tJugador*)j2;
 
+    if(jugador2->totalPuntos != jugador1->totalPuntos)
+    {
+        return jugador2->totalPuntos - jugador1->totalPuntos;
+    }
+
+    if(jugador1->partidasJugadas != jugador2->partidasJugadas)
+    {
+        return jugador1->partidasJugadas - jugador2->partidasJugadas;
+    }
+
+    return strcmp(jugador1->nombre, jugador2->nombre);
+}
 void mostrarArchivoJugadores(const char* nomArch)
 {
     FILE *pf;
@@ -106,4 +122,41 @@ void mostrarArchivoJugadores(const char* nomArch)
         mostrarJugador(&jug);
 
     fclose(pf);
+}
+
+int cargarJugadores(const char* nomArch, tJugador* vec)
+{
+    FILE *pf;
+    tJugador* pj = vec;
+    int cantJugadores = 0;
+
+    pf = fopen(nomArch, "rb");
+    if(!pf)
+        return ERROR_ARCH;
+
+    while(fread(pj, sizeof(tJugador), 1, pf) == 1)
+    {
+        pj++;
+        cantJugadores++;
+    }
+
+    fclose(pf);
+
+    return cantJugadores;
+}
+
+void ordenarJugadores(tJugador* vec, int cantJugadores)
+{
+    qsort(vec, cantJugadores, sizeof(tJugador), compararJugadores);
+}
+
+void mostrarVectorJugadores(tJugador* vec, int cantJugadores)
+{
+    tJugador* pj;
+    tJugador* ult = vec + cantJugadores - 1;
+
+    for(pj=vec; pj<=ult; pj++)
+    {
+        mostrarJugador(pj);
+    }
 }

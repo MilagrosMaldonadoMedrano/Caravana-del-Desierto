@@ -86,6 +86,7 @@ typedef struct
     char oasis;
     char tormenta;
     unsigned posJugador;
+    unsigned movimientos; //agregue en version mod funciones 1.1
 }tPartida;
 
 /// estructura para encolar los movimientos
