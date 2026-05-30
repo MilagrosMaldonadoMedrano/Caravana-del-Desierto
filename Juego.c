@@ -8,7 +8,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
 {
     FILE* pf;
     tBandido bandido;
-
+    int auxTormenta;
     ///creo todas las listas de las casillas
 
     tCasilla casilla;
@@ -51,10 +51,12 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
     unsigned aleatorio;
     ///bandidos
     elem.tipo=ASCII_BANDIDO;
+
     for(int i=0;i<config->maxBandidos;i++)
     {
         aleatorio = rand()%(config->cantPosiciones-2)+2;
         casilla.posicion=aleatorio;
+        elem.id=i+1;
         if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
             return ERROR_MEM;
         bandido.posBandido = casilla.posicion;
@@ -93,14 +95,30 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
     }
 
     ///tormenta
-    elem.tipo=ASCII_TORMENTA;
-    for(int i=0;i<config->maxTormentas;i++)
+    elem.tipo = ASCII_TORMENTA;
+    auxTormenta = config->maxTormentas;
+
+    while(auxTormenta>0)
     {
-        aleatorio = rand()%(config->cantPosiciones-2)+2;
-        casilla.posicion=aleatorio;
-        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
-            return ERROR_MEM;
+        aleatorio = rand() % (config->cantPosiciones - 2) + 2;
+        casilla.posicion = aleatorio;
+
+        tCasilla* casillaAux = buscarElementoLista(tablero, &casilla, compararPosicion);
+
+        if(casillaAux != NULL)
+        {
+            tContadorElementos cont = {0};
+            recorrerDeIzqADer(&casillaAux->elementos, accionContarElementos, &cont);
+
+            if(cont.cantOasis == 0)///inserto si NO HAY oasis en la casilla
+            {
+                if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+                    return ERROR_MEM;
+                auxTormenta--;
+            }
+        }
     }
+
 
     casilla.posicion=config->cantPosiciones;
     elem.tipo=ASCII_SALIDA;
@@ -215,10 +233,20 @@ void dibujarTablero(tLista* tablero, int cantPosiciones, int columnas)
         for(int c = 0; c < columnas; c++)
         {
 
-             if (c == 0 && f % 2 != 0 && f < filas - 1)
-                printf("\u2193 ");
+            if (c == 0)
+            {
+                if (f % 2 != 0 && f < filas - 1)
+                    printf("\u2193 ");
+                else
+                    printf("| ");
+            }
             else
-                printf("| ");
+            {
+                if (f % 2 == 0)
+                    printf("\u2192 ");
+                else
+                    printf("\u2190 ");
+            }
 
 
             int posLogica; ///como tiene un recorrido de "serpiente"
@@ -227,8 +255,6 @@ void dibujarTablero(tLista* tablero, int cantPosiciones, int columnas)
                 posLogica = (f * columnas) + c + 1; ///calculo desde donde inicia para imprimir
             else
                 posLogica = (f * columnas) + (columnas - 1 - c) + 1;
-
-            //printf("| ");
 
             if (posLogica <= cantPosiciones)
             {

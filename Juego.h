@@ -55,6 +55,7 @@ typedef struct
 typedef struct
 {
     char tipo;
+    unsigned id;
 } tElemento;
 
 typedef struct
@@ -82,9 +83,9 @@ typedef struct
 typedef struct
 {
     unsigned cantPuntos;
-    unsigned cantVidas;
-    char oasis;
-    char tormenta;
+    int cantVidas;
+    unsigned oasis;         ///modifique estos char por unsigned
+    unsigned tormenta;
     unsigned posJugador;
     unsigned movimientos; //agregue en version mod funciones 1.1
 }tPartida;
@@ -92,6 +93,10 @@ typedef struct
 /// estructura para encolar los movimientos
 typedef struct
 {
+    tElemento elem;
+    unsigned posOrigen;
+    unsigned posFinal;
+
     unsigned cantMovim;
     char direccion;
 }tMovimiento;

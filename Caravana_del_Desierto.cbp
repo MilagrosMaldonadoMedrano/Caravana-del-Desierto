@@ -47,6 +47,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Juego.h" />
+		<Unit filename="Jugadores.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Jugadores.h" />
 		<Unit filename="Lista.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -55,6 +59,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Menu.h" />
+		<Unit filename="Partidas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Partidas.h" />
 		<Unit filename="Turno.c">
 			<Option compilerVar="CC" />
 		</Unit>

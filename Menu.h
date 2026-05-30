@@ -18,7 +18,12 @@ int mostrarMenu();
 void mostrarRanking(const char* nomArch);
 void iniciarPartida(tConfiguracion* config);
 
-int manejarSituacionCasilla(tPartida* partida,tLista* tablero,tLista* bandidos,tCasilla casillaPosicion);
+
+void planificarMovimientosBandidos(tConfiguracion* config, tCola* bufferMovs, tLista* tablero);
+
+int planificarMovimientoJugador(tConfiguracion* config,tCola* bufferMovs,tCola* historial,tPartida* partida);
+void procesarTurno(tLista* tablero, tCola* bufferMovs, tPartida* partida);
+int manejarSituacionCasilla(tPartida* partida,tLista* tablero,tLista* bandidos,tCasilla casillaPosicion,tConfiguracion* config);
 void limpiarBuffer();
 int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tConfiguracion* config);
 char pedirDireccion() ;

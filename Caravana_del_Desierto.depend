@@ -303,3 +303,98 @@
 	"Turno.h"
 	"Menu.h"
 
+1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\archivo.c
+	"Archivo.h"
+
+1780060633 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\archivo.h
+	"main.h"
+	"Juego.h"
+
+1780060633 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\main.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stddef.h>
+	<windows.h>
+	"Herramientas.h"
+
+1780060633 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\herramientas.h
+	"main.h"
+
+1780087396 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\juego.h
+	"main.h"
+	"Cola.h"
+	"Lista.h"
+
+1780060633 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\cola.h
+	"main.h"
+
+1780060633 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\lista.h
+
+1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\cola.c
+	"Cola.h"
+
+1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\herramientas.c
+	"Herramientas.h"
+
+1780093155 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\juego.c
+	"Archivo.h"
+	"Lista.h"
+
+1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\lista.c
+	"Lista.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+
+1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\main.c
+	"main.h"
+	"Cola.h"
+	"Archivo.h"
+	"Juego.h"
+	"Menu.h"
+	"Turno.h"
+	"Jugadores.h"
+
+1780094065 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\menu.h
+	"main.h"
+	"Archivo.h"
+	"Juego.h"
+	"Jugadores.h"
+	"Partidas.h"
+
+1780060633 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\jugadores.h
+	"main.h"
+	"Archivo.h"
+	"Lista.h"
+	"Menu.h"
+	"Partidas.h"
+
+1780060633 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\partidas.h
+	"main.h"
+	"Archivo.h"
+	"Lista.h"
+	"Menu.h"
+	"Jugadores.h"
+
+1780060633 f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\turno.h
+	"main.h"
+	"Juego.h"
+
+1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\turno.c
+	"Turno.h"
+	"Menu.h"
+
+1780094860 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\menu.c
+	"Turno.h"
+	"Menu.h"
+	"Lista.h"
+	"Archivo.h"
+
+1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\partidas.c
+	"Partidas.h"
+
+1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\jugadores.c
+	"Jugadores.h"
+

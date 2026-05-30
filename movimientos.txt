@@ -1,3 +1,21 @@
 ===== REGISTRO DE MOVIMIENTOS =====
-No se realizaron movimientos.
+Turno  1: F5
+Turno  2: F6
+Turno  3: B4
+Turno  4: B4
+Turno  5: F6
+Turno  6: F6
+Turno  7: F4
+Turno  8: B1
+Turno  9: F5
+Turno 10: B3
+Turno 11: F2
+Turno 12: F2
+Turno 13: F1
+Turno 14: F2
+Turno 15: F2
+Turno 16: F2
+Turno 17: B6
+Turno 18: B2
+Turno 19: F3
 ===================================
