@@ -19,7 +19,7 @@ void mostrarRanking(const char* nomArch);
 void iniciarPartida(tConfiguracion* config);
 
 
-void planificarMovimientosBandidos(tConfiguracion* config, tCola* bufferMovs, tLista* tablero);
+void planificarMovimientosBandidos(tConfiguracion* config, tCola* bufferMovs, tLista* tablero, tLista* bandidos);
 
 int planificarMovimientoJugador(tConfiguracion* config,tCola* bufferMovs,tCola* historial,tPartida* partida);
 void procesarTurno(tLista* tablero, tCola* bufferMovs, tPartida* partida);

@@ -44,7 +44,9 @@ int eliminarListaDesordenadaPorClave(tLista* pl, void* dato, unsigned tamElem,tC
 int listaInsertarAlFinal(tLista* pl, const void* dato, unsigned tamElem);
 int listaEliminarPrimerElemento(tLista* pl, void* dato, unsigned tamElem);
 void* buscarElementoLista(tLista* pl, void* dato,tCmp cmp);
-int buscarElementoEnLista(tLista* pl, void* dato, unsigned tamElem, tCmp cmp);
+int buscarElementoEnLista(tLista* pl, void* dato, unsigned tamElem, tCmp cmp, tAccion accion, const void* extra);
+int recuperarUltElemOperadoEnLista(tLista* pl, void* dato, unsigned tamElem);
+
 int recuperarElementoXPosLista(tLista* pl, void* dato, unsigned tamElem, unsigned posDato);
 
 unsigned listaCantidadElementos(const tLista* pl);

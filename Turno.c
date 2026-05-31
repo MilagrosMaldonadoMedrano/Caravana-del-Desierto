@@ -119,7 +119,6 @@ void ejecutarMovimientoBandido(tLista* tablero, tLista* bandidos, unsigned posJu
 
     /// deberia recorrer todo el tablero y guardar las posiciones de los elementos del tablero (jugador, vidas, etc)
     /// para la lógica de analizar el proximo movimiento del bandido.
-    /// Primero que busque al jugador, luego se vé implementar el resto...
 
     //while (actual != *bandidos && recuperarElementoXPosLista(bandidos, &bandido, sizeof(bandido), pos) == TODO_OK)
     while (recuperarElementoXPosLista(bandidos, &bandido, sizeof(bandido), pos) == ENCONTRADO)

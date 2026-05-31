@@ -105,6 +105,7 @@ typedef struct
 typedef struct
 {
     unsigned posBandido;
+    unsigned id;
 }tBandido;
 
 
@@ -142,6 +143,8 @@ void mostrarBandidos(const void* elem, const void* extra);
 void accionEscribirArchivo(const void* elem, const void* pf);
 void accionImprimirConsola(const void* elem, const void* extra);
 void accionContarElementos(const void* elem, const void* extra);
+void accionContarElementosDesdeTablero(const void* elem, const void* extra);
+void accionActualizarPosBandido(const void* elem, const void* extra);
 
 
 #endif // JUEGO_H_INCLUDED

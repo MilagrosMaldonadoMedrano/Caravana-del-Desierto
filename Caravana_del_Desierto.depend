@@ -33,11 +33,11 @@
 1777236918 c:\users\mirag\desktop\caravana-del-desierto\cola.h
 	"main.h"
 
-1779633479 source:c:\users\mirag\desktop\caravana-del-desierto\juego.c
+1780235957 source:c:\users\mirag\desktop\caravana-del-desierto\juego.c
 	"Archivo.h"
 	"Lista.h"
 
-1779633481 c:\users\mirag\desktop\caravana-del-desierto\juego.h
+1780235859 c:\users\mirag\desktop\caravana-del-desierto\juego.h
 	"main.h"
 	"Cola.h"
 	"Lista.h"
@@ -49,13 +49,14 @@
 	"main.h"
 	"Juego.h"
 
-1779501565 source:c:\users\mirag\desktop\caravana-del-desierto\main.c
+1779669868 source:c:\users\mirag\desktop\caravana-del-desierto\main.c
 	"main.h"
 	"Cola.h"
 	"Archivo.h"
 	"Juego.h"
 	"Menu.h"
 	"Turno.h"
+	"Jugadores.h"
 
 1779507439 c:\users\mirag\desktop\caravana-del-desierto\main.h
 	<stdio.h>
@@ -69,7 +70,7 @@
 1777433963 source:c:\users\mirag\desktop\caravana-del-desierto\herramientas.c
 	"Herramientas.h"
 
-1779634511 c:\users\mirag\desktop\caravana-del-desierto\herramientas.h
+1780227463 c:\users\mirag\desktop\caravana-del-desierto\herramientas.h
 	"main.h"
 
 1777324238 source:c:\users\yo\documents\a-main\universidad\algoritmos-ayed\tp\archivo.c
@@ -209,27 +210,30 @@
 
 1779048607 c:\users\milag\desktop\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\lista.h
 
-1779625615 c:\users\mirag\desktop\caravana-del-desierto\lista.h
+1780236488 c:\users\mirag\desktop\caravana-del-desierto\lista.h
 
-1779627192 source:c:\users\mirag\desktop\caravana-del-desierto\lista.c
+1780236480 source:c:\users\mirag\desktop\caravana-del-desierto\lista.c
 	"Lista.h"
 	<string.h>
 	<stdio.h>
 	<stdlib.h>
 
-1779623116 c:\users\mirag\desktop\caravana-del-desierto\menu.h
+1780226153 c:\users\mirag\desktop\caravana-del-desierto\menu.h
 	"main.h"
 	"Archivo.h"
 	"Juego.h"
+	"Jugadores.h"
+	"Partidas.h"
 
 1779590591 c:\users\mirag\desktop\caravana-del-desierto\turno.h
 	"main.h"
 	"Juego.h"
 
-1779632676 source:c:\users\mirag\desktop\caravana-del-desierto\menu.c
+1780236441 source:c:\users\mirag\desktop\caravana-del-desierto\menu.c
 	"Turno.h"
 	"Menu.h"
 	"Lista.h"
+	"Archivo.h"
 
 1779398232 source:f:\ingeniería\algoritmos\caravana del desierto\caravana-del-desierto\archivo.c
 	"Archivo.h"
@@ -299,7 +303,7 @@
 	"Juego.h"
 	"Archivo.h"
 
-1779630084 source:c:\users\mirag\desktop\caravana-del-desierto\turno.c
+1780229841 source:c:\users\mirag\desktop\caravana-del-desierto\turno.c
 	"Turno.h"
 	"Menu.h"
 
@@ -397,4 +401,24 @@
 
 1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\jugadores.c
 	"Jugadores.h"
+
+1780191726 source:c:\users\mirag\desktop\caravana-del-desierto\jugadores.c
+	"Jugadores.h"
+
+1779669868 c:\users\mirag\desktop\caravana-del-desierto\jugadores.h
+	"main.h"
+	"Archivo.h"
+	"Lista.h"
+	"Menu.h"
+	"Partidas.h"
+
+1779669868 c:\users\mirag\desktop\caravana-del-desierto\partidas.h
+	"main.h"
+	"Archivo.h"
+	"Lista.h"
+	"Menu.h"
+	"Jugadores.h"
+
+1779669868 source:c:\users\mirag\desktop\caravana-del-desierto\partidas.c
+	"Partidas.h"
 

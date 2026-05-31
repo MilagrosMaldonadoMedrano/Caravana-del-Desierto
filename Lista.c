@@ -284,7 +284,6 @@ int listaInsertarOrdenado(tLista* pl,const void* dato,unsigned tamElem,tCmp tCmp
 
 
 
-
 ///si la lista esta desordenada admite repetidos
 int eliminarListaDesordenadaPorClave(tLista* pl, void* dato, unsigned tamElem,tCmp cmp,tAccion accion)
 {
@@ -422,7 +421,7 @@ void* buscarElementoLista(tLista* pl, void* dato,tCmp cmp)
 
 }
 
-int buscarElementoEnLista(tLista* pl, void* dato, unsigned tamElem, tCmp cmp)
+int buscarElementoEnLista(tLista* pl, void* dato, unsigned tamElem, tCmp cmp, tAccion accion, const void* extra)
 {
     tNodoD* actual = *pl;
 
@@ -433,6 +432,8 @@ int buscarElementoEnLista(tLista* pl, void* dato, unsigned tamElem, tCmp cmp)
     {
         if (cmp(dato,actual->info) == 0)
         {
+            if (accion)
+                accion(actual->info, extra);
             memcpy(dato, actual->info, minimo(tamElem, actual->tamElem));
             return ENCONTRADO;
         }
@@ -440,6 +441,17 @@ int buscarElementoEnLista(tLista* pl, void* dato, unsigned tamElem, tCmp cmp)
     } while (actual != *pl);
 
     return NO_ENCONTRADO;
+}
+
+int recuperarUltElemOperadoEnLista(tLista* pl, void* dato, unsigned tamElem)
+{
+    if (!*pl)
+        return LISTA_VACIA;
+
+    memcpy(dato, (*pl)->info, minimo(tamElem, (*pl)->tamElem));
+    *pl = (*pl)->sig;
+
+    return TODO_OK;
 }
 
 int recuperarElementoXPosLista(tLista* pl, void* dato, unsigned tamElem, unsigned posDato)
@@ -465,7 +477,6 @@ int recuperarElementoXPosLista(tLista* pl, void* dato, unsigned tamElem, unsigne
 
     return ENCONTRADO;
 }
-
 
 unsigned listaCantidadElementos(const tLista* pl)
 {

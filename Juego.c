@@ -60,6 +60,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
         if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
             return ERROR_MEM;
         bandido.posBandido = casilla.posicion;
+        bandido.id = elem.id;
         insertarAlFinal(bandidos, &bandido, sizeof(bandido));
     }
 
@@ -346,6 +347,7 @@ int compararElementos(const void* a, const void* b)
 {
     tElemento* elemA = (tElemento*)a;
     tElemento* elemB = (tElemento*)b;
+
     return elemA->tipo - elemB->tipo;
 }
 
@@ -401,6 +403,25 @@ void accionContarElementos(const void* elem, const void* extra)
             break;
     }
 
+}
+
+void accionContarElementosDesdeTablero(const void* elem, const void* extra)
+{
+    tCasilla* e = (tCasilla*)elem;
+    tContadorElementos* cont = (tContadorElementos*)extra;
+
+    recorrerDeIzqADer(&e->elementos, accionContarElementos, cont);
+}
+
+void accionActualizarPosBandido(const void* elem, const void* extra)
+{
+    tBandido* b = (tBandido*)elem;
+    unsigned nuevaPos = *(unsigned*)extra;
+
+    ///para testear
+    printf("Bandido %-2u: Pos anterior: %-2u | Nueva pos: %-2u\n", b->id, b->posBandido, nuevaPos);
+
+    b->posBandido = nuevaPos;
 }
 
 void accionImprimirConsola(const void* elem, const void* extra)
