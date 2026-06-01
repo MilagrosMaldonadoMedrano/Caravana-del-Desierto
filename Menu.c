@@ -450,7 +450,7 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
                 sizeof(tBandido), compararBandidos);
 
             /// posicionar al jugador al inicio del tablero
-            elem.tipo=ASCII_JUGADOR
+            elem.tipo=ASCII_JUGADOR;
             casillaPosicion.posicion = 1;
             if(insertarElementoSeguro(tablero, casillaPosicion, elem, NULL) != TODO_OK)
                 return ERROR_MEM;
