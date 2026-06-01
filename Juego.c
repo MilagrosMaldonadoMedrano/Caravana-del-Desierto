@@ -150,7 +150,10 @@ int insertarElementoSeguro(tLista* tablero,tCasilla casilla,tElemento elem,FILE*
     if(agregarElementoEnCasilla(tablero, casilla, elem) != TODO_OK)
     {
         vaciarTablero(tablero);
-        fclose(pf);
+
+        /// check porque a veces se pasa null
+        if (pf != NULL)
+            fclose(pf);
         return ERROR_MEM;
     }
 
