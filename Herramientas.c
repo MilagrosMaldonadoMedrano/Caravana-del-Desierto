@@ -11,3 +11,11 @@ int cantDigitosUnsigned(unsigned num)
     } while (num > 0);
     return cantDigitos;
 }
+
+void pausar() {
+    system("pause");
+}
+
+void limpiarPantalla() {
+    system("cls");
+}
