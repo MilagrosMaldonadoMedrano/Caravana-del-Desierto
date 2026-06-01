@@ -115,8 +115,10 @@ void mostrarArchivoJugadores(const char* nomArch)
     tJugador jug;
 
     pf = fopen(nomArch, "rb");
-    if(!pf)
-        printf("No se puedo abrir el archvo: '%s\n'", nomArch);
+    if(!pf) {
+        printf("No hay jugadores registrados.\n");
+        return;
+    }
 
     while(fread(&jug, sizeof(tJugador), 1, pf) == 1)
         mostrarJugador(&jug);
