@@ -395,18 +395,18 @@ void procesarTurno(tLista* tablero, tCola* bufferMovs, tPartida* partida)
 
 
 ///Para interpretar lo que sucede una vez actualizado el tablero
-int manejarSituacionCasilla(tPartida* partida,tLista* tablero,tLista* bandidos,tCasilla casillaPosicion,tConfiguracion* config)
+int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos, tCasilla casillaPosicion, tConfiguracion* config)
 {
-    tCasilla* casilla=buscarElementoLista(tablero,&casillaPosicion,compararPosicion);
+    tCasilla* casilla = buscarElementoLista(tablero, &casillaPosicion, compararPosicion);
     tContadorElementos cont = {0};
     tElemento elem;
-
+    tBandido bandidoAEliminar;
 
     ///cuento todos los elementos
     recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
 
 
-    ///primero  veO si llego al fginal de la casilla
+    ///primero veo si llego al final de la casilla
     if(partida->posJugador==config->cantPosiciones)
         return JUGADOR_GANO;
 
@@ -437,19 +437,23 @@ int manejarSituacionCasilla(tPartida* partida,tLista* tablero,tLista* bandidos,t
             elem.tipo=ASCII_JUGADOR;
             eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
 
-            /// posicionar al jugador al inicio del tablero
-            casillaPosicion.posicion = 1;
-            if(insertarElementoSeguro(tablero, casillaPosicion, elem, NULL) != TODO_OK)
-                return ERROR_MEM;
-
             /// eliminar los bandidos de la casilla, y de la lista de bandidos
             elem.tipo=ASCII_BANDIDO;
-            casillaPosicion.posicion = partida->posJugador;
-            if (eliminarElementoEnCasilla(tablero,casillaPosicion,elem) != TODO_OK)
+            if (eliminarElementoEnCasilla(tablero, casillaPosicion, elem) != TODO_OK)
             {
                 fprintf(stderr, "Error. No encontro el bandido en la casilla\n");
                 system("pause");
             }
+
+            bandidoAEliminar.posBandido = partida->posJugador;
+            eliminarListaDesordenadaPorClaveSinDup(bandidos, &bandidoAEliminar,
+                sizeof(tBandido), compararBandidos);
+
+            /// posicionar al jugador al inicio del tablero
+            elem.tipo=ASCII_JUGADOR
+            casillaPosicion.posicion = 1;
+            if(insertarElementoSeguro(tablero, casillaPosicion, elem, NULL) != TODO_OK)
+                return ERROR_MEM;
 
             partida->posJugador = 1;
             printf("El bandido te mando de vuelta al inicio.\n");
