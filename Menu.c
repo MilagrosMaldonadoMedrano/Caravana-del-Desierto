@@ -150,7 +150,7 @@ void iniciarPartida(tConfiguracion* config)
         {
             ///planifico el mov del jugador
             planificarMovimientoJugador(config,&bufferMovs,&historial,&partida);
-            planificarMovimientosBandidos(config,&bufferMovs,&tablero,&bandidos);
+            planificarMovimientosBandidos(&partida,&bufferMovs,&tablero,&bandidos);
             procesarTurno(&tablero,&bufferMovs,&partida);
 
             casilla.posicion=partida.posJugador;
@@ -255,40 +255,38 @@ int planificarMovimientoJugador(tConfiguracion* config,tCola* bufferMovs,tCola* 
     return JUEGO_CONTINUA;
 }
 
-void planificarMovimientosBandidos(tConfiguracion* config, tCola* bufferMovs, tLista* tablero, tLista* bandidos)
+void planificarMovimientosBandidos(tPartida* partida, tCola* bufferMovs, tLista* tablero, tLista* bandidos)
 {
     int dado;
     unsigned pos = 0;
-    unsigned posJugador = 1;
     unsigned cantBandidos;
+    unsigned cantPosiciones = listaCantidadElementos(tablero);
 //    unsigned nuevaPosBandido;
 //    unsigned posBandidoAMover;
 //    unsigned menorDistancia;
 //    char direccion;
 //    char pri = 1;
 //    tElemento elem;
+//    tContadorElementos cont = {0};
+//    tCasilla casillaPosicion;
+//    tCasilla* casilla=NULL;
     tMovimiento mov;
     tBandido bandido;
-    tCasilla casillaPosicion;
-    tCasilla* casilla=NULL;
-    tContadorElementos cont = {0};
 
     if (!*bandidos)
         return; /// no hay bandidos en el tablero
 
     cantBandidos = listaCantidadElementos(bandidos);
+    printf("Cantidad de bandidos: %u\n", cantBandidos);
 
-    do
-    {
-        ///deberia resetear el contador en cada iteración
-        casillaPosicion.posicion = posJugador;
-        casilla = buscarElementoLista(tablero,&casillaPosicion,compararPosicion);
-        recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
-        posJugador++;
+//        casillaPosicion.posicion = ;
+//        casilla = buscarElementoLista(tablero,&casillaPosicion,compararPosicion);
+//        recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
+
         //recorrerDeIzqADer(tablero, accionContarElementosDesdeTablero, &cont);
-    } while (cont.cantJugador == 0);
-//    printf("\nPosiciones de los bandidos en el tablero:\n");
-//    recorrerDeIzqADer(bandidos, mostrarBandidos, NULL);
+
+    printf("\nPosiciones de los bandidos en el tablero:\n");
+    recorrerDeIzqADer(bandidos, mostrarBandidos, NULL);
     /// Primero que busque al jugador, luego se vé implementar el resto...
 
     mov.elem.tipo = ASCII_BANDIDO;
@@ -298,17 +296,17 @@ void planificarMovimientosBandidos(tConfiguracion* config, tCola* bufferMovs, tL
         dado = tirarDado();
         if (recuperarUltElemOperadoEnLista(bandidos, &bandido, sizeof(bandido)) == TODO_OK)
         {
-            unsigned posNuevaAvanzando = (bandido.posBandido + dado) % config->cantPosiciones;
-            unsigned posNuevaRetrocediendo = (config->cantPosiciones + (bandido.posBandido - dado)) % config->cantPosiciones;
+            unsigned posNuevaAvanzando = (bandido.posBandido + dado) % cantPosiciones;
+            unsigned posNuevaRetrocediendo = (cantPosiciones + (bandido.posBandido - dado)) % cantPosiciones;
             unsigned distanciaAvanzando;
             unsigned distanciaRetrocediendo;
 
-            posNuevaAvanzando == 0 ? posNuevaAvanzando = config->cantPosiciones : posNuevaAvanzando;
+            posNuevaAvanzando == 0 ? posNuevaAvanzando = cantPosiciones : posNuevaAvanzando;
 
-            distanciaAvanzando = MODULO((int)posNuevaAvanzando - posJugador);
-            distanciaAvanzando > config->cantPosiciones / 2 ? distanciaAvanzando = config->cantPosiciones - distanciaAvanzando : distanciaAvanzando;
-            distanciaRetrocediendo = MODULO((int)posNuevaRetrocediendo - posJugador);
-            distanciaRetrocediendo > config->cantPosiciones / 2 ? distanciaRetrocediendo = config->cantPosiciones - distanciaRetrocediendo : distanciaRetrocediendo;
+            distanciaAvanzando = MODULO((int)posNuevaAvanzando - partida->posJugador);
+            distanciaAvanzando > cantPosiciones / 2 ? distanciaAvanzando = cantPosiciones - distanciaAvanzando : distanciaAvanzando;
+            distanciaRetrocediendo = MODULO((int)posNuevaRetrocediendo - partida->posJugador);
+            distanciaRetrocediendo > cantPosiciones / 2 ? distanciaRetrocediendo = cantPosiciones - distanciaRetrocediendo : distanciaRetrocediendo;
 
 //            if (pri || distanciaAvanzando < menorDistancia || distanciaRetrocediendo < menorDistancia)
 //            {
@@ -330,11 +328,16 @@ void planificarMovimientosBandidos(tConfiguracion* config, tCola* bufferMovs, tL
 //                    nuevaPosBandido = posNuevaRetrocediendo;
                 }
 
+                mov.elem.id = bandido.id;
                 mov.posOrigen = bandido.posBandido;
                 mov.cantMovim = dado;
 
                 ///actualizo la pos del bandido
-                buscarElementoEnLista(bandidos, &bandido, sizeof(bandido), compararBandidos, accionActualizarPosBandido, &mov.posFinal);
+                if (buscarElementoEnLista(bandidos, &bandido, sizeof(bandido), compararBandidos, accionActualizarPosBandido, &mov.posFinal) != ENCONTRADO)
+                {
+                    fprintf(stderr, "Error: No se encontro al bandido en la lista de bandidos\n");
+                    system("pause");
+                }
 
                 ///inserto el movimiento del bandido en la cola
                 ponerEnCola(bufferMovs, &mov, sizeof(tMovimiento));
@@ -447,7 +450,7 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
 
             bandidoAEliminar.posBandido = partida->posJugador;
             eliminarListaDesordenadaPorClaveSinDup(bandidos, &bandidoAEliminar,
-                sizeof(tBandido), compararBandidos);
+                sizeof(tBandido), compararPosBandidos);
 
             /// posicionar al jugador al inicio del tablero
             elem.tipo=ASCII_JUGADOR;

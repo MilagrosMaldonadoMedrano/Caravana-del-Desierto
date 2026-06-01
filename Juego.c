@@ -358,6 +358,18 @@ int compararBandidos(const void* a,const void* b)
 {
     tBandido* bandidoA = (tBandido*)a;
     tBandido* bandidoB = (tBandido*)b;
+
+    if (bandidoA->posBandido == bandidoB->posBandido)
+        return bandidoA->id - bandidoB->id;
+
+    return bandidoA->posBandido - bandidoB->posBandido;
+}
+
+int compararPosBandidos(const void* a, const void* b)
+{
+    tBandido* bandidoA = (tBandido*)a;
+    tBandido* bandidoB = (tBandido*)b;
+
     return bandidoA->posBandido - bandidoB->posBandido;
 }
 
@@ -370,7 +382,7 @@ void mostrarElementos(const void* elem, const void* extra)
 void mostrarBandidos(const void* elem, const void* extra)
 {
     tBandido* bandido = (tBandido*)elem;
-    printf("Posicion del bandido: %u\n", bandido->posBandido);
+    printf("Id de bandido: %u | Posicion: %u\n", bandido->id, bandido->posBandido);
 }
 
 void accionContarElementos(const void* elem, const void* extra)

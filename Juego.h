@@ -137,6 +137,7 @@ int tirarDado(void);
 int compararPosicion(const void* a,const void* b);
 int compararElementos(const void* a,const void* b);
 int compararBandidos(const void* a,const void* b);
+int compararPosBandidos(const void* a, const void* b);
 void mostrarElementos(const void* elem, const void* extra);
 void mostrarBandidos(const void* elem, const void* extra);
 
