@@ -461,7 +461,6 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
         }
         else
             printf("\u00A1Te salvas por el oasis! El bandido no puede atacarte.\n");
-
     }
 
 
@@ -477,7 +476,6 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
         }
         else
             printf("\u00A1Te salvas por el oasis! Las tormentas no pueden da%carte.\n", COD_ASCII_ENIE);
-
     }
 
     ///OASIS
@@ -619,6 +617,7 @@ char pedirDireccion()
 }
 
 
+/// ésta podría ir en Herramientas.c
 void limpiarBuffer()
 {
     int c;
