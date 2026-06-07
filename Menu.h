@@ -6,6 +6,7 @@
 #include "Juego.h"
 #include "Jugadores.h"
 #include "Partidas.h"
+#include "Arbol.h"
 
 #define MAX_NOMBRE 5
 
@@ -16,7 +17,7 @@
 void pedirNombre(char* nombre);
 int mostrarMenu();
 void mostrarRanking(const char* nomArch);
-void iniciarPartida(tConfiguracion* config);
+void iniciarPartida(tConfiguracion* config, tArbol* arbolJugadores);
 
 
 void planificarMovimientosBandidos(tPartida* partida, tCola* bufferMovs, tLista* tablero, tLista* bandidos);

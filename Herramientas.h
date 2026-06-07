@@ -8,6 +8,8 @@
 #define COD_ASCII_O_TILDE 162
 #define COD_ASCII_ENIE 164
 
+void pausar();
+void limpiarPantalla();
 int cantDigitosUnsigned(unsigned num);
 
 #endif // HERRAMIENTAS_H_INCLUDED

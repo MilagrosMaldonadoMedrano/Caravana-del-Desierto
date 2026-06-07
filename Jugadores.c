@@ -22,6 +22,24 @@ int buscarJugador(const char* nomArch, const char* nombre, tJugador* jug)
     fclose(pf);
     return NO_ENCONTRADO;
 }
+int buscarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, const char* nombre, tJugador* jug) {
+    FILE *pf;
+    tIndice index;
+
+    pf = fopen(nomArch, "rb");
+    if (!pf) return ERROR_ARCH;
+
+    index.clave = (void*)nombre;
+
+    if (buscarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador)) {
+        fseek(pf, index.pos * sizeof(tJugador), SEEK_SET);
+        fread(jug, sizeof(tJugador), 1, pf);
+        fclose(pf);
+        return ENCONTRADO;
+    }
+    fclose(pf);
+    return NO_ENCONTRADO;
+}
 
 int altaJugador(const char* nomArch, tJugador* jug)
 {
@@ -34,6 +52,32 @@ int altaJugador(const char* nomArch, tJugador* jug)
     fwrite(jug, sizeof(tJugador), 1, pf);
 
     fclose(pf);
+    return TODO_OK;
+}
+int altaJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
+    FILE *pf;
+    tIndice index;
+    char *clave;
+    unsigned pos;
+
+    pf = fopen(nomArch, "ab");
+    if(!pf) return ERROR_ARCH;
+
+    fseek(pf, 0, SEEK_END);
+    pos = ftell(pf) / sizeof(tJugador);
+
+    fwrite(jug, sizeof(tJugador), 1, pf);
+    fclose(pf);
+
+    clave = (char*) malloc(MAX_NOMBRE);
+    strcpy(clave, jug->nombre);
+
+    index.clave = clave;
+    index.tamClave = MAX_NOMBRE;
+    index.pos = pos;
+
+    insertarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador);
+
     return TODO_OK;
 }
 
@@ -59,6 +103,25 @@ int actualizarJugador(const char* nomArch, tJugador* jug)
 
     fclose(pf);
 
+    return NO_ENCONTRADO;
+}
+int actualizarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
+    FILE *pf;
+    tIndice index;
+    index.clave = (void*)jug->nombre;
+
+    pf = fopen(nomArch, "rb+");
+    if (!pf) return ERROR_ARCH;
+
+    if (buscarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador)) {
+        fseek(pf, index.pos * sizeof(tJugador), SEEK_SET);
+        fwrite(jug, sizeof(tJugador), 1, pf);
+
+        fclose(pf);
+        return TODO_OK;
+    }
+
+    fclose(pf);
     return NO_ENCONTRADO;
 }
 

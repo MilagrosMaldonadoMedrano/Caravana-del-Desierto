@@ -5,10 +5,13 @@
 #include "Menu.h"
 #include "Turno.h"
 #include "Jugadores.h"
+#include "Arbol.h"
+#include "Indice.h"
 
 int main()
 {
     tConfiguracion config;
+    tArbol arbolJugadores;
     int opcion;
 
     srand(time(NULL));
@@ -25,6 +28,13 @@ int main()
         return ERROR_ARCH;
     }
 
+    crearArbol(&arbolJugadores);
+
+    if (cargarIndiceJugadores(NOM_ARCH_INDICE_JUGADORES, &arbolJugadores) != TODO_OK)
+        indexarArchivoJugadores(NOM_ARCH_JUGADORES, &arbolJugadores);
+
+    mostrarIndiceJugadores(&arbolJugadores);
+
     /*//fc para verificar los archivos:
     mostrarArchivoJugadores(NOM_ARCH_JUGADORES);
     mostrarArchivoPartidas(NOM_ARCH_PARTIDAS);*/
@@ -35,7 +45,7 @@ int main()
         switch (opcion)
         {
             case OPCION_JUGAR:
-                iniciarPartida(&config);
+                iniciarPartida(&config, &arbolJugadores);
                 break;
             case OPCION_RANKING:
                 mostrarRanking(NOM_ARCH_JUGADORES);
@@ -48,6 +58,9 @@ int main()
         }
 
     } while (opcion != OPCION_SALIR);
+
+    guardarIndiceJugadores(NOM_ARCH_INDICE_JUGADORES, &arbolJugadores);
+    vaciarArbol(&arbolJugadores);
 
     return 0;
 }

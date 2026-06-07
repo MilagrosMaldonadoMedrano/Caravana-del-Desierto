@@ -6,6 +6,8 @@
 #include "Lista.h"
 #include "Menu.h"
 #include "Partidas.h"
+#include "Arbol.h"
+#include "Indice.h"
 
 #define MAX_NOMBRE 5
 #define MAX_JUGADORES 100
@@ -23,8 +25,11 @@ typedef struct
 int obtenerUltimoID(const char* nomArch);
 void mostrarArchivoJugadores(const char* nomArch);
 int buscarJugador(const char* nomArch, const char* nombre, tJugador* jug);
+int buscarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, const char* nombre, tJugador* jug);
 int altaJugador(const char* nomArch, tJugador* jug);
+int altaJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug);
 int actualizarJugador(const char* nomArch, tJugador* jug);
+int actualizarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug);
 void mostrarJugador(const void* j);
 
 int cargarJugadores(const char* nomArch, tJugador* vec);
