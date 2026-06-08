@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Arbol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Arbol.h" />
 		<Unit filename="Archivo.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -43,6 +47,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Herramientas.h" />
+		<Unit filename="Indice.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Indice.h" />
 		<Unit filename="Juego.c">
 			<Option compilerVar="CC" />
 		</Unit>

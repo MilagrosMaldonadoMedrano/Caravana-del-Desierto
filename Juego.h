@@ -22,7 +22,7 @@
 #define ASCII_TORMENTA  'T'
 #define ASCII_POS_VACIA '.'
 
-///macros para el switch de crearTablero
+///macros para el Tablero
 #define BANDIDO 0
 #define PREMIO 1
 #define VIDA_EXTRA 2
@@ -31,6 +31,16 @@
 #define POS_VACIA 5
 
 #define CANT_COMPONENTES 6
+
+#define CANT_MIN_POSICIONES 3
+#define RELACION_MIN_BANDIDOS 0.15
+#define RELACION_MAX_BANDIDOS 0.80
+#define RELACION_MIN_TORMENTAS 0.2
+#define RELACION_MAX_TORMENTAS 0.6
+#define TABLERO_JUGABLE 1
+#define TABLERO_NO_JUGABLE 0
+
+#define RELACION_ASPECTO_TABLERO 1.33
 
 /// Nombre del archivo donde se guarda el historial
 #define NOM_ARCH_MOVIMIENTOS "movimientos.txt"
@@ -104,13 +114,15 @@ typedef struct
 /// estructura para los bandidos (guarda las posiciones)
 typedef struct
 {
-    unsigned posBandido;
     unsigned id;
+    unsigned posBandido;
+    unsigned movimientos;
 }tBandido;
 
 
-///CREACION DEL TABLERO
+///FUNCIONES DEL TABLERO
 int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLista* bandidos);
+int verificarTablero(tLista* tablero, const tConfiguracion* config);
 int crearCasilla(tCasilla* casilla);
 int guardarTableroArchivo(tLista* tablero, FILE* pf,tConfiguracion* config,int cantDigitos);
 
@@ -125,7 +137,7 @@ int guardarMostrarHistorial(tCola* historial, const char* nomArch);
 
 ///FUNCIONES DE USO COMUN
 int agregarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem);
-void dibujarTablero(tLista* tablero,int cantPosiciones,int columnas);
+void dibujarTablero(tLista* tablero,int cantPosiciones);
 void vaciarTablero(tLista* tablero);
 int insertarElementoSeguro(tLista* tablero,tCasilla casilla,tElemento elem,FILE* pf);
 int eliminarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem);
@@ -145,7 +157,7 @@ void accionEscribirArchivo(const void* elem, const void* pf);
 void accionImprimirConsola(const void* elem, const void* extra);
 void accionContarElementos(const void* elem, const void* extra);
 void accionContarElementosDesdeTablero(const void* elem, const void* extra);
-void accionActualizarPosBandido(const void* elem, const void* extra);
+void accionActualizarBandido(const void* elem, const void* extra);
 
 
 #endif // JUEGO_H_INCLUDED

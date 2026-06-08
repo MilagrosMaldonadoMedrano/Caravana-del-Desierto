@@ -12,7 +12,7 @@ int main()
 {
     tConfiguracion config;
     tArbol arbolJugadores;
-    int opcion;
+    int opcion, resultado;
 
     srand(time(NULL));
 
@@ -20,9 +20,10 @@ int main()
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
 
-
-    if (cargarConfiguracion(NOM_ARCH_CONFIG, &config) != TODO_OK)
+    resultado = cargarConfiguracion(NOM_ARCH_CONFIG, &config);
+    if (resultado != TODO_OK)
     {
+        informarErrorConfiguracion(resultado);
         perror("\nError al cargar las configuraciones:");
         printf("\nFinalizando programa...\n");
         return ERROR_ARCH;

@@ -9,6 +9,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
     FILE* pf;
     tBandido bandido;
     int auxTormenta;
+    int tableroJugable;
     ///creo todas las listas de las casillas
 
     tCasilla casilla;
@@ -20,114 +21,122 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
 
     int cantDigitosCasillas = cantDigitosUnsigned(config->cantPosiciones);
 
-
-    for(int i=0;i<config->cantPosiciones;i++)
+    do
     {
-        crearCasilla(&casilla);
-        casilla.posicion=i+1;
+        vaciarTablero(tablero);
+        vaciarLista(bandidos);
+        printf("Intento de creacion del tablero...\n");
 
-
-        if(listaInsertarAlFinal(tablero,&casilla,sizeof(tCasilla))!=TODO_OK)
+        for(int i=0;i<config->cantPosiciones;i++)
         {
-            vaciarLista(tablero);
-            fclose(pf);
-            return  ERROR_MEM;
-        }
-    }
-
-    ///agrego el primer elemento
-
-    casilla.posicion=1;
-    elem.tipo=ASCII_INICIO;
-    if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
-        return ERROR_MEM;
+            crearCasilla(&casilla);
+            casilla.posicion=i+1;
 
 
-    elem.tipo=ASCII_JUGADOR;
-    if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
-        return ERROR_MEM;
-
-
-    unsigned aleatorio;
-    ///bandidos
-    elem.tipo=ASCII_BANDIDO;
-
-    for(int i=0;i<config->maxBandidos;i++)
-    {
-        aleatorio = rand()%(config->cantPosiciones-2)+2;
-        casilla.posicion=aleatorio;
-        elem.id=i+1;
-        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
-            return ERROR_MEM;
-        bandido.posBandido = casilla.posicion;
-        bandido.id = elem.id;
-        insertarAlFinal(bandidos, &bandido, sizeof(bandido));
-    }
-
-    ///premios
-    elem.tipo=ASCII_PREMIO;
-    for(int i=0;i<config->maxPremios;i++)
-    {
-        aleatorio = rand()%(config->cantPosiciones-2)+2;
-        casilla.posicion=aleatorio;
-        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
-            return ERROR_MEM;
-    }
-
-    ///vidas
-    elem.tipo=ASCII_VIDA_EXTRA;
-    for(int i=0;i<config->maxVidasExtra;i++)
-    {
-        aleatorio = rand()%(config->cantPosiciones-2)+2;
-        casilla.posicion=aleatorio;
-        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
-            return ERROR_MEM;
-    }
-
-
-    ///oasis
-    elem.tipo=ASCII_OASIS;
-    for(int i=0;i<config->maxOasis;i++)
-    {
-        aleatorio = rand()%(config->cantPosiciones-2)+2;
-        casilla.posicion=aleatorio;
-        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
-            return ERROR_MEM;
-    }
-
-    ///tormenta
-    elem.tipo = ASCII_TORMENTA;
-    auxTormenta = config->maxTormentas;
-
-    while(auxTormenta>0)
-    {
-        aleatorio = rand() % (config->cantPosiciones - 2) + 2;
-        casilla.posicion = aleatorio;
-
-        tCasilla* casillaAux = buscarElementoLista(tablero, &casilla, compararPosicion);
-
-        if(casillaAux != NULL)
-        {
-            tContadorElementos cont = {0};
-            recorrerDeIzqADer(&casillaAux->elementos, accionContarElementos, &cont);
-
-            if(cont.cantOasis == 0)///inserto si NO HAY oasis en la casilla
+            if(listaInsertarAlFinal(tablero,&casilla,sizeof(tCasilla))!=TODO_OK)
             {
-                if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
-                    return ERROR_MEM;
-                auxTormenta--;
+                vaciarLista(tablero);
+                fclose(pf);
+                return  ERROR_MEM;
             }
         }
-    }
+
+        ///agrego el primer elemento
+
+        casilla.posicion=1;
+        elem.tipo=ASCII_INICIO;
+        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+            return ERROR_MEM;
 
 
-    casilla.posicion=config->cantPosiciones;
-    elem.tipo=ASCII_SALIDA;
-    if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
-        return ERROR_MEM;
+        elem.tipo=ASCII_JUGADOR;
+        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+            return ERROR_MEM;
 
 
+        unsigned aleatorio;
+        ///bandidos
+        elem.tipo=ASCII_BANDIDO;
 
+        for(int i=0;i<config->maxBandidos;i++)
+        {
+            aleatorio = rand()%(config->cantPosiciones-2)+2;
+            casilla.posicion=aleatorio;
+            elem.id=i+1;
+            if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+                return ERROR_MEM;
+            bandido.id = elem.id;
+            bandido.posBandido = casilla.posicion;
+            bandido.movimientos = 0;
+            insertarAlFinal(bandidos, &bandido, sizeof(bandido));
+        }
+
+        ///premios
+        elem.tipo=ASCII_PREMIO;
+        for(int i=0;i<config->maxPremios;i++)
+        {
+            aleatorio = rand()%(config->cantPosiciones-2)+2;
+            casilla.posicion=aleatorio;
+            if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+                return ERROR_MEM;
+        }
+
+        ///vidas
+        elem.tipo=ASCII_VIDA_EXTRA;
+        for(int i=0;i<config->maxVidasExtra;i++)
+        {
+            aleatorio = rand()%(config->cantPosiciones-2)+2;
+            casilla.posicion=aleatorio;
+            if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+                return ERROR_MEM;
+        }
+
+
+        ///oasis
+        elem.tipo=ASCII_OASIS;
+        for(int i=0;i<config->maxOasis;i++)
+        {
+            aleatorio = rand()%(config->cantPosiciones-2)+2;
+            casilla.posicion=aleatorio;
+            if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+                return ERROR_MEM;
+        }
+
+        ///tormenta
+        elem.tipo = ASCII_TORMENTA;
+        auxTormenta = config->maxTormentas;
+
+        while(auxTormenta>0)
+        {
+            aleatorio = rand() % (config->cantPosiciones - 2) + 2;
+            casilla.posicion = aleatorio;
+
+            tCasilla* casillaAux = buscarElementoLista(tablero, &casilla, compararPosicion);
+
+            if(casillaAux != NULL)
+            {
+                tContadorElementos cont = {0};
+                recorrerDeIzqADer(&casillaAux->elementos, accionContarElementos, &cont);
+
+                if(cont.cantOasis == 0)///inserto si NO HAY oasis en la casilla
+                {
+                    if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+                        return ERROR_MEM;
+                    auxTormenta--;
+                }
+            }
+        }
+
+
+        casilla.posicion=config->cantPosiciones;
+        elem.tipo=ASCII_SALIDA;
+        if(insertarElementoSeguro(tablero, casilla, elem, pf) != TODO_OK)
+            return ERROR_MEM;
+
+
+        tableroJugable = verificarTablero(tablero, config);
+
+    } while (!tableroJugable);
 
 
     guardarTableroArchivo(tablero,pf,config,cantDigitosCasillas);
@@ -136,6 +145,41 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
     fclose(pf);
 
     return TODO_OK;
+}
+
+// función que verifica que el tablero sea jugable
+int verificarTablero(tLista* tablero, const tConfiguracion* config)
+{
+    tCasilla casillaPos;
+    tContadorElementos cont = {0};
+    unsigned mitadCantPosiciones = config->cantPosiciones / 2;
+    int i;
+
+    /// que no haya muchos bandidos apenas el jugador sale del inicio
+    casillaPos.posicion = 2;
+
+    /// se tiene que fijar las casillas previas al inicio (desde la casilla anterior a la salida
+    /// y desde la casilla siguiente al inicio, que no haya muchos bandidos, para que el jugador
+    /// no muera al inicio
+    for (i = 0; i < minimo(mitadCantPosiciones, config->maxBandidos); i++)
+    {
+        tCasilla* casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
+        recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
+        casillaPos.posicion++;
+    }
+    casillaPos.posicion = config->cantPosiciones - 1;
+    for (i = 0; i < minimo(mitadCantPosiciones, config->maxBandidos); i++)
+    {
+        tCasilla* casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
+        recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
+        casillaPos.posicion--;
+    }
+
+    /// si máS del 60% de los bandidos se encuentran en posiciones cercanas al inicio
+    if (cont.cantBandido >= (unsigned)(config->maxBandidos * 0.6))
+        return TABLERO_NO_JUGABLE;
+
+    return TABLERO_JUGABLE;
 }
 
 int crearCasilla(tCasilla* casilla)
@@ -221,12 +265,14 @@ void vaciarTablero(tLista* tablero)
         }
     }
 }
-void dibujarTablero(tLista* tablero, int cantPosiciones, int columnas)
+void dibujarTablero(tLista* tablero, int cantPosiciones)
 {
     tCasilla* casilla;
     tCasilla casillaPos;
-    int filas = (cantPosiciones + columnas - 1) / columnas; ///(A + B - 1) / B para no tener problema con los decimales
+//    int filas = (cantPosiciones + columnas - 1) / columnas; ///(A + B - 1) / B para no tener problema con los decimales
                                                             ///y que no me falten lugares
+    int columnas = (int)sqrt(cantPosiciones);
+    int filas = (cantPosiciones + columnas - 1) / columnas;
 
     for(int f = 0; f < filas; f++)
     {
@@ -267,7 +313,7 @@ void dibujarTablero(tLista* tablero, int cantPosiciones, int columnas)
 
                 if(listaVacia(&casilla->elementos) == LISTA_VACIA)
                 {
-                    printf(".              ");
+                    printf("               ");
                 }
                 else
                 {
@@ -308,7 +354,7 @@ void dibujarTablero(tLista* tablero, int cantPosiciones, int columnas)
             }
             else
             {
-                printf("               ");
+                printf("-------------- ");
             }
         }
 
@@ -359,10 +405,7 @@ int compararBandidos(const void* a,const void* b)
     tBandido* bandidoA = (tBandido*)a;
     tBandido* bandidoB = (tBandido*)b;
 
-    if (bandidoA->posBandido == bandidoB->posBandido)
-        return bandidoA->id - bandidoB->id;
-
-    return bandidoA->posBandido - bandidoB->posBandido;
+    return bandidoA->id - bandidoB->id;
 }
 
 int compararPosBandidos(const void* a, const void* b)
@@ -428,7 +471,7 @@ void accionContarElementosDesdeTablero(const void* elem, const void* extra)
     recorrerDeIzqADer(&e->elementos, accionContarElementos, cont);
 }
 
-void accionActualizarPosBandido(const void* elem, const void* extra)
+void accionActualizarBandido(const void* elem, const void* extra)
 {
     tBandido* b = (tBandido*)elem;
     unsigned nuevaPos = *(unsigned*)extra;
@@ -437,6 +480,7 @@ void accionActualizarPosBandido(const void* elem, const void* extra)
     printf("Bandido %-2u: Pos anterior: %-2u | Nueva pos: %-2u\n", b->id, b->posBandido, nuevaPos);
 
     b->posBandido = nuevaPos;
+    b->movimientos++;
 }
 
 void accionImprimirConsola(const void* elem, const void* extra)

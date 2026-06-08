@@ -7,6 +7,7 @@
 #include <time.h>
 #include <stddef.h>
 #include <windows.h>
+#include <math.h>
 #include "Herramientas.h"
 
 #endif // MAIN_H_INCLUDED

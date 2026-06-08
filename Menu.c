@@ -88,9 +88,9 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
     tCasilla casilla;
     tJugador jugador;
     tRegistroPartida reg;
-
     char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
     int estado=JUEGO_CONTINUA;
+
     crearLista(&tablero);
     crearLista(&bandidos);
     crearCola(&historial);
@@ -103,7 +103,6 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
     partida.oasis = 0;
     partida.tormenta = 0;
 
-    ///ESTA VALIDACION ME PARECE QUE ESTA DE MAS
     if (crearTablero(NOM_ARCH_TABLERO, &tablero, config, &bandidos) != TODO_OK)
     {
         printf("Error al crear el tablero. Volviendo al menu...\n");
@@ -142,7 +141,7 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
 
 
     printf("Vidas: %u | Puntos: %u\n", partida.cantVidas, partida.cantPuntos);
-    dibujarTablero(&tablero,config->cantPosiciones,5);//definir columnas!
+    dibujarTablero(&tablero,config->cantPosiciones);
     ///---------------BUCLE DEL JUEGO------------------------
 
     while(partida.cantVidas>0 && estado==JUEGO_CONTINUA)
@@ -160,7 +159,7 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
         }
 
         printf("Vidas: %u | Puntos: %u\n", partida.cantVidas, partida.cantPuntos);
-        dibujarTablero(&tablero,config->cantPosiciones,5);//definir columnas!
+        dibujarTablero(&tablero,config->cantPosiciones);
 
     }
     ///------------------------------------------------------
@@ -210,7 +209,7 @@ int planificarMovimientoJugador(tConfiguracion* config,tCola* bufferMovs,tCola* 
     if (partida->tormenta)
     {
         printf("\nEstas atrapado en una tormenta. Perdes este turno.\n");
-        partida->tormenta = 0;
+        //partida->tormenta = 0 // esto lo hacemos en manejarSituacionCasilla
 
         mov.elem.tipo=ASCII_JUGADOR;
         mov.posOrigen=partida->posJugador;
@@ -261,96 +260,214 @@ int planificarMovimientoJugador(tConfiguracion* config,tCola* bufferMovs,tCola* 
 void planificarMovimientosBandidos(tPartida* partida, tCola* bufferMovs, tLista* tablero, tLista* bandidos)
 {
     int dado;
-    unsigned pos = 0;
-    unsigned cantBandidos;
+    char movimiento;
+
+    unsigned cantBandidosAMover, cantBandAMoverEstrateg;
     unsigned cantPosiciones = listaCantidadElementos(tablero);
+    unsigned menorDistancia;
+    unsigned idBandidoMenorDistancia;
+//    unsigned pos = 0;
 //    unsigned nuevaPosBandido;
 //    unsigned posBandidoAMover;
-//    unsigned menorDistancia;
 //    char direccion;
-//    char pri = 1;
 //    tElemento elem;
-//    tContadorElementos cont = {0};
-//    tCasilla casillaPosicion;
-//    tCasilla* casilla=NULL;
+    tContadorElementos cont = {0};
+    tCasilla casillaPos;
+    tCasilla* casilla=NULL;
     tMovimiento mov;
     tBandido bandido;
 
     if (!*bandidos)
         return; /// no hay bandidos en el tablero
 
-    cantBandidos = listaCantidadElementos(bandidos);
-    printf("Cantidad de bandidos: %u\n", cantBandidos);
-
-//        casillaPosicion.posicion = ;
-//        casilla = buscarElementoLista(tablero,&casillaPosicion,compararPosicion);
-//        recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
-
-        //recorrerDeIzqADer(tablero, accionContarElementosDesdeTablero, &cont);
+    cantBandidosAMover = listaCantidadElementos(bandidos);
+    printf("Cantidad de bandidos: %u\n", cantBandidosAMover);
 
     printf("\nPosiciones de los bandidos en el tablero:\n");
     recorrerDeIzqADer(bandidos, mostrarBandidos, NULL);
+
     /// Primero que busque al jugador, luego se vé implementar el resto...
 
     mov.elem.tipo = ASCII_BANDIDO;
 
-    while (cantBandidos > 0)
+    cantBandAMoverEstrateg = cantPosiciones * RELACION_MIN_BANDIDOS;
+    if (cantBandAMoverEstrateg > cantBandidosAMover / 2)
+        cantBandAMoverEstrateg = cantBandAMoverEstrateg * RELACION_MIN_BANDIDOS;
+
+    /// si el jugador está en una tormenta, todos los bandidos contra el jugador
+    cantBandAMoverEstrateg = partida->tormenta ? 0 : cantBandAMoverEstrateg;
+
+    while (cantBandidosAMover > 0)
     {
+        char pri = 1;
+        unsigned idAnt;
+        unsigned idBandidoAMover = 0;
+        movimiento = 0;
         dado = tirarDado();
-        if (recuperarUltElemOperadoEnLista(bandidos, &bandido, sizeof(bandido)) == TODO_OK)
+
+        recuperarUltElemOperadoEnLista(bandidos, &bandido, sizeof(bandido));
+        idAnt = bandido.id;
+
+        do
         {
-            unsigned posNuevaAvanzando = (bandido.posBandido + dado) % cantPosiciones;
-            unsigned posNuevaRetrocediendo = (cantPosiciones + (bandido.posBandido - dado)) % cantPosiciones;
-            unsigned distanciaAvanzando;
-            unsigned distanciaRetrocediendo;
+            reiniciarContador(&cont);
+            /// si el bandido no se movió en este turno
+            if (bandido.movimientos == partida->movimientos)
+            {
+                unsigned posNuevaAvanzando = (bandido.posBandido + dado) % cantPosiciones;
+                unsigned posNuevaRetrocediendo = (cantPosiciones + (bandido.posBandido - dado)) % cantPosiciones;
+                unsigned distanciaAvanzando;
+                unsigned distanciaRetrocediendo;
 
-            posNuevaAvanzando == 0 ? posNuevaAvanzando = cantPosiciones : posNuevaAvanzando;
+                posNuevaAvanzando == 0 ? posNuevaAvanzando = cantPosiciones : posNuevaAvanzando;
+                posNuevaRetrocediendo == 0 ? posNuevaRetrocediendo = cantPosiciones : posNuevaRetrocediendo;
 
-            distanciaAvanzando = MODULO((int)posNuevaAvanzando - partida->posJugador);
-            distanciaAvanzando > cantPosiciones / 2 ? distanciaAvanzando = cantPosiciones - distanciaAvanzando : distanciaAvanzando;
-            distanciaRetrocediendo = MODULO((int)posNuevaRetrocediendo - partida->posJugador);
-            distanciaRetrocediendo > cantPosiciones / 2 ? distanciaRetrocediendo = cantPosiciones - distanciaRetrocediendo : distanciaRetrocediendo;
+                distanciaAvanzando = MODULO((int)(posNuevaAvanzando - partida->posJugador));
+                distanciaAvanzando > cantPosiciones / 2 ? distanciaAvanzando = cantPosiciones - distanciaAvanzando : distanciaAvanzando;
+                distanciaRetrocediendo = MODULO((int)(posNuevaRetrocediendo - partida->posJugador));
+                distanciaRetrocediendo > cantPosiciones / 2 ? distanciaRetrocediendo = cantPosiciones - distanciaRetrocediendo : distanciaRetrocediendo;
 
-//            if (pri || distanciaAvanzando < menorDistancia || distanciaRetrocediendo < menorDistancia)
-//            {
-
-                if (distanciaAvanzando < distanciaRetrocediendo)
+                if (cantBandAMoverEstrateg)
                 {
-                    mov.direccion = FORWARD;
-                    mov.posFinal = posNuevaAvanzando;
-//                    direccion = FORWARD;
-//                    menorDistancia = distanciaAvanzando;
-//                    nuevaPosBandido = posNuevaAvanzando;
+                    /// si la distancia entre el bandido moviéndose y el jugador no es muy cercana
+                    if (minimo(distanciaAvanzando,distanciaRetrocediendo) > cantPosiciones / 3)
+                    {
+                        /// se fija que hay en la casilla donde se ubica el bandido
+                        casillaPos.posicion = bandido.posBandido;
+                        casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
+                        recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
+
+                        /// si hay más de 2 bandidos en la misma posicion
+                        /// o si el bandido se ubica en la salida, que se vaya, porque no le
+                        /// afecta al jugador si llega a la salida
+                        if (cont.cantBandido > 1 || cont.cantSalida == 1)
+                        {
+                            /// se fija hacia donde se mueve
+
+                            /// se fija que no se mueva a la salida
+                            if (posNuevaAvanzando != cantPosiciones)
+                            {
+                                reiniciarContador(&cont);
+                                casillaPos.posicion = posNuevaAvanzando;
+                                casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
+                                recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
+
+                                /// se fija si se mueve hacia adelante, que hay en esa casilla
+                                if (cont.cantOasis || cont.cantVida)
+                                {
+                                    /// se mueve hacia adelante
+                                    mov.direccion = FORWARD;
+                                    mov.posOrigen = bandido.posBandido;
+                                    mov.posFinal = posNuevaAvanzando;
+                                    idBandidoAMover = bandido.id;
+                                    movimiento = 1;
+                                }
+                                else
+                                {
+                                    /// se mueve hacia atras (si conviene)
+                                    reiniciarContador(&cont);
+                                    casillaPos.posicion = posNuevaAvanzando;
+                                    casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
+                                    recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
+                                    if (cont.cantOasis || cont.cantVida)
+                                    {
+                                        mov.direccion = BACKWARD;
+                                        mov.posOrigen = bandido.posBandido;
+                                        mov.posFinal = posNuevaRetrocediendo;
+                                        idBandidoAMover = bandido.id;
+                                        movimiento = 1;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                /// se mueve hacia atras (si conviene)
+                                reiniciarContador(&cont);
+                                casillaPos.posicion = posNuevaAvanzando;
+                                casilla = buscarElementoLista(tablero, &casillaPos, compararPosicion);
+                                recorrerDeIzqADer(&casilla->elementos, accionContarElementos, &cont);
+                                if (cont.cantOasis || cont.cantVida)
+                                {
+                                    mov.direccion = BACKWARD;
+                                    mov.posOrigen = bandido.posBandido;
+                                    mov.posFinal = posNuevaRetrocediendo;
+                                    idBandidoAMover = bandido.id;
+                                    movimiento = 1;
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            /// se fija si hay algun beneficio para el jugador en la casilla que está
+                            if (cont.cantVida || cont.cantOasis)
+                            {
+                                /// se queda
+                                mov.direccion = FORWARD;
+                                mov.posOrigen = bandido.posBandido;
+                                mov.posFinal = bandido.posBandido;
+                                idBandidoAMover = bandido.id;
+                                movimiento = 1;
+                            }
+                            /// si no hay nada, espera a tirar denuevo, si puede.
+                        }
+
+                    }
+
+                }
+
+                /// si no hubo movimiento estratégico
+                if (!movimiento)
+                {
+                    if (pri || distanciaAvanzando < menorDistancia || distanciaRetrocediendo < menorDistancia)
+                    {
+                        if (distanciaAvanzando < distanciaRetrocediendo)
+                        {
+                            menorDistancia = distanciaAvanzando;
+                            mov.direccion = FORWARD;
+                            mov.posFinal = posNuevaAvanzando;
+                        }
+                        else
+                        {
+                            menorDistancia = distanciaRetrocediendo;
+                            mov.direccion = BACKWARD;
+                            mov.posFinal = posNuevaRetrocediendo;
+                        }
+                        mov.posOrigen = bandido.posBandido;
+                        idBandidoMenorDistancia = bandido.id;
+                        pri = 0;
+                    }
                 }
                 else
-                {
-                    mov.direccion = BACKWARD;
-                    mov.posFinal = posNuevaRetrocediendo;
-//                    direccion = BACKWARD;
-//                    menorDistancia = distanciaRetrocediendo;
-//                    nuevaPosBandido = posNuevaRetrocediendo;
-                }
+                    cantBandAMoverEstrateg--;
+            }
 
-                mov.elem.id = bandido.id;
-                mov.posOrigen = bandido.posBandido;
-                mov.cantMovim = dado;
+            recuperarUltElemOperadoEnLista(bandidos, &bandido, sizeof(bandido));
+        } while (!idBandidoAMover && bandido.id != idAnt);
 
-                ///actualizo la pos del bandido
-                if (buscarElementoEnLista(bandidos, &bandido, sizeof(bandido), compararBandidos, accionActualizarPosBandido, &mov.posFinal) != ENCONTRADO)
-                {
-                    fprintf(stderr, "Error: No se encontro al bandido en la lista de bandidos\n");
-                    system("pause");
-                }
 
-                ///inserto el movimiento del bandido en la cola
-                ponerEnCola(bufferMovs, &mov, sizeof(tMovimiento));
+            ///actualizo la pos del bandido
+            if (!idBandidoAMover)
+                idBandidoAMover = idBandidoMenorDistancia;
+
+            bandido.id = idBandidoAMover;
+            if (buscarElementoEnLista(bandidos, &bandido, sizeof(bandido), compararBandidos, accionActualizarBandido, &mov.posFinal) != ENCONTRADO)
+            {
+                fprintf(stderr, "Error: No se encontro al bandido en la lista de bandidos\n");
+                system("pause");
+            }
+
+            mov.elem.id = bandido.id;
+//            mov.posOrigen = bandido.posBandido;
+            mov.cantMovim = mov.posFinal == mov.posOrigen ? 0 : dado;
+
+            ///inserto el movimiento del bandido en la cola
+            ponerEnCola(bufferMovs, &mov, sizeof(tMovimiento));
 
 //                posBandidoAMover = bandido.posBandido;
 //                pri = 0;
-//            }
-            pos++;
-        }
-        cantBandidos--;
+//            pos++;
+        cantBandidosAMover--;
     }
 
 }
@@ -416,7 +533,7 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
     if(partida->posJugador==config->cantPosiciones)
         return JUGADOR_GANO;
 
-
+    ///VIDA EXTRA
     if (cont.cantVida > 0)
     {
         partida->cantVidas++;
@@ -425,8 +542,8 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
         eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
     }
 
-    ///BANDIDOS
 
+    ///BANDIDOS
     if(cont.cantBandido>0)
     {
 
@@ -469,20 +586,27 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
             printf("\u00A1Te salvas por el oasis! El bandido no puede atacarte.\n");
     }
 
-
-    ///Tormenta
-    if(cont.cantTormenta>0)
-    {
-        if(partida->oasis==FALSO)
+    ///TORMENTA
+    //si el jugador no está en una tormenta, se fija si en la casilla hay una tormenta?
+//    if (!partida->tormenta)
+//    {
+    partida->tormenta = FALSO;
+        if(cont.cantTormenta>0)
         {
-            partida->tormenta=VERDADERO;
-            printf("\u00A1Has pasado por una tormenta! Perdes el siguiente turno.\n");
-            elem.tipo=ASCII_TORMENTA;
-            eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+            if(partida->oasis==FALSO)
+            {
+                partida->tormenta=VERDADERO;
+                printf("\u00A1Has pasado por una tormenta! Perdes el siguiente turno.\n");
+                elem.tipo=ASCII_TORMENTA;
+                eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+            }
+            else
+                printf("\u00A1Te salvas por el oasis! Las tormentas no pueden da%carte.\n", COD_ASCII_ENIE);
         }
-        else
-            printf("\u00A1Te salvas por el oasis! Las tormentas no pueden da%carte.\n", COD_ASCII_ENIE);
-    }
+//    }
+//    else
+//        partida->tormenta = 0;
+
 
     ///OASIS
     if (partida->oasis)
@@ -509,7 +633,6 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
         elem.tipo=ASCII_PREMIO;
         eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
     }
-
 
     return JUEGO_CONTINUA;
 }
@@ -622,6 +745,17 @@ char pedirDireccion()
     return (opcion == OPCION_AVANZAR) ? FORWARD : BACKWARD;
 }
 
+void reiniciarContador(tContadorElementos* cont)
+{
+    cont->cantBandido = 0;
+    cont->cantInicio = 0;
+    cont->cantJugador = 0;
+    cont->cantOasis = 0;
+    cont->cantPremio = 0;
+    cont->cantSalida = 0;
+    cont->cantTormenta = 0;
+    cont->cantVida = 0;
+}
 
 /// ésta podría ir en Herramientas.c
 void limpiarBuffer()

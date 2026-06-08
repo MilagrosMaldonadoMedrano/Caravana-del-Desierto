@@ -28,5 +28,6 @@ int manejarSituacionCasilla(tPartida* partida,tLista* tablero,tLista* bandidos,t
 void limpiarBuffer();
 int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tConfiguracion* config);
 char pedirDireccion() ;
+void reiniciarContador(tContadorElementos* cont);
 
 #endif // MENU_H_INCLUDED
