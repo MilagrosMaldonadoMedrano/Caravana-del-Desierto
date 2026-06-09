@@ -1,7 +1,6 @@
 ===== REGISTRO DE MOVIMIENTOS =====
 Turno  1: F6
-Turno  2: F6
-Turno  3: F3
-Turno  4: F4
-Turno  5: F5
+Turno  2: F1
+Turno  3: F2
+Turno  4: F1
 ===================================

@@ -1,19 +1,65 @@
 #include "Turno.h"
 #include "Menu.h"
 #include "Lista.h"
-
 #include "Archivo.h"
 
-void pedirNombre(char* nombre)
+void pedirNombre(char* nombre, char* nickname)
 {
-    printf("Ingrese su nombre: ");
+    int opcion;
 
-    fgets(nombre, MAX_NOMBRE, stdin);
 
-    if(strchr(nombre, '\n'))
-        nombre[strcspn(nombre, "\n")] = '\0';
+    do
+    {
+        printf("1. Soy nuevo\n");
+        printf("2. Ya tengo nickname\n");
+        printf("Opcion: ");
+        scanf("%d", &opcion);
+    }while(opcion!=1 && opcion!=2);
+    limpiarBuffer();
+
+    if(opcion==1)
+    {
+        int numero=rand()%999;
+        char cadena[5];
+        printf("Ingrese su nombre: ");
+        memset(nickname, 0, MAX_NICK);
+        fgets(nombre, MAX_NOMBRE, stdin);
+
+        if(strchr(nombre, '\n'))
+            nombre[strcspn(nombre, "\n")] = '\0';
+        else
+            limpiarBuffer();
+
+        strcpy(nickname,nombre);
+        strcat(nickname,"_");
+        sprintf(cadena, "%d", numero);
+        strcat(nickname,cadena);
+        printf("Registro exitoso! Tu nickname es: %s\n", nickname); ///ENTIENDO QUE SERIA UNA MEJORA VALIDAD QUE NO EXISTE ESTE NICKNAME
+        printf("Guardalo para la proxima vez.\n");
+    }
     else
-        limpiarBuffer();
+    {
+        printf("Ingrese su nickname: ");
+        memset(nickname, 0, MAX_NICK);
+        fgets(nickname, MAX_NICK, stdin);
+
+        if(strchr(nickname, '\n'))
+            nickname[strcspn(nickname, "\n")] = '\0';
+        else
+            limpiarBuffer();
+
+        ///extraer el nombre
+        strncpy(nombre, nickname, MAX_NOMBRE - 1);
+        nombre[MAX_NOMBRE - 1] = '\0';
+
+        char* guion = strchr(nombre, '_');
+        if(guion)
+            *guion = '\0';
+    }
+
+
+
+
 
 }
 // Muestra el menu y devuelve la opcion elegida
@@ -55,27 +101,42 @@ int mostrarMenu()
     return opcion;
 }
 
-// Muestra el ranking (para mas adelante)
+
+
+
+
 void mostrarRanking(const char* nomArch)
 {
+    tArbol arbol;
+    crearArbol(&arbol);
+    indexarArchivoJugadoresPorPuntaje(nomArch,&arbol);
 
-    tJugador vec[MAX_JUGADORES];
-    int cantJugadores;
+    FILE* arch;
 
-    cantJugadores = cargarJugadores(nomArch, vec);
+    if (ERROR_ARCH == abrirArchivo(&arch,nomArch, "rb"))
+        return;
+
+    //tJugador vec[MAX_JUGADORES];
+    /*int cantJugadores;
+
     if(cantJugadores == 0)
     {
         printf("No hay jugadores registrados.\n");
         return;
-    }
-    ordenarJugadores(vec, cantJugadores);
-    printf("\n=====================================================\n");
+    }*/
+    //ordenarJugadores(vec, cantJugadores);
+    printf("\n======================================================\n");
     printf("                         RANKING                      \n");
-    printf("=====================================================\n");
-    mostrarVectorJugadores(vec, cantJugadores);
-    printf("=====================================================\n");
-
+    printf("======================================================\n");
+    recorrerDRI(&arbol, arch, mostrarJugadorDesdeRanking);
+    //recorrerDRI(&arbol,mostrarJugadorRanking);
+    printf("======================================================\n");
+    vaciarArbol(&arbol);
+    fclose(arch);
 }
+
+
+
 
 
 void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
@@ -89,6 +150,7 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
     tJugador jugador;
     tRegistroPartida reg;
     char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
+    char nickname[MAX_NICK];
     int estado=JUEGO_CONTINUA;
 
     crearLista(&tablero);
@@ -111,13 +173,14 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
         return;
     }
 
-    pedirNombre(nombre);
+    pedirNombre(nombre,nickname);
     //if(buscarJugador(NOM_ARCH_JUGADORES, nombre, &jugador) == NO_ENCONTRADO)
-    if(buscarJugadorIndice(arbolJugadores, NOM_ARCH_JUGADORES, nombre, &jugador) == NO_ENCONTRADO)
+    if(buscarJugadorIndice(arbolJugadores, NOM_ARCH_JUGADORES, nickname, &jugador) == NO_ENCONTRADO)
     {
         jugador.idJugador = obtenerUltimoID(NOM_ARCH_JUGADORES) + 1;
 
         strcpy(jugador.nombre, nombre);
+        strcpy(jugador.nickName,nickname);
         jugador.totalPuntos = 0;
         jugador.partidasJugadas = 0;
 
@@ -128,7 +191,11 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
         system("pause");
     }
     else
-        printf("Jugador encontrado.\n");
+    {
+        printf("Jugador %s encontrado.\n", jugador.nombre);
+        strcpy(jugador.nombre, nombre);
+        system("pause");
+    }
 
 
     system("cls");

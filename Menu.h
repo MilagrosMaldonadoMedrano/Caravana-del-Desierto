@@ -8,13 +8,13 @@
 #include "Partidas.h"
 #include "Arbol.h"
 
-#define MAX_NOMBRE 5
+
 
 #define OPCION_JUGAR 1
 #define OPCION_RANKING 2
 #define OPCION_SALIR 3
 
-void pedirNombre(char* nombre);
+void pedirNombre(char* nombre, char* nickname);
 int mostrarMenu();
 void mostrarRanking(const char* nomArch);
 void iniciarPartida(tConfiguracion* config, tArbol* arbolJugadores);

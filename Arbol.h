@@ -25,4 +25,7 @@ void recorrerInOrden(const tArbol *p, void (*accion)(const void *));
 void recorrerInOrdenParam(const tArbol *p, void *param, void (*accion)(const void *, void *));
 int buscarEnArbol(const tArbol *p, void *dato, unsigned tamDato, int (*cmp)(const void*, const void*));
 
+void recorrerDRI(const tArbol* pa, void *param, void (*accion)(const void *, void *));
+
+
 #endif // ARBOL_H_INCLUDED

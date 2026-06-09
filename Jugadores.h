@@ -11,6 +11,7 @@
 
 #define MAX_NOMBRE 5
 #define MAX_JUGADORES 100
+#define MAX_NICK 15
 
 #define NOM_ARCH_JUGADORES "jugadores.dat"
 
@@ -20,15 +21,16 @@ typedef struct
     char nombre[MAX_NOMBRE];
     unsigned totalPuntos;
     unsigned partidasJugadas;
+    char nickName[MAX_NICK];
 }tJugador;
 
 int obtenerUltimoID(const char* nomArch);
 void mostrarArchivoJugadores(const char* nomArch);
 int buscarJugador(const char* nomArch, const char* nombre, tJugador* jug);
-int buscarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, const char* nombre, tJugador* jug);
-int altaJugador(const char* nomArch, tJugador* jug);
+int buscarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, const char* nickname, tJugador* jug);
+//int altaJugador(const char* nomArch, tJugador* jug);
 int altaJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug);
-int actualizarJugador(const char* nomArch, tJugador* jug);
+//int actualizarJugador(const char* nomArch, tJugador* jug);
 int actualizarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug);
 void mostrarJugador(const void* j);
 

@@ -22,14 +22,16 @@ int buscarJugador(const char* nomArch, const char* nombre, tJugador* jug)
     fclose(pf);
     return NO_ENCONTRADO;
 }
-int buscarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, const char* nombre, tJugador* jug) {
+
+int buscarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, const char* nickname, tJugador* jug) {
     FILE *pf;
     tIndice index;
 
     pf = fopen(nomArch, "rb");
     if (!pf) return ERROR_ARCH;
 
-    index.clave = (void*)nombre;
+    index.clave = (void*)nickname;
+    index.tamClave = MAX_NICK;
 
     if (buscarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador)) {
         fseek(pf, index.pos * sizeof(tJugador), SEEK_SET);
@@ -69,11 +71,12 @@ int altaJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug
     fwrite(jug, sizeof(tJugador), 1, pf);
     fclose(pf);
 
-    clave = (char*) malloc(MAX_NOMBRE);
-    strcpy(clave, jug->nombre);
+    clave = (char*) malloc(MAX_NICK);
+    strcpy(clave, jug->nickName);
+
 
     index.clave = clave;
-    index.tamClave = MAX_NOMBRE;
+    index.tamClave = MAX_NICK;
     index.pos = pos;
 
     insertarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador);
@@ -108,7 +111,8 @@ int actualizarJugador(const char* nomArch, tJugador* jug)
 int actualizarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
     FILE *pf;
     tIndice index;
-    index.clave = (void*)jug->nombre;
+    index.clave = (void*)jug->nickName;
+    index.tamClave=MAX_NICK;
 
     pf = fopen(nomArch, "rb+");
     if (!pf) return ERROR_ARCH;
@@ -134,7 +138,7 @@ void mostrarJugador(const void* j)
            jug->totalPuntos,
            jug->partidasJugadas);
 }
-
+/*
 int obtenerUltimoID(const char* nomArch)
 {
     FILE *pf;
@@ -153,6 +157,21 @@ int obtenerUltimoID(const char* nomArch)
     fclose(pf);
 
     return ultimoID;
+}*/
+int obtenerUltimoID(const char* nomArch)
+{
+    FILE *pf;
+    int cant = 0;
+
+    pf = fopen(nomArch, "rb");
+    if(!pf)
+        return 0;
+
+    fseek(pf, 0, SEEK_END);
+    cant = ftell(pf) / sizeof(tJugador);
+
+    fclose(pf);
+    return cant;
 }
 
 int compararJugadores(const void* j1, const void* j2)
@@ -172,6 +191,14 @@ int compararJugadores(const void* j1, const void* j2)
 
     return strcmp(jugador1->nombre, jugador2->nombre);
 }
+
+
+
+
+
+
+
+
 void mostrarArchivoJugadores(const char* nomArch)
 {
     FILE *pf;
@@ -189,39 +216,3 @@ void mostrarArchivoJugadores(const char* nomArch)
     fclose(pf);
 }
 
-int cargarJugadores(const char* nomArch, tJugador* vec)
-{
-    FILE *pf;
-    tJugador* pj = vec;
-    int cantJugadores = 0;
-
-    pf = fopen(nomArch, "rb");
-    if(!pf)
-        return ERROR_ARCH;
-
-    while(fread(pj, sizeof(tJugador), 1, pf) == 1)
-    {
-        pj++;
-        cantJugadores++;
-    }
-
-    fclose(pf);
-
-    return cantJugadores;
-}
-
-void ordenarJugadores(tJugador* vec, int cantJugadores)
-{
-    qsort(vec, cantJugadores, sizeof(tJugador), compararJugadores);
-}
-
-void mostrarVectorJugadores(tJugador* vec, int cantJugadores)
-{
-    tJugador* pj;
-    tJugador* ult = vec + cantJugadores - 1;
-
-    for(pj=vec; pj<=ult; pj++)
-    {
-        mostrarJugador(pj);
-    }
-}

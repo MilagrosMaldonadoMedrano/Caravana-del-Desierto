@@ -50,6 +50,17 @@ void recorrerInOrdenParam(const tArbol *p, void *param, void (*accion)(const voi
     }
 }
 
+///se llama inOrden Inverso
+void recorrerDRI(const tArbol* pa, void *param, void (*accion)(const void *, void *))
+{
+    if(!*pa)
+        return;
+
+    recorrerDRI(&(*pa)->der,param, accion);
+    accion((*pa)->info,param);
+    recorrerDRI(&(*pa)->izq,param, accion);
+}
+
 void vaciarArbol(tArbol *p) {
     if (*p) {
         vaciarArbol(&(*p)->izq);
@@ -73,4 +84,13 @@ int buscarEnArbol(const tArbol *p, void *dato, unsigned tamDato, int (*cmp)(cons
     return comp < 0
             ? buscarEnArbol(&(*p)->izq, dato, tamDato, cmp)
             : buscarEnArbol(&(*p)->der, dato, tamDato, cmp);
+}
+
+void recorrerPreOrdenParam(const tArbol *p, void *param,void (*accion)(const void *, void *))
+{
+    if (*p) {
+        accion((*p)->info, param);
+        recorrerPreOrdenParam(&(*p)->izq, param, accion);
+        recorrerPreOrdenParam(&(*p)->der, param, accion);
+    }
 }
