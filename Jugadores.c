@@ -1,36 +1,14 @@
 #include "Jugadores.h"
+#include "Indice.h"
 
-int buscarJugador(const char* nomArch, const char* nombre, tJugador* jug)
-{
-    FILE *pf;
-    tJugador aux;
-
-    pf = fopen(nomArch, "rb");
-    if(!pf)
-        return ERROR_ARCH;
-
-    while(fread(&aux, sizeof(tJugador), 1, pf) == 1)
-    {
-        if(strcmp(aux.nombre, nombre) == 0)
-        {
-            *jug = aux;
-            fclose(pf);
-            return ENCONTRADO;
-        }
-    }
-
-    fclose(pf);
-    return NO_ENCONTRADO;
-}
-
-int buscarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, const char* nickname, tJugador* jug) {
+int buscarJugador(tArbol* arbolJugadores, const char* nomArch, const char* nickname, tJugador* jug) {
     FILE *pf;
     tIndice index;
 
     pf = fopen(nomArch, "rb");
     if (!pf) return ERROR_ARCH;
 
-    index.clave = (void*)nickname;
+    strcpy(index.clave, nickname);
     index.tamClave = MAX_NICK;
 
     if (buscarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador)) {
@@ -39,27 +17,14 @@ int buscarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, const char*
         fclose(pf);
         return ENCONTRADO;
     }
+
     fclose(pf);
     return NO_ENCONTRADO;
 }
 
-int altaJugador(const char* nomArch, tJugador* jug)
-{
-    FILE *pf;
-
-    pf= fopen(nomArch, "ab");
-    if(!pf)
-        return ERROR_ARCH;
-
-    fwrite(jug, sizeof(tJugador), 1, pf);
-
-    fclose(pf);
-    return TODO_OK;
-}
-int altaJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
+int altaJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
     FILE *pf;
     tIndice index;
-    char *clave;
     unsigned pos;
 
     pf = fopen(nomArch, "ab");
@@ -71,11 +36,7 @@ int altaJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug
     fwrite(jug, sizeof(tJugador), 1, pf);
     fclose(pf);
 
-    clave = (char*) malloc(MAX_NICK);
-    strcpy(clave, jug->nickName);
-
-
-    index.clave = clave;
+    strcpy(index.clave, jug->nickName);
     index.tamClave = MAX_NICK;
     index.pos = pos;
 
@@ -84,35 +45,12 @@ int altaJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug
     return TODO_OK;
 }
 
-int actualizarJugador(const char* nomArch, tJugador* jug)
-{
-    FILE *pf;
-    tJugador aux;
-
-    pf = fopen(nomArch, "rb+");
-    if(!pf)
-        return ERROR_ARCH;
-
-    while(fread(&aux, sizeof(tJugador), 1, pf) == 1)
-    {
-        if(aux.idJugador == jug->idJugador)
-        {
-            fseek(pf, -(long)sizeof(tJugador), SEEK_CUR);
-            fwrite(jug, sizeof(tJugador),1, pf);
-            fclose(pf);
-            return TODO_OK;
-        }
-    }
-
-    fclose(pf);
-
-    return NO_ENCONTRADO;
-}
-int actualizarJugadorIndice(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
+int actualizarJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
     FILE *pf;
     tIndice index;
-    index.clave = (void*)jug->nickName;
-    index.tamClave=MAX_NICK;
+
+    strcpy(index.clave, jug->nickName);
+    index.tamClave = MAX_NICK;
 
     pf = fopen(nomArch, "rb+");
     if (!pf) return ERROR_ARCH;

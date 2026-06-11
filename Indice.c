@@ -3,30 +3,18 @@
 int compararIndiceJugador(const void *a, const void *b) {
     tIndice *ia = (tIndice*)a;
     tIndice *ib = (tIndice*)b;
-    return strcmp((char*)ia->clave, (char*)ib->clave);
+    return strcmp(ia->clave, ib->clave);
 }
 
 /** Cargar el indice a un arbol */
 int cargarIndiceJugadores(const char* nomArchIndice, tArbol* arbolJugadores) {
     FILE* pf;
     tIndice index;
-    unsigned pos;
-    char buffer[MAX_NICK];
-    char *clave;
 
     pf = fopen(nomArchIndice, "rb");
     if (!pf) return ERROR_ARCH;
 
-    while (fread(buffer, sizeof(char), MAX_NICK, pf) == MAX_NICK) {
-        fread(&pos, sizeof(unsigned), 1, pf);
-
-        clave = (char*) malloc(MAX_NICK);
-        strcpy(clave, buffer);
-
-        index.clave = clave;
-        index.tamClave = MAX_NICK;
-        index.pos = pos;
-
+    while (fread(&index, sizeof(tIndice), 1, pf) == 1) {
         insertarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador);
     }
 
@@ -40,17 +28,14 @@ int indexarArchivoJugadores(const char* nomArchJugadores, tArbol* arbolJugadores
     tJugador jug;
     tIndice index;
     unsigned pos = 0;
-    char *clave;
 
-    pf = fopen(nomArchJugadores, "rb");
+    pf = fopen(nomArchJugadores, "a+b"); // a+b para que cree el archivo si no lo encuentra
     if (!pf) return ERROR_ARCH;
 
+    rewind(pf); // rewind para mover el puntero al inicio del archivo
+
     while (fread(&jug, sizeof(tJugador), 1, pf) == 1) {
-
-        clave = (char*) malloc(MAX_NICK);
-        strcpy(clave, jug.nickName);
-
-        index.clave = clave;
+        strcpy(index.clave, jug.nickName);
         index.tamClave = MAX_NICK;
         index.pos = pos;
 
@@ -66,8 +51,7 @@ void guardarNodoIndiceJugador(const void *info, void *params) {
     tIndice *index = (tIndice*) info;
     FILE *pf = (FILE*) params;
 
-    fwrite(index->clave, index->tamClave, 1, pf);
-    fwrite(&index->pos, sizeof(unsigned), 1, pf);
+    fwrite(index, sizeof(tIndice), 1, pf);
 }
 
 int guardarIndiceJugadores(const char* nomArchIndice, const tArbol* arbolJugadores) {
@@ -83,7 +67,7 @@ int guardarIndiceJugadores(const char* nomArchIndice, const tArbol* arbolJugador
 void mostrarNodoIndiceJugador(const void *info)
 {
     tIndice *index = (tIndice*)info;
-    printf("Jugador: %s | Posicion: %u\n", (char*)index->clave, index->pos);
+    printf("Jugador: %s | Posicion: %u\n", index->clave, index->pos);
 }
 
 void mostrarIndiceJugadores(const tArbol* arbolJugadores)

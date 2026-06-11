@@ -8,9 +8,8 @@
 
 #define NOM_ARCH_INDICE_JUGADORES "indice_jugadores.idx"
 
-typedef struct
-{
-    void* clave;
+typedef struct {
+    char clave[MAX_NICK];
     unsigned tamClave;
     unsigned pos;
 } tIndice;

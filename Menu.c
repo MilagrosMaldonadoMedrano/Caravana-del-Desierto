@@ -2,6 +2,7 @@
 #include "Menu.h"
 #include "Lista.h"
 #include "Archivo.h"
+#include "Indice.h"
 
 void pedirNombre(char* nombre, char* nickname)
 {
@@ -174,8 +175,7 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
     }
 
     pedirNombre(nombre,nickname);
-    //if(buscarJugador(NOM_ARCH_JUGADORES, nombre, &jugador) == NO_ENCONTRADO)
-    if(buscarJugadorIndice(arbolJugadores, NOM_ARCH_JUGADORES, nickname, &jugador) == NO_ENCONTRADO)
+    if(buscarJugador(arbolJugadores, NOM_ARCH_JUGADORES, nickname, &jugador) == NO_ENCONTRADO)
     {
         jugador.idJugador = obtenerUltimoID(NOM_ARCH_JUGADORES) + 1;
 
@@ -184,8 +184,7 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
         jugador.totalPuntos = 0;
         jugador.partidasJugadas = 0;
 
-        //altaJugador(NOM_ARCH_JUGADORES, &jugador);
-        altaJugadorIndice(arbolJugadores, NOM_ARCH_JUGADORES, &jugador);
+        altaJugador(arbolJugadores, NOM_ARCH_JUGADORES, &jugador);
 
         printf("El jugador '%s' se ha creado correctamente.\n", nombre);
         system("pause");
@@ -255,8 +254,7 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
     jugador.totalPuntos += partida.cantPuntos;
     jugador.partidasJugadas++;
 
-    //actualizarJugador(NOM_ARCH_JUGADORES, &jugador);
-    actualizarJugadorIndice(arbolJugadores, NOM_ARCH_JUGADORES, &jugador);
+    actualizarJugador(arbolJugadores, NOM_ARCH_JUGADORES, &jugador);
 
     vaciarTablero(&tablero);
     vaciarLista(&bandidos);
