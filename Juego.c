@@ -506,42 +506,6 @@ void accionEscribirArchivo(const void* elem, const void* pf)
 /// ---===================================---
 /// |  FUNCIONES DE REGISTRO DE MOVIMIENTO  |
 /// ---===================================---
-
-// Encola un movimiento en el historial
-void registrarMovimiento(tCola* historial, char direccion, unsigned cantMovim)
-{
-    tMovimiento mov;
-    mov.direccion = direccion;
-    mov.cantMovim = cantMovim;
-    ponerEnCola(historial, &mov, sizeof(mov));
-}
-
-// Muestra todos los movimientos por pantalla y vacía la cola
-void mostrarHistorial(tCola* historial)
-{
-    tMovimiento mov;
-    int nroTurno = 1;
-
-    printf("\n===== REGISTRO DE MOVIMIENTOS =====\n");
-
-    if (colaVacia(historial))
-    {
-        printf("No se realizaron movimientos.\n");
-        printf("===================================\n");
-        return;
-    }
-
-    do
-    {
-        sacarDeCola(historial, &mov, sizeof(mov));
-        printf("Turno %2d: %c%u\n", nroTurno, mov.direccion, mov.cantMovim);
-        nroTurno++;
-    }
-    while (!colaVacia(historial));
-
-    printf("===================================\n");
-}
-
 // Guarda el historial en archivo y lo muestra por pantalla
 int guardarMostrarHistorial(tCola* historial, const char* nomArch)
 {
@@ -586,7 +550,7 @@ int guardarMostrarHistorial(tCola* historial, const char* nomArch)
 /// ---===================================---
 /// |                 Dado                  |
 /// ---===================================---
-int tirarDado(void)
+int tirarDado()
 {
     return rand() % 6 + 1;
 }

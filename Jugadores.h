@@ -29,10 +29,6 @@ int buscarJugador(tArbol* arbolJugadores, const char* nomArch, const char* nickn
 int altaJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug);
 int actualizarJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug);
 void mostrarJugador(const void* j);
-
-int cargarJugadores(const char* nomArch, tJugador* vec);
-void ordenarJugadores(tJugador* vec, int cantJugadores);
 int compararJugadores(const void* j1, const void* j2);
-void mostrarVectorJugadores(tJugador* vec, int cantJugadores);
 
 #endif // JUGADORES_H_INCLUDED

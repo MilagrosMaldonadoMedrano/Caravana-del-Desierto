@@ -99,12 +99,6 @@ int obtenerUltimoID(const char* nomArch)
 }
 
 
-
-
-
-
-
-
 void mostrarArchivoJugadores(const char* nomArch)
 {
     FILE *pf;

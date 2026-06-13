@@ -139,8 +139,6 @@ int guardarTableroArchivo(tLista* tablero, FILE* pf,tConfiguracion* config,int c
 
 
 /// Funciones de registro de movimientos
-void registrarMovimiento(tCola* historial, char direccion, unsigned cantMovim);
-void mostrarHistorial(tCola* historial);
 int guardarMostrarHistorial(tCola* historial, const char* nomArch);
 
 
@@ -151,7 +149,7 @@ void dibujarTablero(tLista* tablero,int cantPosiciones);
 void vaciarTablero(tLista* tablero);
 int insertarElementoSeguro(tLista* tablero,tCasilla casilla,tElemento elem,FILE* pf);
 int eliminarElementoEnCasilla(tLista* tablero,tCasilla casillaPos,tElemento elem);
-int tirarDado(void);
+int tirarDado();
 
 
 

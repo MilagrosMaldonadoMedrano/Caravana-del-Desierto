@@ -62,6 +62,7 @@ int identificarJugador(char* nombre, char* nickname)
     return identificacion;
 
 }
+
 // Muestra el menu y devuelve la opcion elegida
 int mostrarMenu()
 {
@@ -102,7 +103,6 @@ int mostrarMenu()
 
     return opcion;
 }
-
 
 
 void mostrarRanking(const char* nomArch)
