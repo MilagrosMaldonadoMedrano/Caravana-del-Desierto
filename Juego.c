@@ -25,7 +25,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
     {
         vaciarTablero(tablero);
         vaciarLista(bandidos);
-        printf("Intento de creacion del tablero...\n");
+        //printf("Intento de creacion del tablero...\n");
 
         for(int i=0;i<config->cantPosiciones;i++)
         {

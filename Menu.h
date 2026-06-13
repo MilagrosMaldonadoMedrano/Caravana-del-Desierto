@@ -8,13 +8,14 @@
 #include "Partidas.h"
 #include "Arbol.h"
 
-
+#define NICKNAME 1
+#define NOMBRE 2
 
 #define OPCION_JUGAR 1
 #define OPCION_RANKING 2
 #define OPCION_SALIR 3
 
-void pedirNombre(char* nombre, char* nickname);
+int identificarJugador(char* nombre, char* nickname);
 int mostrarMenu();
 void mostrarRanking(const char* nomArch);
 void iniciarPartida(tConfiguracion* config, tArbol* arbolJugadores);
@@ -29,5 +30,8 @@ void limpiarBuffer();
 int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tConfiguracion* config);
 char pedirDireccion() ;
 void reiniciarContador(tContadorElementos* cont);
+
+int cmpPuntaje(const void* elem,const void* elem2);
+void mostrarJugadorDesdeRanking(const void* info,void* params);
 
 #endif // MENU_H_INCLUDED

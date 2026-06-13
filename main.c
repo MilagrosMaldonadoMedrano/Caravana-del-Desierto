@@ -34,8 +34,9 @@ int main()
     if (cargarIndiceJugadores(NOM_ARCH_INDICE_JUGADORES, &arbolJugadores) != TODO_OK)
     {
         indexarArchivoJugadores(NOM_ARCH_JUGADORES, &arbolJugadores);
-        guardarIndiceJugadores(NOM_ARCH_INDICE_JUGADORES, &arbolJugadores);
+        //guardarIndiceJugadores(NOM_ARCH_INDICE_JUGADORES, &arbolJugadores);
     }
+
 
 
     //mostrarIndiceJugadores(&arbolJugadores);

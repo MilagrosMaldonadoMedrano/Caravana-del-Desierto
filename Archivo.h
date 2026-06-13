@@ -14,6 +14,8 @@
 #define ERROR_CONFIG_BANDIDO2 -6
 #define ERROR_CONFIG_TORMENTA -7
 
+
+
 int abrirArchivo(FILE** arch,const char* nomArch,const char* modoApertura);
 int configuracionPorDefecto(FILE** arch,const char* nomArch);
 int cargarConfiguracion(const char* nomArch,tConfiguracion* config);

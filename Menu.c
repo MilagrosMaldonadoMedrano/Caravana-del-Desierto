@@ -4,10 +4,13 @@
 #include "Archivo.h"
 #include "Indice.h"
 
-void pedirNombre(char* nombre, char* nickname)
+int identificarJugador(char* nombre, char* nickname)
 {
     int opcion;
-
+    int identificacion;
+    printf("\n============================\n");
+    printf(  "      ACCESO AL JUEGO       \n");
+    printf(  "============================\n");
 
     do
     {
@@ -35,8 +38,15 @@ void pedirNombre(char* nombre, char* nickname)
         strcat(nickname,"_");
         sprintf(cadena, "%d", numero);
         strcat(nickname,cadena);
-        printf("Registro exitoso! Tu nickname es: %s\n", nickname); ///ENTIENDO QUE SERIA UNA MEJORA VALIDAD QUE NO EXISTE ESTE NICKNAME
-        printf("Guardalo para la proxima vez.\n");
+
+        printf("\n====================================\n");
+        printf(  "        REGISTRO EXITOSO!           \n");
+        printf(  "====================================\n");
+        printf(  "  Nickname: %-22s\n", nickname);
+        printf(  "   Guardalo para la proxima vez.    \n");
+        printf(  "====================================\n");
+
+        identificacion=NOMBRE;
     }
     else
     {
@@ -56,11 +66,12 @@ void pedirNombre(char* nombre, char* nickname)
         char* guion = strchr(nombre, '_');
         if(guion)
             *guion = '\0';
+        identificacion=NICKNAME;
     }
 
 
 
-
+    return identificacion;
 
 }
 // Muestra el menu y devuelve la opcion elegida
@@ -104,40 +115,55 @@ int mostrarMenu()
 
 
 
-
-
 void mostrarRanking(const char* nomArch)
 {
     tArbol arbol;
-    crearArbol(&arbol);
-    indexarArchivoJugadoresPorPuntaje(nomArch,&arbol);
-
     FILE* arch;
 
     if (ERROR_ARCH == abrirArchivo(&arch,nomArch, "rb"))
-        return;
-
-    //tJugador vec[MAX_JUGADORES];
-    /*int cantJugadores;
-
-    if(cantJugadores == 0)
     {
         printf("No hay jugadores registrados.\n");
         return;
-    }*/
-    //ordenarJugadores(vec, cantJugadores);
+    }
+    crearArbol(&arbol);
+
+    tJugador jug;
+
+    while(fread(&jug,sizeof(tJugador),1,arch))
+        insertarEnArbol(&arbol,&jug,sizeof(tJugador),cmpPuntaje);
+
+
+
     printf("\n======================================================\n");
     printf("                         RANKING                      \n");
     printf("======================================================\n");
     recorrerDRI(&arbol, arch, mostrarJugadorDesdeRanking);
-    //recorrerDRI(&arbol,mostrarJugadorRanking);
     printf("======================================================\n");
     vaciarArbol(&arbol);
     fclose(arch);
 }
 
 
+int cmpPuntaje(const void* elem,const void* elem2)
+{
+    tJugador* jug1=(tJugador*)elem;
+    tJugador* jug2=(tJugador*)elem2;
 
+    int cmp=jug1->totalPuntos-jug2->totalPuntos;
+
+    if(cmp==0)
+    {
+        cmp=strcmp(jug1->nickName,jug2->nickName);
+    }
+    return cmp;
+}
+
+
+void mostrarJugadorDesdeRanking(const void* info,void* params)
+{
+    tJugador* jug=(tJugador*)info;
+    printf("ID: %d\t| Nombre: %s\t|Nickname: %s\t| Puntos: %u\t| Partidas: %u\n", jug->idJugador,jug->nombre,jug->nickName,jug->totalPuntos,jug->partidasJugadas);
+}
 
 
 void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
@@ -150,6 +176,7 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
     tCasilla casilla;
     tJugador jugador;
     tRegistroPartida reg;
+    int identificacion;
     char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
     char nickname[MAX_NICK];
     int estado=JUEGO_CONTINUA;
@@ -174,7 +201,7 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
         return;
     }
 
-    pedirNombre(nombre,nickname);
+    identificacion=identificarJugador(nombre,nickname);
     if(buscarJugador(arbolJugadores, NOM_ARCH_JUGADORES, nickname, &jugador) == NO_ENCONTRADO)
     {
         jugador.idJugador = obtenerUltimoID(NOM_ARCH_JUGADORES) + 1;
@@ -185,8 +212,11 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
         jugador.partidasJugadas = 0;
 
         altaJugador(arbolJugadores, NOM_ARCH_JUGADORES, &jugador);
-
-        printf("El jugador '%s' se ha creado correctamente.\n", nombre);
+        if(identificacion==NICKNAME)
+        {
+            printf("No hemos encontrado tu usuario, por lo tanto te dimos de alta!\n");
+        }
+        printf("Hola'%s' tu nickname es %s.\n", nombre,nickname);
         system("pause");
     }
     else
@@ -230,7 +260,11 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
     }
     ///------------------------------------------------------
     if (JUGADOR_GANO==estado)
+    {
         printf("FELICITACIONES %s! Llegaste a la salida y ganaste.\n", nombre);
+        printf("+10 puntos por ganar la partida!");
+        partida.cantPuntos+=10;
+    }
     else
         if (JUGADOR_PERDIO==estado)
             printf("GAME OVER. Te quedaste sin vidas :(.\n");
@@ -261,6 +295,8 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
     vaciarCola(&historial);
     vaciarCola(&bufferMovs);
 }
+
+
 
 
 ///Funciones para los turnos y el estado del tablero
@@ -701,90 +737,6 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
 
     return JUEGO_CONTINUA;
 }
-
-
-
-/*int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tConfiguracion* config)
-{
-    int dado;
-    char direccion;
-    tElemento elem;
-    tCasilla casilla;
-    unsigned nuevaPos;
-
-
-
-    if (partida->tormenta)
-    {
-        printf("\nEstas atrapado en una tormenta. Perdes este turno.\n");
-        partida->tormenta = 0;
-        return JUEGO_CONTINUA;
-    }
-
-    if (partida->oasis)
-    {
-        printf("La proteccion del oasis expiro.\n");
-        partida->oasis = 0;
-    }
-
-    dado=tirarDado();
-    printf("El valor del dado es: %d\n",dado);
-    direccion=pedirDireccion();
-
-    nuevaPos=partida->posJugador;
-    if(FORWARD==direccion)
-    {
-        if(partida->posJugador+dado<=config->cantPosiciones)
-            nuevaPos+=dado;
-        else
-        {
-            unsigned exceso= (partida->posJugador+dado)-config->cantPosiciones;
-            nuevaPos=config->cantPosiciones-exceso;
-            printf("\u00A1Rebotaste en la salida! Te posicionas en la casilla %d\n",nuevaPos);
-        }
-    }
-    else  ///direccion backward
-    {
-        if((int)(partida->posJugador)-dado >= 1)
-            nuevaPos-=dado;
-        else ///TOPE INFERIOR, ENTIENDO QUE LA DIRECCION PASA A SER FORWARD
-        {
-            nuevaPos+=dado;
-            printf("No podes retroceder mas alla del inicio del tablero. Tu direccion es hacia adelante.\n");
-        }
-    }
-
-    elem.tipo=ASCII_JUGADOR;
-
-    casilla.posicion=partida->posJugador;
-    if (eliminarElementoEnCasilla(tablero,casilla,elem) != TODO_OK)
-        return JUEGO_ERROR;
-
-    registrarMovimiento(historial, direccion, dado);
-
-
-
-    casilla.posicion=nuevaPos;
-    partida->posJugador=nuevaPos;
-    partida->movimientos++;
-
-
-
-//    if(manejarSituacionCasilla(partida,tablero,casilla)==JUGADOR_PERDIO)
-//        return JUGADOR_PERDIO;
-
-    insertarElementoSeguro(tablero,casilla,elem,NULL);
-
-    system("pause");
-    limpiarBuffer();
-    //system("cls");
-
-    if(partida->posJugador==config->cantPosiciones)
-        return JUGADOR_GANO;
-
-
-    return JUEGO_CONTINUA;
-}*/
 
 char pedirDireccion()
 {

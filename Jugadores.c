@@ -76,26 +76,7 @@ void mostrarJugador(const void* j)
            jug->totalPuntos,
            jug->partidasJugadas);
 }
-/*
-int obtenerUltimoID(const char* nomArch)
-{
-    FILE *pf;
-    tJugador jug;
-    int ultimoID = 0;
 
-    pf = fopen(nomArch, "rb");
-    if(!pf)
-        return ERROR_ARCH;
-
-    while(fread(&jug, sizeof(tJugador), 1, pf) == 1)
-    {
-        ultimoID = jug.idJugador;
-    }
-
-    fclose(pf);
-
-    return ultimoID;
-}*/
 int obtenerUltimoID(const char* nomArch)
 {
     FILE *pf;
@@ -110,24 +91,6 @@ int obtenerUltimoID(const char* nomArch)
 
     fclose(pf);
     return cant;
-}
-
-int compararJugadores(const void* j1, const void* j2)
-{
-    tJugador* jugador1 = (tJugador*)j1;
-    tJugador* jugador2 = (tJugador*)j2;
-
-    if(jugador2->totalPuntos != jugador1->totalPuntos)
-    {
-        return jugador2->totalPuntos - jugador1->totalPuntos;
-    }
-
-    if(jugador1->partidasJugadas != jugador2->partidasJugadas)
-    {
-        return jugador1->partidasJugadas - jugador2->partidasJugadas;
-    }
-
-    return strcmp(jugador1->nombre, jugador2->nombre);
 }
 
 

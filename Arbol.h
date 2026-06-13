@@ -9,6 +9,10 @@
 #define SIN_MEM -1
 #define TODO_BIEN 0
 
+#define ARBOL_VACIO -3
+#define ARBOL_NO_VACIO 3
+
+
 typedef struct sNodoArbol {
     void *info;
     unsigned tamInfo;
@@ -26,6 +30,8 @@ void recorrerInOrdenParam(const tArbol *p, void *param, void (*accion)(const voi
 int buscarEnArbol(const tArbol *p, void *dato, unsigned tamDato, int (*cmp)(const void*, const void*));
 
 void recorrerDRI(const tArbol* pa, void *param, void (*accion)(const void *, void *));
+int insertarEnArbolAccion(tArbol *p, const void *d, unsigned cantBytes, int (*cmp)(const void*, const void*),void (*accion)(void*, const void*));
+int arbolVacio(const tArbol* pa);
 
 
 #endif // ARBOL_H_INCLUDED
