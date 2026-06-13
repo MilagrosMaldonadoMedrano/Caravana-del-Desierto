@@ -1,14 +1,17 @@
 #include "Arbol.h"
 
-void crearArbol(tArbol *p) {
+void crearArbol(tArbol *p)
+{
     *p = NULL;
 }
 ///modificar para que acepte una accion si hay duplicado
-int insertarEnArbol(tArbol *p, const void *d, unsigned cantBytes, int (*cmp)(const void*, const void*)) {
+int insertarEnArbol(tArbol *p, const void *d, unsigned cantBytes, int (*cmp)(const void*, const void*))
+{
     tNodoArbol *nue;
     int comp;
 
-    while (*p) {
+    while (*p)
+    {
         if ((comp = cmp(d, (*p)->info)) < 0)
             p = &(*p)->izq;
         else if (comp > 0)
@@ -21,7 +24,8 @@ int insertarEnArbol(tArbol *p, const void *d, unsigned cantBytes, int (*cmp)(con
     if (!nue) return SIN_MEM;
 
     nue->info = malloc(cantBytes);
-    if (!nue->info) {
+    if (!nue->info)
+    {
         free(nue);
         return SIN_MEM;
     }
@@ -40,7 +44,8 @@ int insertarEnArbolAccion(tArbol *p, const void *d, unsigned cantBytes, int (*cm
     tNodoArbol *nue;
     int comp;
 
-    while (*p) {
+    while (*p)
+    {
         if ((comp = cmp(d, (*p)->info)) < 0)
             p = &(*p)->izq;
         else if (comp > 0)
@@ -57,7 +62,8 @@ int insertarEnArbolAccion(tArbol *p, const void *d, unsigned cantBytes, int (*cm
     if (!nue) return SIN_MEM;
 
     nue->info = malloc(cantBytes);
-    if (!nue->info) {
+    if (!nue->info)
+    {
         free(nue);
         return SIN_MEM;
     }
@@ -74,16 +80,20 @@ int insertarEnArbolAccion(tArbol *p, const void *d, unsigned cantBytes, int (*cm
 
 
 // Recorrido inOrden
-void recorrerInOrden(const tArbol *p, void (*accion)(const void *)) {
-    if (*p) {
+void recorrerInOrden(const tArbol *p, void (*accion)(const void *))
+{
+    if (*p)
+    {
         recorrerInOrden(&(*p)->izq, accion);
         accion((*p)->info);
         recorrerInOrden(&(*p)->der, accion);
     }
 }
 
-void recorrerInOrdenParam(const tArbol *p, void *param, void (*accion)(const void *, void *)) {
-    if (*p) {
+void recorrerInOrdenParam(const tArbol *p, void *param, void (*accion)(const void *, void *))
+{
+    if (*p)
+    {
         recorrerInOrdenParam(&(*p)->izq, param, accion);
         accion((*p)->info, param);
         recorrerInOrdenParam(&(*p)->der, param, accion);
@@ -101,8 +111,10 @@ void recorrerDRI(const tArbol* pa, void *param, void (*accion)(const void *, voi
     recorrerDRI(&(*pa)->izq,param, accion);
 }
 
-void vaciarArbol(tArbol *p) {
-    if (*p) {
+void vaciarArbol(tArbol *p)
+{
+    if (*p)
+    {
         vaciarArbol(&(*p)->izq);
         vaciarArbol(&(*p)->der);
         free((*p)->info);
@@ -111,24 +123,27 @@ void vaciarArbol(tArbol *p) {
     }
 }
 
-int buscarEnArbol(const tArbol *p, void *dato, unsigned tamDato, int (*cmp)(const void*, const void*)) {
+int buscarEnArbol(const tArbol *p, void *dato, unsigned tamDato, int (*cmp)(const void*, const void*))
+{
     if (!*p) return 0;
 
     int comp = cmp(dato, (*p)->info);
 
-    if (comp == 0) {
+    if (comp == 0)
+    {
         memcpy(dato, (*p)->info, tamDato);
         return 1;
     }
 
     return comp < 0
-            ? buscarEnArbol(&(*p)->izq, dato, tamDato, cmp)
-            : buscarEnArbol(&(*p)->der, dato, tamDato, cmp);
+           ? buscarEnArbol(&(*p)->izq, dato, tamDato, cmp)
+           : buscarEnArbol(&(*p)->der, dato, tamDato, cmp);
 }
 
 void recorrerPreOrdenParam(const tArbol *p, void *param,void (*accion)(const void *, void *))
 {
-    if (*p) {
+    if (*p)
+    {
         accion((*p)->info, param);
         recorrerPreOrdenParam(&(*p)->izq, param, accion);
         recorrerPreOrdenParam(&(*p)->der, param, accion);

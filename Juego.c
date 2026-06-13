@@ -27,7 +27,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
         vaciarLista(bandidos);
         //printf("Intento de creacion del tablero...\n");
 
-        for(int i=0;i<config->cantPosiciones;i++)
+        for(int i=0; i<config->cantPosiciones; i++)
         {
             crearCasilla(&casilla);
             casilla.posicion=i+1;
@@ -58,7 +58,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
         ///bandidos
         elem.tipo=ASCII_BANDIDO;
 
-        for(int i=0;i<config->maxBandidos;i++)
+        for(int i=0; i<config->maxBandidos; i++)
         {
             aleatorio = rand()%(config->cantPosiciones-2)+2;
             casilla.posicion=aleatorio;
@@ -73,7 +73,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
 
         ///premios
         elem.tipo=ASCII_PREMIO;
-        for(int i=0;i<config->maxPremios;i++)
+        for(int i=0; i<config->maxPremios; i++)
         {
             aleatorio = rand()%(config->cantPosiciones-2)+2;
             casilla.posicion=aleatorio;
@@ -83,7 +83,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
 
         ///vidas
         elem.tipo=ASCII_VIDA_EXTRA;
-        for(int i=0;i<config->maxVidasExtra;i++)
+        for(int i=0; i<config->maxVidasExtra; i++)
         {
             aleatorio = rand()%(config->cantPosiciones-2)+2;
             casilla.posicion=aleatorio;
@@ -94,7 +94,7 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
 
         ///oasis
         elem.tipo=ASCII_OASIS;
-        for(int i=0;i<config->maxOasis;i++)
+        for(int i=0; i<config->maxOasis; i++)
         {
             aleatorio = rand()%(config->cantPosiciones-2)+2;
             casilla.posicion=aleatorio;
@@ -136,7 +136,8 @@ int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLis
 
         tableroJugable = verificarTablero(tablero, config);
 
-    } while (!tableroJugable);
+    }
+    while (!tableroJugable);
 
 
     guardarTableroArchivo(tablero,pf,config,cantDigitosCasillas);
@@ -224,7 +225,7 @@ int guardarTableroArchivo(tLista* tablero, FILE* pf, tConfiguracion* config, int
         else
         {
 
-           recorrerDeIzqADer(&casilla->elementos, accionEscribirArchivo, pf);
+            recorrerDeIzqADer(&casilla->elementos, accionEscribirArchivo, pf);
         }
 
         fprintf(pf, "]\n");
@@ -270,7 +271,7 @@ void dibujarTablero(tLista* tablero, int cantPosiciones)
     tCasilla* casilla;
     tCasilla casillaPos;
 //    int filas = (cantPosiciones + columnas - 1) / columnas; ///(A + B - 1) / B para no tener problema con los decimales
-                                                            ///y que no me falten lugares
+    ///y que no me falten lugares
     int columnas = (int)sqrt(cantPosiciones);
     int filas = (cantPosiciones + columnas - 1) / columnas;
 
@@ -435,30 +436,30 @@ void accionContarElementos(const void* elem, const void* extra)
 
     switch(e->tipo)
     {
-        case ASCII_INICIO:
-            cont->cantInicio++;
-            break;
-        case ASCII_JUGADOR:
-            cont->cantJugador++;
-            break;
-        case ASCII_BANDIDO:
-            cont->cantBandido++;
-            break;
-        case ASCII_PREMIO:
-            cont->cantPremio++;
-            break;
-        case ASCII_VIDA_EXTRA:
-            cont->cantVida++;
-            break;
-        case ASCII_OASIS:
-            cont->cantOasis++;
-            break;
-        case ASCII_TORMENTA:
-             cont->cantTormenta++;
-             break;
-        case ASCII_SALIDA:
-            cont->cantSalida++;
-            break;
+    case ASCII_INICIO:
+        cont->cantInicio++;
+        break;
+    case ASCII_JUGADOR:
+        cont->cantJugador++;
+        break;
+    case ASCII_BANDIDO:
+        cont->cantBandido++;
+        break;
+    case ASCII_PREMIO:
+        cont->cantPremio++;
+        break;
+    case ASCII_VIDA_EXTRA:
+        cont->cantVida++;
+        break;
+    case ASCII_OASIS:
+        cont->cantOasis++;
+        break;
+    case ASCII_TORMENTA:
+        cont->cantTormenta++;
+        break;
+    case ASCII_SALIDA:
+        cont->cantSalida++;
+        break;
     }
 
 }
@@ -530,11 +531,13 @@ void mostrarHistorial(tCola* historial)
         return;
     }
 
-    do {
+    do
+    {
         sacarDeCola(historial, &mov, sizeof(mov));
         printf("Turno %2d: %c%u\n", nroTurno, mov.direccion, mov.cantMovim);
         nroTurno++;
-    } while (!colaVacia(historial));
+    }
+    while (!colaVacia(historial));
 
     printf("===================================\n");
 }
@@ -562,12 +565,14 @@ int guardarMostrarHistorial(tCola* historial, const char* nomArch)
     }
     else
     {
-        do {
+        do
+        {
             sacarDeCola(historial, &mov, sizeof(mov));
             printf("Turno %2d: %c%u\n", nroTurno, mov.direccion, mov.cantMovim);
             fprintf(arch, "Turno %2d: %c%u\n", nroTurno, mov.direccion, mov.cantMovim);
             nroTurno++;
-        } while (!colaVacia(historial));
+        }
+        while (!colaVacia(historial));
     }
 
     printf("===================================\n");

@@ -1,7 +1,8 @@
 #include "Jugadores.h"
 #include "Indice.h"
 
-int buscarJugador(tArbol* arbolJugadores, const char* nomArch, const char* nickname, tJugador* jug) {
+int buscarJugador(tArbol* arbolJugadores, const char* nomArch, const char* nickname, tJugador* jug)
+{
     FILE *pf;
     tIndice index;
 
@@ -11,7 +12,8 @@ int buscarJugador(tArbol* arbolJugadores, const char* nomArch, const char* nickn
     strcpy(index.clave, nickname);
     index.tamClave = MAX_NICK;
 
-    if (buscarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador)) {
+    if (buscarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador))
+    {
         fseek(pf, index.pos * sizeof(tJugador), SEEK_SET);
         fread(jug, sizeof(tJugador), 1, pf);
         fclose(pf);
@@ -22,7 +24,8 @@ int buscarJugador(tArbol* arbolJugadores, const char* nomArch, const char* nickn
     return NO_ENCONTRADO;
 }
 
-int altaJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
+int altaJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug)
+{
     FILE *pf;
     tIndice index;
     unsigned pos;
@@ -45,7 +48,8 @@ int altaJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
     return TODO_OK;
 }
 
-int actualizarJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug) {
+int actualizarJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug)
+{
     FILE *pf;
     tIndice index;
 
@@ -55,7 +59,8 @@ int actualizarJugador(tArbol* arbolJugadores, const char* nomArch, tJugador* jug
     pf = fopen(nomArch, "rb+");
     if (!pf) return ERROR_ARCH;
 
-    if (buscarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador)) {
+    if (buscarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador))
+    {
         fseek(pf, index.pos * sizeof(tJugador), SEEK_SET);
         fwrite(jug, sizeof(tJugador), 1, pf);
 
@@ -106,7 +111,8 @@ void mostrarArchivoJugadores(const char* nomArch)
     tJugador jug;
 
     pf = fopen(nomArch, "rb");
-    if(!pf) {
+    if(!pf)
+    {
         printf("No hay jugadores registrados.\n");
         return;
     }

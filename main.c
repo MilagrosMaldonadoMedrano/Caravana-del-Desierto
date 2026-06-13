@@ -33,7 +33,13 @@ int main()
 
     if (cargarIndiceJugadores(NOM_ARCH_INDICE_JUGADORES, &arbolJugadores) != TODO_OK)
     {
-        indexarArchivoJugadores(NOM_ARCH_JUGADORES, &arbolJugadores);
+        if (indexarArchivoJugadores(NOM_ARCH_JUGADORES, &arbolJugadores) != TODO_OK)
+        {
+            perror("\nError al indexar el archivo de jugadores:");
+            printf("\nFinalizando programa...\n");
+            vaciarArbol(&arbolJugadores);
+            return ERROR_ARCH;
+        }
         //guardarIndiceJugadores(NOM_ARCH_INDICE_JUGADORES, &arbolJugadores);
     }
 
@@ -45,27 +51,36 @@ int main()
     mostrarArchivoJugadores(NOM_ARCH_JUGADORES);
     mostrarArchivoPartidas(NOM_ARCH_PARTIDAS);*/
 
-    do {
+    do
+    {
         opcion = mostrarMenu();
 
         switch (opcion)
         {
-            case OPCION_JUGAR:
-                iniciarPartida(&config, &arbolJugadores);
-                break;
-            case OPCION_RANKING:
-                mostrarRanking(NOM_ARCH_JUGADORES);
-                break;
-            case OPCION_SALIR:
-                printf("\nSaliendo...\n");
-                break;
-            default:
-                printf("\nOpcion invalida. Intente nuevamente.\n");
+        case OPCION_JUGAR:
+            iniciarPartida(&config, &arbolJugadores);
+            break;
+        case OPCION_RANKING:
+            mostrarRanking(NOM_ARCH_JUGADORES);
+            break;
+        case OPCION_SALIR:
+            printf("\nSaliendo...\n");
+            break;
+        default:
+            printf("\nOpcion invalida. Intente nuevamente.\n");
         }
 
-    } while (opcion != OPCION_SALIR);
+    }
+    while (opcion != OPCION_SALIR);
 
-    guardarIndiceJugadores(NOM_ARCH_INDICE_JUGADORES, &arbolJugadores);
+    if (guardarIndiceJugadores(NOM_ARCH_INDICE_JUGADORES, &arbolJugadores) != TODO_OK)
+    {
+        perror("\nError al actualizar el archivo de indices\n");
+        printf("\nFinalizando programa...\n");
+        vaciarArbol(&arbolJugadores);
+        return ERROR_ARCH;
+    }
+
     vaciarArbol(&arbolJugadores);
 
     return 0;

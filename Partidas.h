@@ -16,7 +16,7 @@ typedef struct
     unsigned puntos;
     unsigned movimientos;
     int gano;
-}tRegistroPartida;
+} tRegistroPartida;
 
 int altaPartida(const char* nomArch, const tRegistroPartida* reg);
 int obtenerUltimoIdPartida(const char* nomArch);

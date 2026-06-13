@@ -17,13 +17,13 @@ typedef struct sNodo
     void* info;
     unsigned tamInfo;
     struct sNodo* sig;
-}tNodo;
+} tNodo;
 
 typedef struct
 {
     tNodo* pri;
     tNodo* ult;
-}tCola;
+} tCola;
 
 void crearCola(tCola* pc);
 int ponerEnCola(tCola* pc,const void* dato,size_t tam);

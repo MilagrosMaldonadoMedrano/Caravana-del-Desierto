@@ -3,28 +3,11 @@
 
 #include "main.h"
 #include "Juego.h"
-//#include "Cola.h"
 
-#define JUGADOR_GANO 1
-#define JUGADOR_PERDIO -1
-#define JUEGO_CONTINUA 0
-#define JUEGO_ERROR -2
-
-#define OPCION_AVANZAR 1
-#define OPCION_RETROCEDER 2
-
-
-void aplicarEfectoCasilla(char casilla, tPartida* partida);
-int verificarFinPartida(char casilla, const tPartida* partida);
-void ejecutarTurno(tLista* tablero, tPartida* partida, tCola* historial);
-void ejecutarMovimientoBandido(tLista* tablero, tLista* bandidos, unsigned posJugador, unsigned cantPosiciones);
-
-
-
-
-
-
-
-
+int planificarMovimientoJugador(tConfiguracion* config,tCola* bufferMovs,tCola* historial,tPartida* partida);
+void planificarMovimientosBandidos(tPartida* partida, tCola* bufferMovs, tLista* tablero, tLista* bandidos);
+void procesarTurno(tLista* tablero, tCola* bufferMovs, tPartida* partida);
+int manejarSituacionCasilla(tPartida* partida,tLista* tablero,tLista* bandidos,tCasilla casillaPosicion,tConfiguracion* config);
+void reiniciarContador(tContadorElementos* cont);
 
 #endif // TURNO_H_INCLUDED

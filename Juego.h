@@ -5,12 +5,25 @@
 #include "Cola.h"
 #include "Lista.h"
 
+/// Nombre del archivo de configuraciones
 #define NOM_ARCH_CONFIG "config.txt"
+
+/// Nombre del archivo donde se crea el tablero
 #define NOM_ARCH_TABLERO "caravana.txt"
 
-#define ERROR_SIN_MEM -3
+/// Nombre del archivo donde se guarda el historial
+#define NOM_ARCH_MOVIMIENTOS "movimientos.txt"
 
+///macros para el buchle del juego:
+#define JUGADOR_GANO 1
+#define JUGADOR_PERDIO -1
+#define JUEGO_CONTINUA 0
+//#define JUEGO_ERROR -2
 
+#define OPCION_AVANZAR 1
+#define OPCION_RETROCEDER 2
+
+///macros para los códigos ASCII de los elementos del juego
 #define ASCII_JUGADOR   'J'
 #define ASCII_INICIO    'I'
 #define ASCII_SALIDA    'S'
@@ -32,6 +45,7 @@
 
 #define CANT_COMPONENTES 6
 
+///macros para cálculos de lógica y evitar uso de magic numbers
 #define CANT_MIN_POSICIONES 3
 #define RELACION_MIN_BANDIDOS 0.15
 #define RELACION_MAX_BANDIDOS 0.80
@@ -40,10 +54,6 @@
 #define TABLERO_JUGABLE 1
 #define TABLERO_NO_JUGABLE 0
 
-#define RELACION_ASPECTO_TABLERO 1.33
-
-/// Nombre del archivo donde se guarda el historial
-#define NOM_ARCH_MOVIMIENTOS "movimientos.txt"
 
 ///macros de dirección para la estructura tMovimientos
 #define FORWARD 'F'
@@ -59,7 +69,7 @@ typedef struct
     unsigned maxVidasExtra;
     unsigned maxOasis;
     unsigned maxTormentas;
-}tConfiguracion;
+} tConfiguracion;
 
 
 typedef struct
@@ -85,7 +95,7 @@ typedef struct
 {
     tLista elementos;
     unsigned posicion;
-}tCasilla;
+} tCasilla;
 
 
 
@@ -98,7 +108,7 @@ typedef struct
     unsigned tormenta;
     unsigned posJugador;
     unsigned movimientos; //agregue en version mod funciones 1.1
-}tPartida;
+} tPartida;
 
 /// estructura para encolar los movimientos
 typedef struct
@@ -109,7 +119,7 @@ typedef struct
 
     unsigned cantMovim;
     char direccion;
-}tMovimiento;
+} tMovimiento;
 
 /// estructura para los bandidos (guarda las posiciones)
 typedef struct
@@ -117,7 +127,7 @@ typedef struct
     unsigned id;
     unsigned posBandido;
     unsigned movimientos;
-}tBandido;
+} tBandido;
 
 
 ///FUNCIONES DEL TABLERO

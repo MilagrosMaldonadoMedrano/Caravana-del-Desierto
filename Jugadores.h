@@ -21,7 +21,7 @@ typedef struct
     unsigned totalPuntos;
     unsigned partidasJugadas;
     char nickName[MAX_NICK];
-}tJugador;
+} tJugador;
 
 int obtenerUltimoID(const char* nomArch);
 void mostrarArchivoJugadores(const char* nomArch);

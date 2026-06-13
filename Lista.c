@@ -21,7 +21,7 @@ void vaciarLista(tLista* pl)
     tNodoD* primero=*pl;
 
     if(!primero)
-            return;
+        return;
 
     tNodoD* eliminar=primero->sig;
     while(eliminar!=primero)
@@ -89,16 +89,16 @@ int insertarAlComienzo(tLista* pl,const void* elem,unsigned cantBytes)
         return LISTA_LLENA;
     }
 
-     memcpy(nuevo->info,elem,cantBytes);
-     nuevo->tamElem=cantBytes;
+    memcpy(nuevo->info,elem,cantBytes);
+    nuevo->tamElem=cantBytes;
 
 
-     if(!*pl)//primer nodo
-     {
+    if(!*pl)//primer nodo
+    {
         *pl=nuevo;
         nuevo->sig=nuevo;
         nuevo->ant=nuevo;
-     }
+    }
     else
     {
         tNodoD* primero=(*pl)->sig;
@@ -338,7 +338,8 @@ int eliminarListaDesordenadaPorClave(tLista* pl, void* dato, unsigned tamElem,tC
         actual=actual->sig;
 
 
-    }while(actual!=(*pl)->sig);///mientras que el actual sea distinto del primero
+    }
+    while(actual!=(*pl)->sig); ///mientras que el actual sea distinto del primero
 
     if(primerAparicion==VERDADERO)
         return NO_ENCONTRADO;
@@ -389,7 +390,8 @@ int eliminarListaDesordenadaPorClaveSinDup(tLista* pl, void* dato, unsigned tamE
         else
             actual = actual->sig;
 
-    } while (*pl && actual != *pl);
+    }
+    while (*pl && actual != *pl);
 
     return NO_ENCONTRADO;
 }
@@ -411,7 +413,8 @@ void* buscarElementoLista(tLista* pl, void* dato,tCmp cmp)
 
         actual=actual->sig;
 
-    }while(actual!=(*pl));
+    }
+    while(actual!=(*pl));
 
 
     if(cmp(dato,actual->info)==0)
@@ -438,7 +441,8 @@ int buscarElementoEnLista(tLista* pl, void* dato, unsigned tamElem, tCmp cmp, tA
             return ENCONTRADO;
         }
         actual = actual->sig;
-    } while (actual != *pl);
+    }
+    while (actual != *pl);
 
     return NO_ENCONTRADO;
 }
@@ -491,7 +495,8 @@ unsigned listaCantidadElementos(const tLista* pl)
         cant++;
         act = act->sig;
 
-    }while(act != *pl);
+    }
+    while(act != *pl);
 
     return cant;
 }
@@ -615,7 +620,9 @@ void ordenarLista(tLista *pl, tCmp cmp)
 
             act = act->sig;
 
-        } while(act->sig != inicio);
+        }
+        while(act->sig != inicio);
 
-    } while(huboCambio);
+    }
+    while(huboCambio);
 }

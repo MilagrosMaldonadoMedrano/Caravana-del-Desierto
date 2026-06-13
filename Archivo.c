@@ -120,7 +120,7 @@ int validarConfiguracion(const tConfiguracion* config)
 
     if (config->vidasInicio + config->maxVidasExtra < config->maxBandidos)
     {
-    /// si hay muchas tormentas, y pocas o ninguna vida extra
+        /// si hay muchas tormentas, y pocas o ninguna vida extra
         if (config->maxTormentas >= config->maxOasis + ((unsigned)config->cantPosiciones * RELACION_MAX_TORMENTAS))
             return ERROR_CONFIG_TORMENTA;
     }
@@ -132,33 +132,33 @@ void informarErrorConfiguracion(int codError)
 {
     switch (codError)
     {
-        case ERROR_ARCH:
-            fprintf(stderr, "\nNo se pudo abrir el archivo de configuraciones");
+    case ERROR_ARCH:
+        fprintf(stderr, "\nNo se pudo abrir el archivo de configuraciones");
         break;
 
-        case ERROR_ARCH_DEF:
-            fprintf(stderr, "\nNo se pudo crear el archivo de configuraciones");
+    case ERROR_ARCH_DEF:
+        fprintf(stderr, "\nNo se pudo crear el archivo de configuraciones");
         break;
 
         printf("\nConfiguraciones no jugables:");
-        case ERROR_CONFIG_CANT_POS:
-            fprintf(stderr, "\nLa cantidad de posiciones es insuficiente");
+    case ERROR_CONFIG_CANT_POS:
+        fprintf(stderr, "\nLa cantidad de posiciones es insuficiente");
         break;
 
-        case ERROR_CONFIG_VIDA:
-            fprintf(stderr, "\nEl jugador debe tener minimo 1 vida al inicio");
+    case ERROR_CONFIG_VIDA:
+        fprintf(stderr, "\nEl jugador debe tener minimo 1 vida al inicio");
         break;
 
-        case ERROR_CONFIG_BANDIDO1:
-            fprintf(stderr, "\nNo puede haber tantos bandidos");
+    case ERROR_CONFIG_BANDIDO1:
+        fprintf(stderr, "\nNo puede haber tantos bandidos");
         break;
 
-        case ERROR_CONFIG_BANDIDO2:
-            fprintf(stderr, "\nEl jugador necesita mas vidas para esa cantidad de bandidos");
+    case ERROR_CONFIG_BANDIDO2:
+        fprintf(stderr, "\nEl jugador necesita mas vidas para esa cantidad de bandidos");
         break;
 
-        case ERROR_CONFIG_TORMENTA:
-            fprintf(stderr, "\nHay muchas tormentas, y pocas vidas y/u oasis");
+    case ERROR_CONFIG_TORMENTA:
+        fprintf(stderr, "\nHay muchas tormentas, y pocas vidas y/u oasis");
         break;
     }
 }

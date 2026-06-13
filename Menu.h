@@ -19,17 +19,8 @@ int identificarJugador(char* nombre, char* nickname);
 int mostrarMenu();
 void mostrarRanking(const char* nomArch);
 void iniciarPartida(tConfiguracion* config, tArbol* arbolJugadores);
-
-
-void planificarMovimientosBandidos(tPartida* partida, tCola* bufferMovs, tLista* tablero, tLista* bandidos);
-
-int planificarMovimientoJugador(tConfiguracion* config,tCola* bufferMovs,tCola* historial,tPartida* partida);
-void procesarTurno(tLista* tablero, tCola* bufferMovs, tPartida* partida);
-int manejarSituacionCasilla(tPartida* partida,tLista* tablero,tLista* bandidos,tCasilla casillaPosicion,tConfiguracion* config);
-void limpiarBuffer();
-int ejecutarTurnoJugador(tLista* tablero,tPartida* partida, tCola* historial,tConfiguracion* config);
-char pedirDireccion() ;
-void reiniciarContador(tContadorElementos* cont);
+char pedirDireccion();
+void ingresarNombreVal(const char* mensaje, char* nombre);
 
 int cmpPuntaje(const void* elem,const void* elem2);
 void mostrarJugadorDesdeRanking(const void* info,void* params);

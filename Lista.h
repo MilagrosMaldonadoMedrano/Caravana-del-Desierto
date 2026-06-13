@@ -21,7 +21,7 @@ typedef struct sNodoD
     unsigned tamElem;
     struct sNodoD* sig;
     struct sNodoD* ant;
-}tNodoD;
+} tNodoD;
 
 typedef tNodoD* tLista;
 

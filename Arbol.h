@@ -13,7 +13,8 @@
 #define ARBOL_NO_VACIO 3
 
 
-typedef struct sNodoArbol {
+typedef struct sNodoArbol
+{
     void *info;
     unsigned tamInfo;
     struct sNodoArbol *izq;

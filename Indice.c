@@ -1,20 +1,23 @@
 #include "indice.h"
 
-int compararIndiceJugador(const void *a, const void *b) {
+int compararIndiceJugador(const void *a, const void *b)
+{
     tIndice *ia = (tIndice*)a;
     tIndice *ib = (tIndice*)b;
     return strcmp(ia->clave, ib->clave);
 }
 
 /** Cargar el indice a un arbol */
-int cargarIndiceJugadores(const char* nomArchIndice, tArbol* arbolJugadores) {
+int cargarIndiceJugadores(const char* nomArchIndice, tArbol* arbolJugadores)
+{
     FILE* pf;
     tIndice index;
 
     pf = fopen(nomArchIndice, "rb");
     if (!pf) return ERROR_ARCH;
 
-    while (fread(&index, sizeof(tIndice), 1, pf) == 1) {
+    while (fread(&index, sizeof(tIndice), 1, pf) == 1)
+    {
         insertarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador);
     }
 
@@ -23,7 +26,8 @@ int cargarIndiceJugadores(const char* nomArchIndice, tArbol* arbolJugadores) {
 }
 
 /** Crear el indice */
-int indexarArchivoJugadores(const char* nomArchJugadores, tArbol* arbolJugadores) {
+int indexarArchivoJugadores(const char* nomArchJugadores, tArbol* arbolJugadores)
+{
     FILE* pf;
     tJugador jug;
     tIndice index;
@@ -34,7 +38,8 @@ int indexarArchivoJugadores(const char* nomArchJugadores, tArbol* arbolJugadores
 
     rewind(pf); // rewind para mover el puntero al inicio del archivo
 
-    while (fread(&jug, sizeof(tJugador), 1, pf) == 1) {
+    while (fread(&jug, sizeof(tJugador), 1, pf) == 1)
+    {
         strcpy(index.clave, jug.nickName);
         index.tamClave = MAX_NICK;
         index.pos = pos;
@@ -47,14 +52,16 @@ int indexarArchivoJugadores(const char* nomArchJugadores, tArbol* arbolJugadores
     return TODO_OK;
 }
 
-void guardarNodoIndiceJugador(const void *info, void *params) {
+void guardarNodoIndiceJugador(const void *info, void *params)
+{
     tIndice *index = (tIndice*) info;
     FILE *pf = (FILE*) params;
 
     fwrite(index, sizeof(tIndice), 1, pf);
 }
 
-int guardarIndiceJugadores(const char* nomArchIndice, const tArbol* arbolJugadores) {
+int guardarIndiceJugadores(const char* nomArchIndice, const tArbol* arbolJugadores)
+{
     FILE *pf = fopen(nomArchIndice, "wb");
     if (!pf) return ERROR_ARCH;
 
