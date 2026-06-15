@@ -1,9 +1,138 @@
 #include "Archivo.h"
 #include "Lista.h"
+#include "Turno.h"
+
+/// Iniciar partida
+void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
+{
+    tPartida partida;
+    tLista tablero;
+    tLista bandidos;
+    tCola historial;
+    tCola bufferMovs;
+    tCasilla casilla;
+    tJugador jugador;
+    tRegistroPartida reg;
+    int identificacion;
+    char nombre[MAX_NOMBRE];  ///deberia ser parte de una estructura jugador
+    char nickname[MAX_NICK];
+    int estado=JUEGO_CONTINUA;
+
+    crearLista(&tablero);
+    crearLista(&bandidos);
+    crearCola(&historial);
+    crearCola(&bufferMovs);
+
+    partida.posJugador=1;
+    partida.cantPuntos = 0;
+    partida.movimientos = 0;
+    partida.cantVidas = config->vidasInicio;
+    partida.oasis = 0;
+    partida.tormenta = 0;
+
+    if (crearTablero(NOM_ARCH_TABLERO, &tablero, config, &bandidos) != TODO_OK)
+    {
+        printf("Error al crear el tablero. Volviendo al menu...\n");
+        vaciarLista(&tablero);
+        vaciarCola(&historial);
+        return;
+    }
+
+    identificacion=identificarJugador(nombre,nickname);
+    if(buscarJugador(arbolJugadores, NOM_ARCH_JUGADORES, nickname, &jugador) == NO_ENCONTRADO)
+    {
+        jugador.idJugador = obtenerUltimoID(NOM_ARCH_JUGADORES) + 1;
+
+        strcpy(jugador.nombre, nombre);
+        strcpy(jugador.nickName,nickname);
+        jugador.totalPuntos = 0;
+        jugador.partidasJugadas = 0;
+
+        altaJugador(arbolJugadores, NOM_ARCH_JUGADORES, &jugador);
+        if(identificacion==NICKNAME)
+        {
+            printf("No hemos encontrado tu usuario, por lo tanto te dimos de alta!\n");
+        }
+        printf("Hola '%s' tu nickname es %s.\n", nombre,nickname);
+        system("pause");
+    }
+    else
+    {
+        printf("Jugador %s encontrado.\n", jugador.nombre);
+        strcpy(jugador.nombre, nombre);
+        system("pause");
+    }
+
+
+    system("cls");
+    printf("\n=========================================\n");
+    printf("  Bienvenido a la caravana, %s!\n", nombre);
+    printf("=========================================\n");
+    printf("Vidas iniciales: %u | Puntos: %u\n\n", partida.cantVidas, partida.cantPuntos);
+    system("pause");
+    system("cls");
+
+    printf("%s: Vidas: %u | Puntos: %u\n", nickname, partida.cantVidas, partida.cantPuntos);
+    dibujarTablero(&tablero,config->cantPosiciones);
+    ///---------------BUCLE DEL JUEGO------------------------
+
+    while(partida.cantVidas>0 && estado==JUEGO_CONTINUA)
+    {
+
+        if (estado == JUEGO_CONTINUA)
+        {
+            ///planifico el mov del jugador
+            planificarMovimientoJugador(config,&bufferMovs,&historial,&partida);
+            planificarMovimientosBandidos(&partida,&bufferMovs,&tablero,&bandidos);
+            procesarTurno(&tablero,&bufferMovs,&partida);
+
+            casilla.posicion=partida.posJugador;
+            estado = manejarSituacionCasilla(&partida,&tablero,&bandidos,casilla,config);
+        }
+
+        printf("%s: Vidas: %u | Puntos: %u\n", nickname, partida.cantVidas, partida.cantPuntos);
+        dibujarTablero(&tablero,config->cantPosiciones);
+
+    }
+    ///------------------------------------------------------
+    if (JUGADOR_GANO==estado)
+    {
+        printf("FELICITACIONES %s! Llegaste a la salida y ganaste.\n", nombre);
+        printf("+10 puntos por ganar la partida!");
+        partida.cantPuntos+=10;
+    }
+    else if (JUGADOR_PERDIO==estado)
+        printf("GAME OVER. Te quedaste sin vidas :(.\n");
+    else
+    {
+        fprintf(stderr, "ERROR. Algo paso...\n");
+        vaciarTablero(&tablero);
+        vaciarLista(&bandidos);
+        vaciarCola(&historial);
+    }
+
+    guardarMostrarHistorial(&historial, NOM_ARCH_MOVIMIENTOS);
+
+    reg.idPartida = obtenerUltimoIdPartida(NOM_ARCH_PARTIDAS) + 1;
+    reg.idJugador = jugador.idJugador;
+    reg.puntos = partida.cantPuntos;
+    reg.movimientos = partida.movimientos;
+    reg.gano = (estado == JUGADOR_GANO);
+    altaPartida(NOM_ARCH_PARTIDAS, &reg);
+
+    jugador.totalPuntos += partida.cantPuntos;
+    jugador.partidasJugadas++;
+
+    actualizarJugador(arbolJugadores, NOM_ARCH_JUGADORES, &jugador);
+
+    vaciarTablero(&tablero);
+    vaciarLista(&bandidos);
+    vaciarCola(&historial);
+    vaciarCola(&bufferMovs);
+}
 
 //esta función crea el archivo del tablero en base a la configuración, un tablero jugable
 //llama a otra función que valida si la configuración, para poder crear el tablero
-
 int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLista* bandidos)
 {
     FILE* pf;
@@ -498,9 +627,6 @@ void accionEscribirArchivo(const void* elem, const void* pf)
         fprintf((FILE*)pf, "%c", e->tipo);
     }
 }
-
-
-
 
 
 /// ---===================================---

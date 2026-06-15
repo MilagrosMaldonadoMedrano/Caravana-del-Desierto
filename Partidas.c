@@ -1,4 +1,5 @@
 #include "Partidas.h"
+#include "Archivo.h"
 
 int altaPartida(const char* nomArch, const tRegistroPartida* reg)
 {

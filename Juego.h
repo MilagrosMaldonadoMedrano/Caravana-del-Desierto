@@ -4,6 +4,9 @@
 #include "main.h"
 #include "Cola.h"
 #include "Lista.h"
+#include "Arbol.h"
+#include "Jugadores.h"
+
 
 /// Nombre del archivo de configuraciones
 #define NOM_ARCH_CONFIG "config.txt"
@@ -14,7 +17,7 @@
 /// Nombre del archivo donde se guarda el historial
 #define NOM_ARCH_MOVIMIENTOS "movimientos.txt"
 
-///macros para el buchle del juego:
+///macros para el bucle del juego:
 #define JUGADOR_GANO 1
 #define JUGADOR_PERDIO -1
 #define JUEGO_CONTINUA 0
@@ -130,6 +133,10 @@ typedef struct
 } tBandido;
 
 
+/// Funciones de juego
+void iniciarPartida(tConfiguracion* config, tArbol* arbolJugadores);
+
+
 ///FUNCIONES DEL TABLERO
 int crearTablero(const char* nomArch,tLista* tablero,tConfiguracion* config,tLista* bandidos);
 int verificarTablero(tLista* tablero, const tConfiguracion* config);
@@ -137,10 +144,8 @@ int crearCasilla(tCasilla* casilla);
 int guardarTableroArchivo(tLista* tablero, FILE* pf,tConfiguracion* config,int cantDigitos);
 
 
-
 /// Funciones de registro de movimientos
 int guardarMostrarHistorial(tCola* historial, const char* nomArch);
-
 
 
 ///FUNCIONES DE USO COMUN

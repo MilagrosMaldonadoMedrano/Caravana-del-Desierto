@@ -2,7 +2,6 @@
 #define MENU_H_INCLUDED
 
 #include "main.h"
-#include "Archivo.h"
 #include "Juego.h"
 #include "Jugadores.h"
 #include "Partidas.h"
@@ -18,7 +17,6 @@
 int identificarJugador(char* nombre, char* nickname);
 int mostrarMenu();
 void mostrarRanking(const char* nomArch);
-void iniciarPartida(tConfiguracion* config, tArbol* arbolJugadores);
 char pedirDireccion();
 void ingresarNombreVal(const char* mensaje, char* nombre);
 

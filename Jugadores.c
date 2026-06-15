@@ -1,5 +1,6 @@
 #include "Jugadores.h"
 #include "Indice.h"
+#include "Archivo.h"
 
 int buscarJugador(tArbol* arbolJugadores, const char* nomArch, const char* nickname, tJugador* jug)
 {

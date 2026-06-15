@@ -1,4 +1,5 @@
 #include "indice.h"
+#include "Archivo.h"
 
 int compararIndiceJugador(const void *a, const void *b)
 {

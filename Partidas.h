@@ -2,7 +2,6 @@
 #define PARTIDAS_H_INCLUDED
 
 #include "main.h"
-#include "Archivo.h"
 #include "Lista.h"
 #include "Menu.h"
 #include "Jugadores.h"

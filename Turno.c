@@ -376,6 +376,15 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
 
         if(partida->oasis==FALSO)
         {
+            /// Procesar oasis en caso de haber uno en la misma casilla que el bandido
+            if(cont.cantOasis>=1) {
+                printf("\u00A1Tenes proteccion en el proximo turno!\n");
+                partida->oasis=VERDADERO;
+
+                elem.tipo=ASCII_OASIS;
+                eliminarElementoEnCasilla(tablero,casillaPosicion,elem);
+            }
+
             printf("\u00A1Te ha atacado un bandido!\n");
 
             partida->cantVidas--;
