@@ -1,5 +1,0 @@
-===== REGISTRO DE MOVIMIENTOS =====
-Turno  1: F4
-Turno  2: F2
-Turno  3: F1
-===================================
