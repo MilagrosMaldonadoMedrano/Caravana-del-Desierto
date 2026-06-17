@@ -10,7 +10,7 @@ int compararIndiceJugador(const void *a, const void *b)
 
 void cargarArbolEquilibrado(tArbol *arbol, FILE *pf, int limInf, int limSup) {
     tIndice index;
-    unsigned medio;
+    int medio;
 
     if (limInf > limSup) return;
 
@@ -21,8 +21,8 @@ void cargarArbolEquilibrado(tArbol *arbol, FILE *pf, int limInf, int limSup) {
 
     insertarEnArbol(arbol, &index, sizeof(tIndice), compararIndiceJugador);
 
-    cargarArbolEquilibrado(arbol, pf, limInf, medio - 1);
-    cargarArbolEquilibrado(arbol, pf, medio + 1, limSup);
+    cargarArbolEquilibrado(&(*arbol)->izq, pf, limInf, medio - 1);
+    cargarArbolEquilibrado(&(*arbol)->der, pf, medio + 1, limSup);
 }
 
 

@@ -37,19 +37,21 @@
 	"Archivo.h"
 	"Lista.h"
 
-1781379117 c:\users\mirag\desktop\caravana-del-desierto\juego.h
+1781489136 c:\users\mirag\desktop\caravana-del-desierto\juego.h
 	"main.h"
 	"Cola.h"
 	"Lista.h"
+	"Arbol.h"
+	"Jugadores.h"
 
-1781379029 source:c:\users\mirag\desktop\caravana-del-desierto\archivo.c
+1781739634 source:c:\users\mirag\desktop\caravana-del-desierto\archivo.c
 	"Archivo.h"
 
 1781319522 c:\users\mirag\desktop\caravana-del-desierto\archivo.h
 	"main.h"
 	"Juego.h"
 
-1781378994 source:c:\users\mirag\desktop\caravana-del-desierto\main.c
+1781736436 source:c:\users\mirag\desktop\caravana-del-desierto\main.c
 	"main.h"
 	"Cola.h"
 	"Archivo.h"
@@ -231,9 +233,8 @@
 	<stdio.h>
 	<stdlib.h>
 
-1781356892 c:\users\mirag\desktop\caravana-del-desierto\menu.h
+1781489136 c:\users\mirag\desktop\caravana-del-desierto\menu.h
 	"main.h"
-	"Archivo.h"
 	"Juego.h"
 	"Jugadores.h"
 	"Partidas.h"
@@ -243,7 +244,7 @@
 	"main.h"
 	"Juego.h"
 
-1781379479 source:c:\users\mirag\desktop\caravana-del-desierto\menu.c
+1781489136 source:c:\users\mirag\desktop\caravana-del-desierto\menu.c
 	"Turno.h"
 	"Menu.h"
 	"Lista.h"
@@ -325,7 +326,7 @@
 	"Archivo.h"
 	"Lista.h"
 
-1781379072 source:c:\users\mirag\desktop\caravana-del-desierto\turno.c
+1781739495 source:c:\users\mirag\desktop\caravana-del-desierto\turno.c
 	"Turno.h"
 	"Menu.h"
 
@@ -424,40 +425,41 @@
 1780060633 source:f:\ingeniería\algoritmos\tp-caravana\caravana-del-desierto\jugadores.c
 	"Jugadores.h"
 
-1781379077 source:c:\users\mirag\desktop\caravana-del-desierto\jugadores.c
+1781489136 source:c:\users\mirag\desktop\caravana-del-desierto\jugadores.c
 	"Jugadores.h"
 	"Indice.h"
-
-1781379456 c:\users\mirag\desktop\caravana-del-desierto\jugadores.h
-	"main.h"
 	"Archivo.h"
+
+1781489136 c:\users\mirag\desktop\caravana-del-desierto\jugadores.h
+	"main.h"
 	"Lista.h"
 	"Menu.h"
 	"Partidas.h"
 	"Arbol.h"
 
-1781379112 c:\users\mirag\desktop\caravana-del-desierto\partidas.h
+1781489136 c:\users\mirag\desktop\caravana-del-desierto\partidas.h
 	"main.h"
-	"Archivo.h"
 	"Lista.h"
 	"Menu.h"
 	"Jugadores.h"
 
-1779669868 source:c:\users\mirag\desktop\caravana-del-desierto\partidas.c
+1781489136 source:c:\users\mirag\desktop\caravana-del-desierto\partidas.c
 	"Partidas.h"
+	"Archivo.h"
 
-1781379008 source:c:\users\mirag\desktop\caravana-del-desierto\arbol.c
+1781736436 source:c:\users\mirag\desktop\caravana-del-desierto\arbol.c
 	"Arbol.h"
 
-1781379085 c:\users\mirag\desktop\caravana-del-desierto\arbol.h
+1781736436 c:\users\mirag\desktop\caravana-del-desierto\arbol.h
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 
-1781379029 source:c:\users\mirag\desktop\caravana-del-desierto\indice.c
+1781739410 source:c:\users\mirag\desktop\caravana-del-desierto\indice.c
 	"indice.h"
+	"Archivo.h"
 
-1781379117 c:\users\mirag\desktop\caravana-del-desierto\indice.h
+1781736436 c:\users\mirag\desktop\caravana-del-desierto\indice.h
 	<stdio.h>
 	<string.h>
 	"Arbol.h"

@@ -43,7 +43,7 @@ int cargarConfiguracion(const char* nomArch,tConfiguracion* config)
     FILE* arch;
     if(ERROR_ARCH==abrirArchivo(&arch,nomArch,"rt"))
     {
-        perror("Error:");
+//        perror("Error:");
         printf("\nSe cargaran configuraciones por defecto\n");
         if (configuracionPorDefecto(&arch,nomArch) != TODO_OK)
         {

@@ -89,6 +89,8 @@ void iniciarPartida(tConfiguracion* config, tArbol *arbolJugadores)
             casilla.posicion=partida.posJugador;
             estado = manejarSituacionCasilla(&partida,&tablero,&bandidos,casilla,config);
         }
+//        system("pause");
+//        system("cls");
 
         printf("%s: Vidas: %u | Puntos: %u\n", nickname, partida.cantVidas, partida.cantPuntos);
         dibujarTablero(&tablero,config->cantPosiciones);
@@ -607,7 +609,7 @@ void accionActualizarBandido(const void* elem, const void* extra)
     unsigned nuevaPos = *(unsigned*)extra;
 
     ///para testear
-    printf("Bandido %-2u: Pos anterior: %-2u | Nueva pos: %-2u\n", b->id, b->posBandido, nuevaPos);
+//    printf("Bandido %-2u: Pos anterior: %-2u | Nueva pos: %-2u\n", b->id, b->posBandido, nuevaPos);
 
     b->posBandido = nuevaPos;
     b->movimientos++;

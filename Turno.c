@@ -68,11 +68,6 @@ void planificarMovimientosBandidos(tPartida* partida, tCola* bufferMovs, tLista*
     unsigned cantPosiciones = listaCantidadElementos(tablero);
     unsigned menorDistancia;
     unsigned idBandidoMenorDistancia;
-//    unsigned pos = 0;
-//    unsigned nuevaPosBandido;
-//    unsigned posBandidoAMover;
-//    char direccion;
-//    tElemento elem;
     tContadorElementos cont = {0};
     tCasilla casillaPos;
     tCasilla* casilla=NULL;
@@ -83,10 +78,10 @@ void planificarMovimientosBandidos(tPartida* partida, tCola* bufferMovs, tLista*
         return; /// no hay bandidos en el tablero
 
     cantBandidosAMover = listaCantidadElementos(bandidos);
-    printf("Cantidad de bandidos: %u\n", cantBandidosAMover);
-
-    printf("\nPosiciones de los bandidos en el tablero:\n");
-    recorrerDeIzqADer(bandidos, mostrarBandidos, NULL);
+//    printf("Cantidad de bandidos: %u\n", cantBandidosAMover);
+//
+//    printf("\nPosiciones de los bandidos en el tablero:\n");
+//    recorrerDeIzqADer(bandidos, mostrarBandidos, NULL);
 
     mov.elem.tipo = ASCII_BANDIDO;
 
@@ -117,6 +112,8 @@ void planificarMovimientosBandidos(tPartida* partida, tCola* bufferMovs, tLista*
             /// si el bandido no se movió en este turno
             if (bandido.movimientos == partida->movimientos)
             {
+                /// calcula para donde se tiene que mover el bandido, para que quede
+                /// a la menor distancia posible del jugador
                 unsigned posNuevaAvanzando = (bandido.posBandido + dado) % cantPosiciones;
                 unsigned posNuevaRetrocediendo = (cantPosiciones + (bandido.posBandido - dado)) % cantPosiciones;
                 unsigned distanciaAvanzando;
