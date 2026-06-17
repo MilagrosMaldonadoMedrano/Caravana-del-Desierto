@@ -26,6 +26,7 @@ typedef tNodoArbol *tArbol;
 void crearArbol(tArbol *p);
 void vaciarArbol(tArbol *p);
 int insertarEnArbol(tArbol *p, const void *d, unsigned cantBytes, int (*cmp)(const void*, const void*));
+void recorrerPreOrden(const tArbol *p, void (*accion)(const void *));
 void recorrerInOrden(const tArbol *p, void (*accion)(const void *));
 void recorrerInOrdenParam(const tArbol *p, void *param, void (*accion)(const void *, void *));
 int buscarEnArbol(const tArbol *p, void *dato, unsigned tamDato, int (*cmp)(const void*, const void*));

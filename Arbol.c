@@ -78,6 +78,16 @@ int insertarEnArbolAccion(tArbol *p, const void *d, unsigned cantBytes, int (*cm
 
 
 
+// Recorrido preOrden
+void recorrerPreOrden(const tArbol *p, void (*accion)(const void *))
+{
+    if (*p)
+    {
+        accion((*p)->info);
+        recorrerPreOrden(&(*p)->izq, accion);
+        recorrerPreOrden(&(*p)->der, accion);
+    }
+}
 
 // Recorrido inOrden
 void recorrerInOrden(const tArbol *p, void (*accion)(const void *))

@@ -47,9 +47,9 @@ int main()
 
     //mostrarIndiceJugadores(&arbolJugadores);
 
-    /*//fc para verificar los archivos:
-    mostrarArchivoJugadores(NOM_ARCH_JUGADORES);
-    mostrarArchivoPartidas(NOM_ARCH_PARTIDAS);*/
+    //fc para verificar los archivos:
+    //mostrarArchivoJugadores(NOM_ARCH_JUGADORES);
+    //mostrarArchivoPartidas(NOM_ARCH_PARTIDAS);
 
     do
     {

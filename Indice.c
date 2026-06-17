@@ -8,19 +8,37 @@ int compararIndiceJugador(const void *a, const void *b)
     return strcmp(ia->clave, ib->clave);
 }
 
+void cargarArbolEquilibrado(tArbol *arbol, FILE *pf, int limInf, int limSup) {
+    tIndice index;
+    unsigned medio;
+
+    if (limInf > limSup) return;
+
+    medio = (limInf + limSup) / 2;
+
+    fseek(pf, medio * sizeof(tIndice), SEEK_SET);
+    fread(&index, sizeof(tIndice), 1, pf);
+
+    insertarEnArbol(arbol, &index, sizeof(tIndice), compararIndiceJugador);
+
+    cargarArbolEquilibrado(arbol, pf, limInf, medio - 1);
+    cargarArbolEquilibrado(arbol, pf, medio + 1, limSup);
+}
+
+
 /** Cargar el indice a un arbol */
 int cargarIndiceJugadores(const char* nomArchIndice, tArbol* arbolJugadores)
 {
     FILE* pf;
-    tIndice index;
+    int cantReg;
 
     pf = fopen(nomArchIndice, "rb");
     if (!pf) return ERROR_ARCH;
 
-    while (fread(&index, sizeof(tIndice), 1, pf) == 1)
-    {
-        insertarEnArbol(arbolJugadores, &index, sizeof(tIndice), compararIndiceJugador);
-    }
+    fseek(pf, 0, SEEK_END);
+    cantReg = ftell(pf) / sizeof(tIndice);
+
+    cargarArbolEquilibrado(arbolJugadores, pf, 0, cantReg - 1);
 
     fclose(pf);
     return TODO_OK;
@@ -78,11 +96,11 @@ void mostrarNodoIndiceJugador(const void *info)
     printf("Jugador: %s | Posicion: %u\n", index->clave, index->pos);
 }
 
-void mostrarIndiceJugadores(const tArbol* arbolJugadores)
-{
+void mostrarIndiceJugadores(const tArbol* arbolJugadores) {
     printf("----------------------------------------\n");
     printf("\nIndice de Jugadores\n");
-    recorrerInOrden(arbolJugadores, mostrarNodoIndiceJugador);
+    recorrerPreOrden(arbolJugadores, mostrarNodoIndiceJugador);
+    //recorrerInOrden(arbolJugadores, mostrarNodoIndiceJugador);
     printf("----------------------------------------\n");
 }
 

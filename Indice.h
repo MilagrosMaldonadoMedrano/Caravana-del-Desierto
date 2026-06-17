@@ -18,6 +18,7 @@ typedef struct
 
 
 int compararIndiceJugador(const void *a, const void *b);
+void cargarArbolEquilibrado(tArbol *arbol, FILE *pf, int limInf, int limSup);
 int cargarIndiceJugadores(const char* nomArchIndice, tArbol* arbolJugadores);
 int indexarArchivoJugadores(const char* nomArchJugadores, tArbol* arbolJugadores);
 int guardarIndiceJugadores(const char* nomArchIndice, const tArbol* arbolJugadores);
