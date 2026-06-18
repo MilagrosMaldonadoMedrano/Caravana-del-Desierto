@@ -24,7 +24,7 @@ int main()
     if (resultado != TODO_OK)
     {
         informarErrorConfiguracion(resultado);
-        perror("\nError al cargar las configuraciones:");
+//        perror("\nError al cargar las configuraciones:");
         printf("\nFinalizando programa...\n");
         return ERROR_ARCH;
     }

@@ -259,15 +259,11 @@ void planificarMovimientosBandidos(tPartida* partida, tCola* bufferMovs, tLista*
         }
 
         mov.elem.id = bandido.id;
-//            mov.posOrigen = bandido.posBandido;
         mov.cantMovim = mov.posFinal == mov.posOrigen ? 0 : dado;
 
         ///inserto el movimiento del bandido en la cola
         ponerEnCola(bufferMovs, &mov, sizeof(tMovimiento));
 
-//                posBandidoAMover = bandido.posBandido;
-//                pri = 0;
-//            pos++;
         cantBandidosAMover--;
     }
 
@@ -374,7 +370,8 @@ int manejarSituacionCasilla(tPartida* partida, tLista* tablero, tLista* bandidos
         if(partida->oasis==FALSO)
         {
             /// Procesar oasis en caso de haber uno en la misma casilla que el bandido
-            if(cont.cantOasis>=1) {
+            if(cont.cantOasis>=1)
+            {
                 printf("\u00A1Tenes proteccion en el proximo turno!\n");
                 partida->oasis=VERDADERO;
 

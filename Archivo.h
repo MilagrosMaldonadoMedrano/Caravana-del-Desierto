@@ -3,7 +3,6 @@
 
 #include "main.h"
 #include "Juego.h"
-//#include "Cola.h"
 
 #define TODO_OK 1
 #define ERROR_ARCH -1
